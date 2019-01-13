@@ -63,7 +63,7 @@
         <!-- Login -->
         <div class="nk-block toggled" id="l-login">
           <!-- Start my code -->
-            <div><a href="index.html" class="title"><h2>Home Automation</h2></a></div>
+            <div><a href="index.php" class="title"><h2>Home Automation</h2></a></div>
             <hr/>
             <div><b><h3>Login</h3></b></div>
           <!-- End my code -->
@@ -94,7 +94,7 @@
         <!-- Register -->
         <div class="nk-block" id="l-register">
           <!-- Start my code -->
-            <div><a href="index.html" class="title"><h2>Home Automation</h2></a></div>
+            <div><a href="index.php" class="title"><h2>Home Automation</h2></a></div>
             <hr/>
             <div><b><h3>Registration</h3></b></div>
           <!-- End my code -->
@@ -132,7 +132,7 @@
         <!-- Forgot Password -->
         <div class="nk-block" id="l-forget-password">
           <!-- Start my code -->
-            <div><a href="index.html" class="title"><h2>Home Automation</h2></a></div>
+            <div><a href="index.php" class="title"><h2>Home Automation</h2></a></div>
             <hr/>
             <div><b><h3>Forgot password?</h3></b></div>
           <!-- End my code -->
@@ -155,6 +155,7 @@
             </div>
         </div>
     </div>
+
     <!-- Login Register area End-->
     <!-- jquery
 		============================================ -->
@@ -222,6 +223,7 @@
     <!-- main JS
 		============================================ -->
     <script src="js/main.js"></script>
+    <script src="js/send_mail.js"></script>
 </body>
 
 </html>
