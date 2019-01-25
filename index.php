@@ -520,7 +520,7 @@ myApp.directive('emailExistsDir', function($http) {
     			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     		}).then(function mySuccess(response) {
 
-    			flag = response.data;
+    			var flag = response.data;
     			// we should be using flag in only this block so logic in following
     			if(flag.error || flag.user.emailExists)
     			{

@@ -1,6 +1,6 @@
 (function ($) {
  "use strict";
- 
+
 	/*----------------------
 		Dialogs
 	 -----------------------*/
@@ -22,52 +22,60 @@
 
 	//Warning Message
 	$('#sa-warning').on('click', function(){
-		swal({   
-			title: "Are you sure?",   
-			text: "You will not be able to recover this imaginary file!",   
-			type: "warning",   
-			showCancelButton: true,   
+		swal({
+			title: "Are you sure?",
+			text: "You will not be able to recover this imaginary file!",
+			type: "warning",
+			showCancelButton: true,
 			confirmButtonText: "Yes, delete it!",
 		}).then(function(){
-			swal("Deleted!", "Your imaginary file has been deleted.", "success"); 
+			swal("Deleted!", "Your imaginary file has been deleted.", "success");
 		});
 	});
-	
+
 	//Parameter
 	$('#sa-params').on('click', function(){
-		swal({   
-			title: "Are you sure?",   
-			text: "You will not be able to recover this imaginary file!",   
-			type: "warning",   
-			showCancelButton: true,   
+		swal({
+			title: "Are you sure?",
+			text: "You will not be able to recover this imaginary file!",
+			type: "warning",
+			showCancelButton: true,
 			confirmButtonText: "Yes, delete it!",
-			cancelButtonText: "No, cancel plx!",   
+			cancelButtonText: "No, cancel plx!",
 		}).then(function(isConfirm){
-			if (isConfirm) {     
-				swal("Deleted!", "Your imaginary file has been deleted.", "success");   
-			} else {     
-				swal("Cancelled", "Your imaginary file is safe :)", "error");   
-			} 
+			if (isConfirm) {
+				swal("Deleted!", "Your imaginary file has been deleted.", "success");
+			} else {
+				swal("Cancelled", "Your imaginary file is safe :)", "error");
+			}
 		});
 	});
 
 	//Custom Image
 	$('#sa-image').on('click', function(){
-		swal({   
-			title: "Sweet!",   
-			text: "Here's a custom image.",   
-			imageUrl: "img/dialog/like.png" 
+		swal({
+			title: "Sweet!",
+			text: "Here's a custom image.",
+			imageUrl: "img/dialog/like.png"
 		});
 	});
 
 	//Auto Close Timer
 	$('#sa-close').on('click', function(){
-		 swal({   
-			title: "Auto close alert!",   
-			text: "I will close in 2 seconds.",   
-			timer: 2000
+		 swal({
+			title: "Auto close alert!",
+			text: "I will close in 5 seconds.",
+			timer: 5000
 		});
 	});
 
- 
-})(jQuery); 
+  $('#alert-dialog').on('click', function(){
+    alert();
+     swal({
+      title: "Auto close alert!",
+      text: "I will close in 2 seconds.",
+      timer: 2000
+    });
+  });
+
+})(jQuery);
