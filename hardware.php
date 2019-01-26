@@ -360,6 +360,8 @@ if(isset($_COOKIE['homeID']) && isset($_COOKIE['roomID'])){
     myApp.controller("HardwareController", function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies) {
       $scope.user="<?php echo $email; ?>";
       $scope.hwReName="";
+      $scope.hwReSeries="";
+      $scope.hwReIP="";
       $scope.beforeHwName="";
       $scope.beforeHwSeries="";
       $scope.beforeHwIP="";
@@ -473,7 +475,7 @@ if(isset($_COOKIE['homeID']) && isset($_COOKIE['roomID'])){
       $scope.deleteHardware = function(val){
         swal({
     			title: "Are you sure?",
-    			text: "You will not be able to recover this home!",
+    			text: "You will not be able to recover this hardware!",
     			type: "warning",
     			showCancelButton: true,
     			confirmButtonText: "Yes, delete it!",

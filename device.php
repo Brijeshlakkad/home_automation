@@ -3,8 +3,10 @@ include("functions.php");
 checkSession();
 $id=$_SESSION['Userid'];
 $email=$_SESSION['User'];
-if(isset($_COOKIE['homeID'])){
+if(isset($_COOKIE['homeID']) && isset($_COOKIE['roomID']) && isset($_COOKIE['hwID'])){
   $homeID=$_COOKIE['homeID'];
+  $roomID=$_COOKIE['roomID'];
+  $hwID=$_COOKIE['hwID'];
 ?>
 <!doctype html>
 <html class="no-js" lang="">
@@ -99,13 +101,28 @@ if(isset($_COOKIE['homeID'])){
   /* Add shadows to create the "card" effect */
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   transition: 0.3s;
-
+  height:150px;
 }
 
 /* On mouse-over, add a deeper shadow */
 .card:hover {
   box-shadow: 0 16px 16px 0 rgba(0,0,0,0.2);
   background-color: rgba(210, 210, 210, 0.8);
+}
+
+.redDot {
+  height: 8px;
+  width: 8px;
+  background-color: rgba(250,0,0,1);
+  border-radius: 50%;
+  display: inline-block;
+}
+.greenDot {
+  height: 8px;
+  width: 8px;
+  background-color: rgba(0,250,0,1);
+  border-radius: 50%;
+  display: inline-block;
 }
  </style>
 <body ng-app="myapp">
@@ -169,64 +186,114 @@ if(isset($_COOKIE['homeID'])){
         </div>
     </div>
     <!-- Main Menu area End-->
-    <div class="container" ng-controller="RoomController" id="roomModificationCtrl">
-      <button class="btn btn-lg notika-btn-lightblue btn-reco-mg btn-button-mg" data-toggle="modal" data-target="#addRoom"><span class="glyphicon glyphicon-plus"></span> Add Room</button>
-      <div class="row" ng-bind-html="showAllRoom">
+    <div class="container" ng-controller="DeviceController" id="deviceModificationCtrl">
+      <button class="btn btn-lg notika-btn-lightblue btn-reco-mg btn-button-mg" data-toggle="modal" data-target="#addDevice"><span class="glyphicon glyphicon-plus"></span> Add Device</button>
+      <div class="row" ng-bind-html="showAllDevice">
 
       </div>
-      <div class="modal fade" id="addRoom" role="dialog">
+      <div class="modal fade" id="addDevice" role="dialog">
           <div class="modal-dialog modal-sm">
               <div class="modal-content">
                   <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal">&times;</button>
                   </div>
                   <div class="modal-body">
-                    <h2>Create new room</h2>
-                    <form name="roomNameForm" novalidate>
+                    <h2>Create new device</h2>
+                    <form name="dvForm" novalidate>
+                    <div class="row" style="padding-bottom:10px;">
+                      <div class="nk-int-st">
+                        <input class="form-control" name="dvName" data-ng-model="dvName" type="text" placeholder="Device Name" ng-style="dvNameStyle" ng-change="analyzeDvName(dvName)" required dv-name-dir/>
+                      </div>
+                      <span style="color:red;" id="dvName" ng-show="dvForm.dvName.$dirty && dvForm.dvName.$invalid">
+                      <span ng-show="dvForm.dvName.$error.required">Please enter device name</span>
+                      <span ng-show="!dvForm.dvName.$error.required && dvForm.dvName.$error.dvNameValid">Please enter only alphabetics and digits</span>
+                      <span ng-show="dvForm.dvName.$error.dvNameExistsValid">Device name already exists</span>
+                      </span>
+                    </div>
                     <div class="row">
                       <div class="nk-int-st">
-                        <input class="form-control" name="roomName" data-ng-model="roomName" type="text" placeholder="Room Name" ng-style="roomNameStyle" ng-change="analyzeRoomName(roomName)" required room-name-dir/>
+                      <div>Device Port</div>
+                      <select class="form-control" name="dvPort" ng-model="dvPort" ng-style="dvPortStyle" placeholder="Device Port" required>
+              			 	<option
+              					ng-repeat="x in portOptions"
+              					ng-value="x">{{x}}</option>
+              				</select>
                       </div>
-                      <span style="color:red;" id="roomName" ng-show="roomNameForm.roomName.$dirty && roomNameForm.roomName.$invalid">
-                      <span ng-show="roomNameForm.roomName.$error.required">Please enter room name</span>
-                      <span ng-show="!roomNameForm.roomName.$error.required && roomNameForm.roomName.$error.roomNameValid">Please enter only alphabetics and digits</span>
-                      <span ng-show="!roomNameForm.roomName.$error.required && !roomNameForm.roomName.$error.roomNameValid && roomNameForm.roomName.$error.roomNameLenValid">Please enter only more than 3 characters</span>
-                      <span ng-show="roomNameForm.roomName.$error.roomNameExistsValid">Room name already exists</span>
+                      <span style="color:red;" id="dvPort" ng-show="dvForm.dvPort.$dirty && dvForm.dvPort.$invalid">
+                      <span ng-show="dvForm.dvPort.$error.required">Please select a port</span>
+                      </span>
+                    </div>
+                    <div class="row">
+                      <div class="nk-int-st">
+                      <div>Device Category</div>
+                      <select class="form-control" name="dvImg" ng-model="dvImg" ng-style="dvImgStyle" placeholder="Device Category" required>
+                      <option
+                        ng-repeat="x in dvImgList"
+                        ng-value="x.key">{{x.value}}</option>
+                      </select>
+                      </div>
+                      <span style="color:red;" id="dvImg" ng-show="dvForm.dvImg.$dirty && dvForm.dvImg.$invalid">
+                      <span ng-show="dvForm.dvImg.$error.required">Please select a device category</span>
                       </span>
                     </div>
                   </form>
                   </div>
                   <div class="modal-footer" style="margin:10px;">
-                      <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="roomNameForm.roomName.$invalid" ng-click="addRoom()">Create</button>
+                      <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="dvForm.dvName.$invalid || dvForm.dvPort.$invalid || dvForm.dvImg.$invalid" ng-click="addDevice()">Create</button>
                       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                   </div>
               </div>
           </div>
       </div>
-      <div class="modal fade" id="renameRoom" role="dialog">
+      <div class="modal fade" id="renameDevice" role="dialog">
           <div class="modal-dialog modal-sm">
               <div class="modal-content">
                   <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal">&times;</button>
                   </div>
                   <div class="modal-body">
-                    <h2>Modify your room</h2>
-                    <form name="roomReNameForm" novalidate>
+                    <h2>Modify your hardware</h2>
+                    <form name="dvReForm" novalidate>
                     <div class="row">
                       <div class="nk-int-st">
-                        <input class="form-control" name="roomReName" ng-model="roomReName" type="text" placeholder="Home Name" ng-style="roomReNameStyle" ng-change="analyzeHomeName(roomReName)" required room-name-dir/>
+                        <input class="form-control" name="dvReName" ng-model="dvReName" type="text" placeholder="Hardware Name" ng-style="dvNameStyle" ng-change="analyzeDvName(dvReName)" required dv-name-dir/>
                       </div>
-                      <span style="color:red;" id="roomReName" ng-show="roomReNameForm.roomReName.$dirty && roomReNameForm.roomReName.$invalid">
-                      <span ng-show="roomReNameForm.roomReName.$error.required">Please enter room name</span>
-                      <span ng-show="!roomReNameForm.roomReName.$error.required && roomReNameForm.roomReName.$error.roomNameValid">Please enter only alphabetics and digits</span>
-                      <span ng-show="!roomReNameForm.roomReName.$error.required && !roomReNameForm.roomReName.$error.roomNameValid && roomReNameForm.roomReName.$error.roomNameLenValid">Please enter only more than 3 characters</span>
-                      <span ng-show="roomReNameForm.roomReName.$error.roomNameExistsValid">Room name already exists</span>
+                      <span style="color:red;" id="dvReName" ng-show="dvReForm.dvReName.$dirty && dvReForm.dvReName.$invalid">
+                      <span ng-show="dvReForm.dvReName.$error.required">Please enter device name</span>
+                      <span ng-show="!dvReForm.dvReName.$error.required && dvReForm.dvReName.$error.dvNameValid">Please enter only alphabetics and digits</span>
+                      <span ng-show="dvReForm.dvReName.$error.dvNameExistsValid">Device name already exists</span>
+                      </span>
+                    </div>
+                    <div class="row">
+                      <div class="nk-int-st">
+                      <div>Device Port</div>
+                      <select class="form-control" name="dvRePort" ng-model="dvRePort" ng-style="dvRePortStyle" placeholder="Device Port" required>
+                      <option
+                        ng-repeat="x in portOptions"
+                        ng-value="x">{{x}}</option>
+                      </select>
+                      </div>
+                      <span style="color:red;" id="dvRePort" ng-show="dvForm.dvRePort.$dirty && dvForm.dvRePort.$invalid">
+                      <span ng-show="dvForm.dvRePort.$error.required">Please select a port</span>
+                      </span>
+                    </div>
+                    <div class="row">
+                      <div class="nk-int-st">
+                      <div>Device Category</div>
+                      <select class="form-control" name="dvReImg" ng-model="dvReImg" ng-style="dvReImgStyle" placeholder="Device Category" required>
+                      <option
+                        ng-repeat="x in dvImgList"
+                        ng-value="x.key">{{x.value}}</option>
+                      </select>
+                      </div>
+                      <span style="color:red;" id="dvReImg" ng-show="dvForm.dvReImg.$dirty && dvForm.dvReImg.$invalid">
+                      <span ng-show="dvForm.dvReImg.$error.required">Please select a device category</span>
                       </span>
                     </div>
                   </form>
                   </div>
                   <div class="modal-footer" style="margin:10px;">
-                      <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="roomReNameForm.roomReName.$invalid" ng-click="modifyRoom()">Modify</button>
+                      <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="dvReForm.dvReName.$invalid" ng-click="modifyDevice()">Modify</button>
                       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                   </div>
               </div>
@@ -324,38 +391,70 @@ if(isset($_COOKIE['homeID'])){
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-sanitize.js"></script>
     <script>
     var myApp = angular.module("myapp", ['ngCookies']);
-    myApp.controller("RoomController", function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies) {
+    myApp.controller("DeviceController", function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies) {
       $scope.user="<?php echo $email; ?>";
-      $scope.roomReName="";
-      $scope.beforeRoomName="";
+      $scope.dvReName="";
+      $scope.dvRePort="";
+      $scope.dvReImg="";
+      $scope.beforeDvName="";
+      $scope.beforeDvPort="";
+      $scope.beforeDvImg="";
       $scope.homeID="<?php echo $homeID; ?>";
-      $scope.roomID="";
-      $rootScope.roomList="";
+      $scope.roomID="<?php echo $roomID; ?>";
+      $scope.hwID="<?php echo $hwID; ?>";
+      $scope.dvID="";
+      $rootScope.dvList=[];
+      $rootScope.dvImgList=[];
       $scope.userID="<?php echo $id; ?>";
-      $scope.roomNameStyle={
+      $scope.portOptions = [];
+      for(i=0;i<=9;i++){
+        $scope.portOptions.push(i+"");
+      }
+      $scope.dvNameStyle={
         "border-bottom-width":"2px"
       };
-      $scope.analyzeRoomName=function(val){
+      $scope.analyzeDvName=function(val){
         var patt_room=new RegExp("^[a-zA-Z0-9]+$");
-        if(patt_room.test(val) && val.length>3){
-          $scope.roomNameStyle['border-bottom-color']="green";
+        if(patt_room.test(val)){
+          $scope.dvNameStyle['border-bottom-color']="green";
         }else{
-          $scope.roomNameStyle['border-bottom-color']="red";
+          $scope.dvNameStyle['border-bottom-color']="red";
         }
       };
-      $scope.addRoom=function(){
+      $scope.dvPortStyle={
+        "border-bottom-width":"2px"
+      };
+      $scope.analyzeDvPort=function(val){
+        if(val!="" && val!=null){
+          $scope.dvPortStyle['border-bottom-color']="green";
+        }else{
+          $scope.dvPortStyle['border-bottom-color']="red";
+        }
+      };
+      $scope.dvImgStyle={
+        "border-bottom-width":"2px"
+      };
+      $scope.analyzeDvImg=function(val){
+        if(val!="" && val!=null){
+          $scope.dvImgStyle['border-bottom-color']="green";
+        }else{
+          $scope.dvImgStyle['border-bottom-color']="red";
+        }
+      };
+      $scope.addDevice=function(){
+        alert($scope.dvImg);
         $http({
           method: "POST",
-          url: "room_actions.php",
-          data: "action=1&email="+$scope.user+"&roomName="+$scope.roomName+"&homeID="+$scope.homeID,
+          url: "device_actions.php",
+          data: "action=1&email="+$scope.user+"&dvName="+$scope.dvName+"&dvPort="+$scope.dvPort+"&dvImg="+$scope.dvImg+"&homeID="+$scope.homeID+"&roomID="+$scope.roomID+"&hwID="+$scope.hwID,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySuccess(response){
           var data=response.data;
-          $scope.roomNameForm.$setPristine();
-          $scope.roomName="";
+          $scope.dvForm.$setPristine();
+          $scope.dvName="";
           if(!data.error){
-            $scope.showSuccessDialog("Room Created");
-            $scope.getAllRoom();
+            $scope.showSuccessDialog("Device Created");
+            $scope.getAllDevice();
           }else{
             $scope.showErrorDialog(data.errorMessage);
           }
@@ -363,20 +462,41 @@ if(isset($_COOKIE['homeID'])){
 
         });
       };
-      $scope.getRoomList=function(){
+      $scope.getDeviceImgList=function(){
         $http({
           method: "POST",
-          url: "room_actions.php",
-          data: "action=4&email="+$scope.user+"&homeID="+$scope.homeID,
+          url: "device_actions.php",
+          data: "action=4",
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySuccess(response){
           var data=response.data;
           if(!data.error){
-            if(typeof data.user.room=='undefined'){
-              $rootScope.roomList=[];
+            if(typeof data.user.deviceImg=='undefined'){
+              $rootScope.dvImgList=[];
             }
             else{
-              $rootScope.roomList=data.user.room;
+              $rootScope.dvImgList=data.user.deviceImg;
+            }
+          }else{
+          }
+        },function myError(response){
+
+        });
+      };
+      $scope.getDeviceList=function(){
+        $http({
+          method: "POST",
+          url: "device_actions.php",
+          data: "action=8&email="+$scope.user+"&homeID="+$scope.homeID+"&roomID="+$scope.roomID+"&hwID="+$scope.hwID,
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).then(function mySuccess(response){
+          var data=response.data;
+          if(!data.error){
+            if(typeof data.user.device=='undefined'){
+              $rootScope.dvList=[];
+            }
+            else{
+              $rootScope.dvList=data.user.device;
             }
           }else{
           }
@@ -394,18 +514,19 @@ if(isset($_COOKIE['homeID'])){
       $scope.showSuccessDialog=function(val){
         swal(""+val, "", "success");
       };
-      $scope.getAllRoom=function(){
+      $scope.getAllDevice=function(){
         $http({
           method: "POST",
-          url: "room_actions.php",
-          data: "action=0&email="+$scope.user+"&homeID="+$scope.homeID,
+          url: "device_actions.php",
+          data: "action=0&email="+$scope.user+"&homeID="+$scope.homeID+"&roomID="+$scope.roomID+"&hwID="+$scope.hwID,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySuccess(response){
           var data=response.data;
           if(!data.error){
-            var showAllRoom=data.user.allRoom;
-            $scope.showAllRoom=$sce.trustAsHtml(showAllRoom);
-            $scope.getRoomList();
+            var showAllDevice=data.user.allDevice;
+            $scope.showAllDevice=$sce.trustAsHtml(showAllDevice);
+            $scope.getDeviceList();
+            $scope.getDeviceImgList();
           }else{
             $scope.showErrorDialog(data.errorMessage);
           }
@@ -413,58 +534,72 @@ if(isset($_COOKIE['homeID'])){
 
         });
       };
-      $scope.getAllRoom();
-      $scope.deleteRoom = function(val){
+      $scope.getAllDevice();
+      $scope.deleteDevice = function(val){
         swal({
     			title: "Are you sure?",
-    			text: "You will not be able to recover this room!",
+    			text: "You will not be able to recover this device!",
     			type: "warning",
     			showCancelButton: true,
     			confirmButtonText: "Yes, delete it!",
     		}).then(function(){
           $http({
             method: "POST",
-            url: "room_actions.php",
+            url: "device_actions.php",
             data: "action=2&email="+$scope.user+"&id="+val,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
           }).then(function mySuccess(response){
             var data=response.data;
             if(!data.error){
-              swal("Deleted!", "Your room has been deleted.", "success");
-              $scope.getAllRoom();
+              swal("Deleted!", "Your device has been deleted.", "success");
+              $scope.getAllDevice();
             }else{
               $scope.showErrorDialog(data.errorMessage);
             }
           });
     		});
       };
-      $scope.setRoomName=function(id,roomName,callback){
-        $scope.beforeRoomName=roomName;
-        $scope.roomReName=roomName;
-        $scope.roomID=id;
+      $scope.setRoomName=function(id,dvName,dvPort,dvImg,callback){
+        $scope.beforeDvName=dvName;
+        $scope.beforeDvPort=dvPort;
+        $scope.beforeDvImg=dvImg;
+        $scope.dvReName=dvName;
+        $scope.dvRePort=dvPort;
+        $scope.dvReImg=dvImg;
+        /*
+        for(i=0;i<$rootScope.dvImgList.length;i++){
+          if(dvImg==$rootScope.dvImgList[i].key)
+          {
+            $scope.dvReImg=$rootScope.dvImgList[i].value;
+            break;
+          }
+        }
+        */
+        $scope.dvID=id;
         $timeout(callback,10);
       };
-      $scope.editRoom = function(id,roomName){
-        $scope.setRoomName(id,roomName,function(){
-          $("#renameRoom").modal("show");
+      $scope.editDevice = function(id,dvName,dvPort,dvImg){
+        $scope.setRoomName(id,dvName,dvPort,dvImg,function(){
+          $("#renameDevice").modal("show");
         });
       };
 
-      $scope.modifyRoom=function(){
-        if($scope.beforeRoomName!=$scope.roomReName){
+      $scope.modifyDevice=function(){
+        if($scope.beforeDvName!=$scope.dvReName || $scope.beforeDvPort!=$scope.dvRePort || $scope.beforeDvImg!=$scope.dvReImg){
           $http({
             method: "POST",
-            url: "room_actions.php",
-            data: "action=3&email="+$scope.user+"&roomName="+$scope.roomReName+"&id="+$scope.roomID,
+            url: "device_actions.php",
+            data: "action=3&email="+$scope.user+"&dvName="+$scope.dvReName+"&dvPort="+$scope.dvRePort+"&dvImg="+$scope.dvReImg+"&id="+$scope.dvID,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
           }).then(function mySuccess(response){
             var data=response.data;
-            $scope.roomReNameForm.$setPristine();
-            $scope.beforeRoomName="";
-            $scope.roomReName="";
+            alert(JSON.stringify(data));
+            $scope.dvReForm.$setPristine();
+            $scope.beforeDvName="";
+            $scope.dvReName="";
             if(!data.error && (typeof data.error != 'undefined')){
-              $scope.showSuccessDialog("Room Name Modified");
-              $scope.getAllRoom();
+              $scope.showSuccessDialog("Device Modified");
+              $scope.getAllDevice();
             }else{
               $scope.showErrorDialog(data.errorMessage);
             }
@@ -474,50 +609,49 @@ if(isset($_COOKIE['homeID'])){
         }
       };
 
-      $scope.gotoRoom = function(homeID,roomID){
+      $scope.gotoDevice = function(dvID,hwID,roomID,homeID){
         $cookies.remove('homeID');
         $cookies.remove('roomID');
+        $cookies.remove('hwID');
+        $cookies.remove('dvID');
         $cookies.put('homeID',homeID);
         $cookies.put('roomID',roomID);
-        $window.location.href="hardware.php";
+        $cookies.put('hwID',hwID);
+        $cookies.put('dvID',dvID);
+        $window.location.href="device_status.php";
       };
     });
-    function deleteRoom(id){
-      angular.element($("#roomModificationCtrl")).scope().deleteRoom(id);
+    function deleteDevice(id){
+      angular.element($("#deviceModificationCtrl")).scope().deleteDevice(id);
     }
-    function editRoom(id,roomName){
-      angular.element($("#roomModificationCtrl")).scope().editRoom(id,roomName);
+    function editDevice(id,dvName,dvPort,dvImg){
+      angular.element($("#deviceModificationCtrl")).scope().editDevice(id,dvName,dvPort,dvImg);
     }
-    function gotoRoom(homeID,roomID){
-      angular.element($("#roomModificationCtrl")).scope().gotoRoom(homeID,roomID);
+    function gotoDevice(dvID,hwID,roomID,homeID){
+      angular.element($("#deviceModificationCtrl")).scope().gotoDevice(dvID,hwID,roomID,homeID);
     }
-    myApp.directive("roomNameDir",function($rootScope,$http){
+    myApp.directive("dvNameDir",function($rootScope,$http){
       return{
         require: 'ngModel',
         link: function(scope, element, attr, mCtrl){
           function myValidation(value){
             var patt_room=/^[a-zA-Z0-9]+$/;
             if(patt_room.test(value)){
-              mCtrl.$setValidity('roomNameValid',true);
+              mCtrl.$setValidity('dvNameValid',true);
             }else{
-              mCtrl.$setValidity('roomNameValid',false);
-            }
-            if(value.length>3){
-              mCtrl.$setValidity('roomNameLenValid',true);
-            }else{
-              mCtrl.$setValidity('roomNameLenValid',false);
+              mCtrl.$setValidity('dvNameValid',false);
             }
             var i,flag=0;
-            var len=$rootScope.roomList.length;
+            var len=$rootScope.dvList.length;
             for(i=0;i<len;i++){
-              if($rootScope.roomList[i].roomName==value){
+              if($rootScope.dvList[i].dvName==value){
                 flag=1;
               }
             }
             if(flag==1){
-              mCtrl.$setValidity('roomNameExistsValid',false);
+              mCtrl.$setValidity('dvNameExistsValid',false);
             }else{
-              mCtrl.$setValidity('roomNameExistsValid',true);
+              mCtrl.$setValidity('dvNameExistsValid',true);
             }
             return value;
           }
