@@ -96,15 +96,25 @@ function getHomeData($gotData){
   $gotData->total=mysqli_num_rows($check);
   if($check && ($gotData->total>=0))
   {
+    $gotData->user->allHome=(object) null;
     $email=$gotData->user->email;
-    $allHome="<div class='grid-container'>";
+    if($gotData->total==0){
+      $noFound='<div class="row" align="center" style="margin-top: 80px;">
+              	<div id="no_found"><img src="images/not-found.png" width="100px" alt="no found" /></div>
+              	<br/>
+              	<div style="color:gray;"><h4>%s</h4></div>
+              	</div>';
+      $gotData->user->allHome=$noFound;
+      return $gotData;
+    }
+    $allHome="<div class='grid-container' style='cursor:pointer;'>";
     while($row=mysqli_fetch_array($check)){
       $homeName=$row['homename'];
       $id=$row['id'];
       $editFunc = "editHome($id,'".$homeName."')";
       $deleteButton="<button class='btn btn-default' onclick='deleteHome($id)' ><span class='glyphicon glyphicon-trash'></span> Delete</button>";
       $editButton="<button class='btn btn-default' onclick=$editFunc><span class='glyphicon glyphicon-pencil'></span> Edit</button>";
-      $allHome.='<div class="grid-item card" id='.$id.'><div class="row"><a class="titile">'.$homeName.'</a></div><div class="row"><div class="col-md-3"></div><div class="col-md-3">'.$editButton.'</div><div class="col-md-3">'.$deleteButton.'</div><div class="col-md-3"></div></div></div>';
+      $allHome.='<div class="grid-item card"><div class="row"><a onclick="gotoHome('.$id.')">'.$homeName.'</a></div><div class="row"><div class="col-md-3"></div><div class="col-md-3">'.$editButton.'</div><div class="col-md-3">'.$deleteButton.'</div><div class="col-md-3"></div></div></div>';
     }
     $allHome.='</div>';
     $gotData->user->allHome=$allHome;

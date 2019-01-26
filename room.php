@@ -3,6 +3,8 @@ include("functions.php");
 checkSession();
 $id=$_SESSION['Userid'];
 $email=$_SESSION['User'];
+if(isset($_REQUEST['homeID'])){
+  $homeID=$_REQUEST['homeID'];
 ?>
 <!doctype html>
 <html class="no-js" lang="">
@@ -168,69 +170,69 @@ $email=$_SESSION['User'];
     </div>
     <!-- Main Menu area End-->
     <div class="container" ng-controller="HomeController" id="homeModificationCtrl">
-      <button class="btn btn-lg notika-btn-lightblue btn-reco-mg btn-button-mg" data-toggle="modal" data-target="#addHome"><span class="glyphicon glyphicon-plus"></span> Add Home</button>
-      <div class="row" ng-bind-html="showAllHome">
+      <button class="btn btn-lg notika-btn-lightblue btn-reco-mg btn-button-mg" data-toggle="modal" data-target="#addRoom"><span class="glyphicon glyphicon-plus"></span> Add Room</button>
+      <div class="row" ng-bind-html="showAllRoom">
 
       </div>
-      <div class="modal fade" id="addHome" role="dialog">
+      <div class="modal fade" id="addRoom" role="dialog">
           <div class="modal-dialog modal-sm">
               <div class="modal-content">
                   <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal">&times;</button>
                   </div>
                   <div class="modal-body">
-                    <h2>Create new home</h2>
-                    <form name="homeNameForm" novalidate>
+                    <h2>Create new room</h2>
+                    <form name="roomNameForm" novalidate>
                     <div class="row">
                       <div class="nk-int-st">
-                        <input class="form-control" name="homeName" data-ng-model="homeName" type="text" placeholder="Home Name" ng-style="homeNameStyle" ng-change="analyzeHomeName(homeName)" required home-name-dir/>
+                        <input class="form-control" name="roomName" data-ng-model="roomName" type="text" placeholder="Room Name" ng-style="roomNameStyle" ng-change="analyzeRoomName(roomName)" required room-name-dir/>
                       </div>
-                      <span style="color:red;" id="homeName" ng-show="homeNameForm.homeName.$dirty && homeNameForm.homeName.$invalid">
-                      <span ng-show="homeNameForm.homeName.$error.required">Please enter home name</span>
-                      <span ng-show="!homeNameForm.homeName.$error.required && homeNameForm.homeName.$error.homeNameValid">Please enter only alphabetics and digits</span>
-                      <span ng-show="!homeNameForm.homeName.$error.required && !homeNameForm.homeName.$error.homeNameValid && homeNameForm.homeName.$error.homeNameLenValid">Please enter only more than 3 characters</span>
-                      <span ng-show="homeNameForm.homeName.$error.homeNameExistsValid">Home name already exists</span>
+                      <span style="color:red;" id="roomName" ng-show="roomNameForm.roomName.$dirty && roomNameForm.roomName.$invalid">
+                      <span ng-show="roomNameForm.roomName.$error.required">Please enter room name</span>
+                      <span ng-show="!roomNameForm.roomName.$error.required && roomNameForm.roomName.$error.roomNameValid">Please enter only alphabetics and digits</span>
+                      <span ng-show="!roomNameForm.roomName.$error.required && !roomNameForm.roomName.$error.roomNameValid && roomNameForm.roomName.$error.roomNameLenValid">Please enter only more than 3 characters</span>
+                      <span ng-show="roomNameForm.roomName.$error.roomNameExistsValid">Room name already exists</span>
                       </span>
                     </div>
                   </form>
                   </div>
                   <div class="modal-footer" style="margin:10px;">
-                      <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="homeNameForm.homeName.$invalid" ng-click="addHome()">Create</button>
+                      <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="roomNameForm.roomName.$invalid" ng-click="addRoom()">Create</button>
                       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                   </div>
               </div>
           </div>
       </div>
-      <div class="modal fade" id="renameHome" role="dialog">
+      <div class="modal fade" id="renameRoom" role="dialog">
           <div class="modal-dialog modal-sm">
               <div class="modal-content">
                   <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal">&times;</button>
                   </div>
                   <div class="modal-body">
-                    <h2>Modify your home</h2>
-                    <form name="homeReNameForm" novalidate>
+                    <h2>Modify your room</h2>
+                    <form name="roomReNameForm" novalidate>
                     <div class="row">
                       <div class="nk-int-st">
-                        <input class="form-control" name="homeReName" ng-model="homeReName" type="text" placeholder="Home Name" ng-style="homeReNameStyle" ng-change="analyzeHomeName(homeReName)" required home-name-dir/>
+                        <input class="form-control" name="roomReName" ng-model="roomReName" type="text" placeholder="Home Name" ng-style="roomReNameStyle" ng-change="analyzeHomeName(roomReName)" required room-name-dir/>
                       </div>
-                      <span style="color:red;" id="homeReName" ng-show="homeReNameForm.homeReName.$dirty && homeReNameForm.homeReName.$invalid">
-                      <span ng-show="homeReNameForm.homeReName.$error.required">Please enter home name</span>
-                      <span ng-show="!homeReNameForm.homeReName.$error.required && homeReNameForm.homeReName.$error.homeNameValid">Please enter only alphabetics and digits</span>
-                      <span ng-show="!homeReNameForm.homeReName.$error.required && !homeReNameForm.homeReName.$error.homeNameValid && homeReNameForm.homeReName.$error.homeNameLenValid">Please enter only more than 3 characters</span>
-                      <span ng-show="homeReNameForm.homeReName.$error.homeNameExistsValid">Home name already exists</span>
+                      <span style="color:red;" id="roomReName" ng-show="roomReNameForm.roomReName.$dirty && roomReNameForm.roomReName.$invalid">
+                      <span ng-show="roomReNameForm.roomReName.$error.required">Please enter room name</span>
+                      <span ng-show="!roomReNameForm.roomReName.$error.required && roomReNameForm.roomReName.$error.roomNameValid">Please enter only alphabetics and digits</span>
+                      <span ng-show="!roomReNameForm.roomReName.$error.required && !roomReNameForm.roomReName.$error.roomNameValid && roomReNameForm.roomReName.$error.roomNameLenValid">Please enter only more than 3 characters</span>
+                      <span ng-show="roomReNameForm.roomReName.$error.roomNameExistsValid">Room name already exists</span>
                       </span>
                     </div>
                   </form>
                   </div>
                   <div class="modal-footer" style="margin:10px;">
-                      <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="homeReNameForm.homeReName.$invalid" ng-click="modifyHome()">Modify</button>
+                      <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="roomReNameForm.roomReName.$invalid" ng-click="modifyRoom()">Modify</button>
                       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                   </div>
               </div>
           </div>
       </div>
-      </div>
+    </div>
       <div id="extraDiv"></div>
     <!-- Start Footer area-->
     <div class="footer-copyright-area footerB" style="width:100%">
@@ -323,35 +325,36 @@ $email=$_SESSION['User'];
     var myApp = angular.module("myapp", []);
     myApp.controller("HomeController", function($rootScope,$scope,$http,$window,$sce,$timeout) {
       $scope.user="<?php echo $email; ?>";
-      $scope.homeReName="";
-      $scope.beforeHomeName="";
-      $scope.homeID="";
-      $rootScope.homeList="";
+      $scope.roomReName="";
+      $scope.beforeRoomName="";
+      $scope.homeID="<?php echo $homeID; ?>";
+      $scope.roomID="";
+      $rootScope.roomList="";
       $scope.userID="<?php echo $id; ?>";
-      $scope.homeNameStyle={
+      $scope.roomNameStyle={
         "border-bottom-width":"2px"
       };
-      $scope.analyzeHomeName=function(val){
-        var patt_home=new RegExp("^[a-zA-Z0-9]+$");
-        if(patt_home.test(val) && val.length>3){
-          $scope.homeNameStyle['border-bottom-color']="green";
+      $scope.analyzeRoomName=function(val){
+        var patt_room=new RegExp("^[a-zA-Z0-9]+$");
+        if(patt_room.test(val) && val.length>3){
+          $scope.roomNameStyle['border-bottom-color']="green";
         }else{
-          $scope.homeNameStyle['border-bottom-color']="red";
+          $scope.roomNameStyle['border-bottom-color']="red";
         }
       };
-      $scope.addHome=function(){
+      $scope.addRoom=function(){
         $http({
           method: "POST",
-          url: "home_actions.php",
-          data: "action=1&email="+$scope.user+"&homeName="+$scope.homeName,
+          url: "room_actions.php",
+          data: "action=1&email="+$scope.user+"&roomName="+$scope.roomName+"&homeID="+$scope.homeID,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySuccess(response){
           var data=response.data;
-          $scope.homeNameForm.$setPristine();
-          $scope.homeName="";
+          $scope.roomNameForm.$setPristine();
+          $scope.roomName="";
           if(!data.error){
-            $scope.showSuccessDialog("Home Created");
-            $scope.getAllHome();
+            $scope.showSuccessDialog("Room Created");
+            $scope.getAllRoom();
           }else{
             $scope.showErrorDialog(data.errorMessage);
           }
@@ -359,23 +362,27 @@ $email=$_SESSION['User'];
 
         });
       };
-      $scope.getHomeList=function(){
+      $scope.getRoomList=function(){
         $http({
           method: "POST",
-          url: "home_actions.php",
-          data: "action=4&email="+$scope.user,
+          url: "room_actions.php",
+          data: "action=4&email="+$scope.user+"&homeID="+$scope.homeID,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySuccess(response){
           var data=response.data;
           if(!data.error){
-            $rootScope.homeList=data.user.home;
+            if(typeof data.user.room=='undefined'){
+              $rootScope.roomList=[];
+            }
+            else{
+              $rootScope.roomList=data.user.room;
+            }
           }else{
           }
         },function myError(response){
 
         });
       };
-      $scope.getHomeList();
       $scope.showErrorDialog=function(error){
         swal({
          title: "Try Again!",
@@ -386,18 +393,18 @@ $email=$_SESSION['User'];
       $scope.showSuccessDialog=function(val){
         swal(""+val, "", "success");
       };
-      $scope.getAllHome=function(){
+      $scope.getAllRoom=function(){
         $http({
           method: "POST",
-          url: "home_actions.php",
-          data: "action=0&email="+$scope.user,
+          url: "room_actions.php",
+          data: "action=0&email="+$scope.user+"&homeID="+$scope.homeID,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySuccess(response){
           var data=response.data;
           if(!data.error){
-            var showAllHome=data.user.allHome;
-            $scope.showAllHome=$sce.trustAsHtml(showAllHome);
-            $scope.getHomeList();
+            var showAllRoom=data.user.allRoom;
+            $scope.showAllRoom=$sce.trustAsHtml(showAllRoom);
+            $scope.getRoomList();
           }else{
             $scope.showErrorDialog(data.errorMessage);
           }
@@ -405,8 +412,8 @@ $email=$_SESSION['User'];
 
         });
       };
-      $scope.getAllHome();
-      $scope.deleteHome = function(val){
+      $scope.getAllRoom();
+      $scope.deleteRoom = function(val){
         swal({
     			title: "Are you sure?",
     			text: "You will not be able to recover this home!",
@@ -416,47 +423,47 @@ $email=$_SESSION['User'];
     		}).then(function(){
           $http({
             method: "POST",
-            url: "home_actions.php",
+            url: "room_actions.php",
             data: "action=2&email="+$scope.user+"&id="+val,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
           }).then(function mySuccess(response){
             var data=response.data;
             if(!data.error){
-              swal("Deleted!", "Your home has been deleted.", "success");
-              $scope.getAllHome();
+              swal("Deleted!", "Your room has been deleted.", "success");
+              $scope.getAllRoom();
             }else{
               $scope.showErrorDialog(data.errorMessage);
             }
           });
     		});
       };
-      $scope.setHomeName=function(id,homeName,callback){
-        $scope.beforeHomeName=homeName;
-        $scope.homeReName=homeName;
-        $scope.homeID=id;
+      $scope.setRoomName=function(id,roomName,callback){
+        $scope.beforeRoomName=roomName;
+        $scope.roomReName=roomName;
+        $scope.roomID=id;
         $timeout(callback,10);
       };
-      $scope.editHome = function(id,homeName){
-        $scope.setHomeName(id,homeName,function(){
-          $("#renameHome").modal("show");
+      $scope.editRoom = function(id,roomName){
+        $scope.setRoomName(id,roomName,function(){
+          $("#renameRoom").modal("show");
         });
       };
 
-      $scope.modifyHome=function(){
-        if($scope.beforeHomeName!=$scope.homeReName){
+      $scope.modifyRoom=function(){
+        if($scope.beforeRoomName!=$scope.roomReName){
           $http({
             method: "POST",
-            url: "home_actions.php",
-            data: "action=3&email="+$scope.user+"&homeName="+$scope.homeReName+"&id="+$scope.homeID,
+            url: "room_actions.php",
+            data: "action=3&email="+$scope.user+"&roomName="+$scope.roomReName+"&id="+$scope.roomID,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
           }).then(function mySuccess(response){
             var data=response.data;
-            $scope.homeReNameForm.$setPristine();
-            $scope.beforeHomeName="";
-            $scope.homeReName="";
+            $scope.roomReNameForm.$setPristine();
+            $scope.beforeRoomName="";
+            $scope.roomReName="";
             if(!data.error && (typeof data.error != 'undefined')){
-              $scope.showSuccessDialog("Home Name Modified");
-              $scope.getAllHome();
+              $scope.showSuccessDialog("Room Name Modified");
+              $scope.getAllRoom();
             }else{
               $scope.showErrorDialog(data.errorMessage);
             }
@@ -466,44 +473,44 @@ $email=$_SESSION['User'];
         }
       };
     });
-    function deleteHome(id){
-      angular.element($("#homeModificationCtrl")).scope().deleteHome(id);
+    function deleteRoom(id){
+      angular.element($("#homeModificationCtrl")).scope().deleteRoom(id);
     }
-    function editHome(id,homeName){
-      angular.element($("#homeModificationCtrl")).scope().editHome(id,homeName);
+    function editRoom(id,roomName){
+      angular.element($("#homeModificationCtrl")).scope().editRoom(id,roomName);
     }
-    function gotoHome(id){
-      var form="<form method='post' id='redirectForm' action='room.php'><input type='hidden' name='homeID' value='"+id+"' /></form>"
+    function gotoRoom(homeID,roomID){
+      var form="<form method='post' id='redirectForm' action='room.php'><input type='hidden' name='homeID' value='"+homeID+"' /><input type='hidden' name='roomID' value='"+roomID+"' /></form>"
       $('#extraDiv').html(form);
       $("#redirectForm").submit();
     }
-    myApp.directive("homeNameDir",function($rootScope,$http){
+    myApp.directive("roomNameDir",function($rootScope,$http){
       return{
         require: 'ngModel',
         link: function(scope, element, attr, mCtrl){
           function myValidation(value){
-            var patt_home=/^[a-zA-Z0-9]+$/;
-            if(patt_home.test(value)){
-              mCtrl.$setValidity('homeNameValid',true);
+            var patt_room=/^[a-zA-Z0-9]+$/;
+            if(patt_room.test(value)){
+              mCtrl.$setValidity('roomNameValid',true);
             }else{
-              mCtrl.$setValidity('homeNameValid',false);
+              mCtrl.$setValidity('roomNameValid',false);
             }
             if(value.length>3){
-              mCtrl.$setValidity('homeNameLenValid',true);
+              mCtrl.$setValidity('roomNameLenValid',true);
             }else{
-              mCtrl.$setValidity('homeNameLenValid',false);
+              mCtrl.$setValidity('roomNameLenValid',false);
             }
             var i,flag=0;
-            var len=$rootScope.homeList.length;
+            var len=$rootScope.roomList.length;
             for(i=0;i<len;i++){
-              if($rootScope.homeList[i].homeName==value){
+              if($rootScope.roomList[i].roomName==value){
                 flag=1;
               }
             }
             if(flag==1){
-              mCtrl.$setValidity('homeNameExistsValid',false);
+              mCtrl.$setValidity('roomNameExistsValid',false);
             }else{
-              mCtrl.$setValidity('homeNameExistsValid',true);
+              mCtrl.$setValidity('roomNameExistsValid',true);
             }
             return value;
           }
@@ -516,3 +523,6 @@ $email=$_SESSION['User'];
 </body>
 
 </html>
+<?php
+}
+?>
