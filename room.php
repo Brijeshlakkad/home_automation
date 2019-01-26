@@ -3,8 +3,8 @@ include("functions.php");
 checkSession();
 $id=$_SESSION['Userid'];
 $email=$_SESSION['User'];
-if(isset($_REQUEST['homeID'])){
-  $homeID=$_REQUEST['homeID'];
+if(isset($_COOKIE['homeID'])){
+  $homeID=$_COOKIE['homeID'];
 ?>
 <!doctype html>
 <html class="no-js" lang="">
@@ -320,10 +320,11 @@ if(isset($_REQUEST['homeID'])){
 	<!-- tawk chat JS
 		============================================ -->
     <script src="js/tawk-chat.js"></script>
+    <script src="js/angular-cookies.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-sanitize.js"></script>
     <script>
-    var myApp = angular.module("myapp", []);
-    myApp.controller("HomeController", function($rootScope,$scope,$http,$window,$sce,$timeout) {
+    var myApp = angular.module("myapp", ['ngCookies']);
+    myApp.controller("HomeController", function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies) {
       $scope.user="<?php echo $email; ?>";
       $scope.roomReName="";
       $scope.beforeRoomName="";
@@ -472,6 +473,11 @@ if(isset($_REQUEST['homeID'])){
           });
         }
       };
+
+      $scope.gotoRoom = function(homeID,roomID){
+        $cookies.put('roomID',roomID);
+        $window.location.href="hardware.php";
+      };
     });
     function deleteRoom(id){
       angular.element($("#homeModificationCtrl")).scope().deleteRoom(id);
@@ -480,9 +486,7 @@ if(isset($_REQUEST['homeID'])){
       angular.element($("#homeModificationCtrl")).scope().editRoom(id,roomName);
     }
     function gotoRoom(homeID,roomID){
-      var form="<form method='post' id='redirectForm' action='room.php'><input type='hidden' name='homeID' value='"+homeID+"' /><input type='hidden' name='roomID' value='"+roomID+"' /></form>"
-      $('#extraDiv').html(form);
-      $("#redirectForm").submit();
+      angular.element($("#homeModificationCtrl")).scope().gotoRoom(homeID,roomID);
     }
     myApp.directive("roomNameDir",function($rootScope,$http){
       return{

@@ -318,10 +318,11 @@ $email=$_SESSION['User'];
 	<!-- tawk chat JS
 		============================================ -->
     <script src="js/tawk-chat.js"></script>
+    <script src="js/angular-cookies.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-sanitize.js"></script>
     <script>
-    var myApp = angular.module("myapp", []);
-    myApp.controller("HomeController", function($rootScope,$scope,$http,$window,$sce,$timeout) {
+    var myApp = angular.module("myapp", ['ngCookies']);
+    myApp.controller("HomeController",function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies) {
       $scope.user="<?php echo $email; ?>";
       $scope.homeReName="";
       $scope.beforeHomeName="";
@@ -465,6 +466,12 @@ $email=$_SESSION['User'];
           });
         }
       };
+
+      $scope.gotoHome = function(id){
+        $cookies.put('homeID',id);
+        $window.location.href="room.php";
+      };
+
     });
     function deleteHome(id){
       angular.element($("#homeModificationCtrl")).scope().deleteHome(id);
@@ -473,9 +480,7 @@ $email=$_SESSION['User'];
       angular.element($("#homeModificationCtrl")).scope().editHome(id,homeName);
     }
     function gotoHome(id){
-      var form="<form method='post' id='redirectForm' action='room.php'><input type='hidden' name='homeID' value='"+id+"' /></form>"
-      $('#extraDiv').html(form);
-      $("#redirectForm").submit();
+      angular.element($("#homeModificationCtrl")).scope().gotoHome(id);
     }
     myApp.directive("homeNameDir",function($rootScope,$http){
       return{
