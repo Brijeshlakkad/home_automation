@@ -468,6 +468,7 @@ $email=$_SESSION['User'];
       };
 
       $scope.gotoHome = function(id){
+        $cookies.remove('homeID');
         $cookies.put('homeID',id);
         $window.location.href="room.php";
       };

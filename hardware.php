@@ -3,8 +3,9 @@ include("functions.php");
 checkSession();
 $id=$_SESSION['Userid'];
 $email=$_SESSION['User'];
-if(isset($_COOKIE['homeID'])){
+if(isset($_COOKIE['homeID']) && isset($_COOKIE['roomID'])){
   $homeID=$_COOKIE['homeID'];
+  $roomID=$_COOKIE['roomID'];
 ?>
 <!doctype html>
 <html class="no-js" lang="">
@@ -169,64 +170,96 @@ if(isset($_COOKIE['homeID'])){
         </div>
     </div>
     <!-- Main Menu area End-->
-    <div class="container" ng-controller="RoomController" id="roomModificationCtrl">
-      <button class="btn btn-lg notika-btn-lightblue btn-reco-mg btn-button-mg" data-toggle="modal" data-target="#addRoom"><span class="glyphicon glyphicon-plus"></span> Add Room</button>
-      <div class="row" ng-bind-html="showAllRoom">
+    <div class="container" ng-controller="HardwareController" id="hwModificationCtrl">
+      <button class="btn btn-lg notika-btn-lightblue btn-reco-mg btn-button-mg" data-toggle="modal" data-target="#addHardware"><span class="glyphicon glyphicon-plus"></span> Add Hardware</button>
+      <div class="row" ng-bind-html="showAllHardware">
 
       </div>
-      <div class="modal fade" id="addRoom" role="dialog">
+      <div class="modal fade" id="addHardware" role="dialog">
           <div class="modal-dialog modal-sm">
               <div class="modal-content">
                   <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal">&times;</button>
                   </div>
                   <div class="modal-body">
-                    <h2>Create new room</h2>
-                    <form name="roomNameForm" novalidate>
+                    <h2>Create new hardware</h2>
+                    <form name="hwForm" novalidate>
                     <div class="row">
                       <div class="nk-int-st">
-                        <input class="form-control" name="roomName" data-ng-model="roomName" type="text" placeholder="Room Name" ng-style="roomNameStyle" ng-change="analyzeRoomName(roomName)" required room-name-dir/>
+                        <input class="form-control" name="hwName" data-ng-model="hwName" type="text" placeholder="Hardware Name" ng-style="hwNameStyle" ng-change="analyzeHwName(hwName)" required hw-name-dir/>
                       </div>
-                      <span style="color:red;" id="roomName" ng-show="roomNameForm.roomName.$dirty && roomNameForm.roomName.$invalid">
-                      <span ng-show="roomNameForm.roomName.$error.required">Please enter room name</span>
-                      <span ng-show="!roomNameForm.roomName.$error.required && roomNameForm.roomName.$error.roomNameValid">Please enter only alphabetics and digits</span>
-                      <span ng-show="!roomNameForm.roomName.$error.required && !roomNameForm.roomName.$error.roomNameValid && roomNameForm.roomName.$error.roomNameLenValid">Please enter only more than 3 characters</span>
-                      <span ng-show="roomNameForm.roomName.$error.roomNameExistsValid">Room name already exists</span>
+                      <span style="color:red;" id="hwName" ng-show="hwForm.hwName.$dirty && hwForm.hwName.$invalid">
+                      <span ng-show="hwForm.hwName.$error.required">Please enter hardware name</span>
+                      <span ng-show="!hwForm.hwName.$error.required && hwForm.hwName.$error.hwNameValid">Please enter only alphabetics and digits</span>
+                      <span ng-show="!hwForm.hwName.$error.required && !hwForm.hwName.$error.hwNameValid && hwForm.hwName.$error.hwNameLenValid">Please enter only more than 3 characters</span>
+                      <span ng-show="hwForm.hwName.$error.hwNameExistsValid">Hardware name already exists</span>
+                      </span>
+                    </div>
+                    <div class="row">
+                      <div class="nk-int-st">
+                        <input class="form-control" name="hwSeries" data-ng-model="hwSeries" type="text" placeholder="Hardware Series" ng-style="hwSeriesStyle" ng-change="analyzeHwSeries(hwSeries)" required/>
+                      </div>
+                      <span style="color:red;" id="hwSeries" ng-show="hwForm.hwSeries.$dirty && hwForm.hwSeries.$invalid">
+                      <span ng-show="hwForm.hwSeries.$error.required">Please enter hardware series</span>
+                      </span>
+                    </div>
+                    <div class="row">
+                      <div class="nk-int-st">
+                        <input class="form-control" name="hwIP" data-ng-model="hwIP" type="text" placeholder="Hardware Series" ng-style="hwIPStyle" ng-change="analyzeHwIP(hwIP)" required/>
+                      </div>
+                      <span style="color:red;" id="hwIP" ng-show="hwForm.hwIP.$dirty && hwForm.hwIP.$invalid">
+                      <span ng-show="hwForm.hwIP.$error.required">Please enter hardware IP</span>
                       </span>
                     </div>
                   </form>
                   </div>
                   <div class="modal-footer" style="margin:10px;">
-                      <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="roomNameForm.roomName.$invalid" ng-click="addRoom()">Create</button>
+                      <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="hwForm.hwName.$invalid || hwForm.hwSeries.$invalid || hwForm.hwIP.$invalid" ng-click="addHardware()">Create</button>
                       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                   </div>
               </div>
           </div>
       </div>
-      <div class="modal fade" id="renameRoom" role="dialog">
+      <div class="modal fade" id="renameHardware" role="dialog">
           <div class="modal-dialog modal-sm">
               <div class="modal-content">
                   <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal">&times;</button>
                   </div>
                   <div class="modal-body">
-                    <h2>Modify your room</h2>
-                    <form name="roomReNameForm" novalidate>
+                    <h2>Modify your hardware</h2>
+                    <form name="hwReForm" novalidate>
                     <div class="row">
                       <div class="nk-int-st">
-                        <input class="form-control" name="roomReName" ng-model="roomReName" type="text" placeholder="Home Name" ng-style="roomReNameStyle" ng-change="analyzeHomeName(roomReName)" required room-name-dir/>
+                        <input class="form-control" name="hwReName" ng-model="hwReName" type="text" placeholder="Hardware Name" ng-style="hwNameStyle" ng-change="analyzeHwName(hwReName)" required hw-name-dir/>
                       </div>
-                      <span style="color:red;" id="roomReName" ng-show="roomReNameForm.roomReName.$dirty && roomReNameForm.roomReName.$invalid">
-                      <span ng-show="roomReNameForm.roomReName.$error.required">Please enter room name</span>
-                      <span ng-show="!roomReNameForm.roomReName.$error.required && roomReNameForm.roomReName.$error.roomNameValid">Please enter only alphabetics and digits</span>
-                      <span ng-show="!roomReNameForm.roomReName.$error.required && !roomReNameForm.roomReName.$error.roomNameValid && roomReNameForm.roomReName.$error.roomNameLenValid">Please enter only more than 3 characters</span>
-                      <span ng-show="roomReNameForm.roomReName.$error.roomNameExistsValid">Room name already exists</span>
+                      <span style="color:red;" id="hwReName" ng-show="hwReForm.hwReName.$dirty && hwReForm.hwReName.$invalid">
+                      <span ng-show="hwReForm.hwReName.$error.required">Please enter hardware name</span>
+                      <span ng-show="!hwReForm.hwReName.$error.required && hwReForm.hwReName.$error.hwNameValid">Please enter only alphabetics and digits</span>
+                      <span ng-show="!hwReForm.hwReName.$error.required && !hwReForm.hwReName.$error.hwNameValid && hwReForm.hwReName.$error.hwNameLenValid">Please enter only more than 3 characters</span>
+                      <span ng-show="hwReForm.hwReName.$error.hwNameExistsValid">Hardware name already exists</span>
+                      </span>
+                    </div>
+                    <div class="row">
+                      <div class="nk-int-st">
+                        <input class="form-control" name="hwReSeries" data-ng-model="hwReSeries" type="text" placeholder="Hardware Series" ng-style="hwSeriesStyle" ng-change="analyzeHwSeries(hwReSeries)" required/>
+                      </div>
+                      <span style="color:red;" id="hwReSeries" ng-show="hwForm.hwReSeries.$dirty && hwForm.hwReSeries.$invalid">
+                      <span ng-show="hwForm.hwReSeries.$error.required">Please enter hardware series</span>
+                      </span>
+                    </div>
+                    <div class="row">
+                      <div class="nk-int-st">
+                        <input class="form-control" name="hwReIP" data-ng-model="hwReIP" type="text" placeholder="Hardware Series" ng-style="hwIPStyle" ng-change="analyzeHwIP(hwReIP)" required/>
+                      </div>
+                      <span style="color:red;" id="hwReIP" ng-show="hwForm.hwReIP.$dirty && hwForm.hwReIP.$invalid">
+                      <span ng-show="hwForm.hwReIP.$error.required">Please enter hardware IP</span>
                       </span>
                     </div>
                   </form>
                   </div>
                   <div class="modal-footer" style="margin:10px;">
-                      <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="roomReNameForm.roomReName.$invalid" ng-click="modifyRoom()">Modify</button>
+                      <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="hwReForm.hwReName.$invalid" ng-click="modifyHardware()">Modify</button>
                       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                   </div>
               </div>
@@ -324,38 +357,61 @@ if(isset($_COOKIE['homeID'])){
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-sanitize.js"></script>
     <script>
     var myApp = angular.module("myapp", ['ngCookies']);
-    myApp.controller("RoomController", function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies) {
+    myApp.controller("HardwareController", function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies) {
       $scope.user="<?php echo $email; ?>";
-      $scope.roomReName="";
-      $scope.beforeRoomName="";
+      $scope.hwReName="";
+      $scope.beforeHwName="";
+      $scope.beforeHwSeries="";
+      $scope.beforeHwIP="";
       $scope.homeID="<?php echo $homeID; ?>";
-      $scope.roomID="";
-      $rootScope.roomList="";
+      $scope.roomID="<?php echo $roomID; ?>";
+      $scope.hwID="";
+      $rootScope.hwList="";
       $scope.userID="<?php echo $id; ?>";
-      $scope.roomNameStyle={
+      $scope.hwNameStyle={
         "border-bottom-width":"2px"
       };
-      $scope.analyzeRoomName=function(val){
+      $scope.analyzeHwName=function(val){
         var patt_room=new RegExp("^[a-zA-Z0-9]+$");
         if(patt_room.test(val) && val.length>3){
-          $scope.roomNameStyle['border-bottom-color']="green";
+          $scope.hwNameStyle['border-bottom-color']="green";
         }else{
-          $scope.roomNameStyle['border-bottom-color']="red";
+          $scope.hwNameStyle['border-bottom-color']="red";
         }
       };
-      $scope.addRoom=function(){
+      $scope.hwSeriesStyle={
+        "border-bottom-width":"2px"
+      };
+      $scope.analyzeHwSeries=function(val){
+        if(val!="" && val!=null){
+          $scope.hwSeriesStyle['border-bottom-color']="green";
+        }else{
+          $scope.hwSeriesStyle['border-bottom-color']="red";
+        }
+      };
+      $scope.hwIPStyle={
+        "border-bottom-width":"2px"
+      };
+      $scope.analyzeHwIP=function(val){
+        if(val!="" && val!=null){
+          $scope.hwIPStyle['border-bottom-color']="green";
+        }else{
+          $scope.hwIPStyle['border-bottom-color']="red";
+        }
+      };
+      $scope.addHardware=function(){
         $http({
           method: "POST",
-          url: "room_actions.php",
-          data: "action=1&email="+$scope.user+"&roomName="+$scope.roomName+"&homeID="+$scope.homeID,
+          url: "hardware_actions.php",
+          data: "action=1&email="+$scope.user+"&hwName="+$scope.hwName+"&hwSeries="+$scope.hwSeries+"&hwIP="+$scope.hwIP+"&homeID="+$scope.homeID+"&roomID="+$scope.roomID,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySuccess(response){
           var data=response.data;
-          $scope.roomNameForm.$setPristine();
-          $scope.roomName="";
+          $scope.hwForm.$setPristine();
+          $scope.hwName="";
           if(!data.error){
-            $scope.showSuccessDialog("Room Created");
-            $scope.getAllRoom();
+            $scope.showSuccessDialog("Hardware Created");
+            $scope.getAllHardware();
           }else{
             $scope.showErrorDialog(data.errorMessage);
           }
@@ -363,20 +419,20 @@ if(isset($_COOKIE['homeID'])){
 
         });
       };
-      $scope.getRoomList=function(){
+      $scope.getHardwareList=function(){
         $http({
           method: "POST",
-          url: "room_actions.php",
-          data: "action=4&email="+$scope.user+"&homeID="+$scope.homeID,
+          url: "hardware_actions.php",
+          data: "action=4&email="+$scope.user+"&homeID="+$scope.homeID+"&roomID="+$scope.roomID,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySuccess(response){
           var data=response.data;
           if(!data.error){
-            if(typeof data.user.room=='undefined'){
-              $rootScope.roomList=[];
+            if(typeof data.user.hw=='undefined'){
+              $rootScope.hwList=[];
             }
             else{
-              $rootScope.roomList=data.user.room;
+              $rootScope.hwList=data.user.hw;
             }
           }else{
           }
@@ -394,18 +450,18 @@ if(isset($_COOKIE['homeID'])){
       $scope.showSuccessDialog=function(val){
         swal(""+val, "", "success");
       };
-      $scope.getAllRoom=function(){
+      $scope.getAllHardware=function(){
         $http({
           method: "POST",
-          url: "room_actions.php",
-          data: "action=0&email="+$scope.user+"&homeID="+$scope.homeID,
+          url: "hardware_actions.php",
+          data: "action=0&email="+$scope.user+"&homeID="+$scope.homeID+"&roomID="+$scope.roomID,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySuccess(response){
           var data=response.data;
           if(!data.error){
-            var showAllRoom=data.user.allRoom;
-            $scope.showAllRoom=$sce.trustAsHtml(showAllRoom);
-            $scope.getRoomList();
+            var showAllHardware=data.user.allHardware;
+            $scope.showAllHardware=$sce.trustAsHtml(showAllHardware);
+            $scope.getHardwareList();
           }else{
             $scope.showErrorDialog(data.errorMessage);
           }
@@ -413,8 +469,8 @@ if(isset($_COOKIE['homeID'])){
 
         });
       };
-      $scope.getAllRoom();
-      $scope.deleteRoom = function(val){
+      $scope.getAllHardware();
+      $scope.deleteHardware = function(val){
         swal({
     			title: "Are you sure?",
     			text: "You will not be able to recover this home!",
@@ -424,47 +480,51 @@ if(isset($_COOKIE['homeID'])){
     		}).then(function(){
           $http({
             method: "POST",
-            url: "room_actions.php",
+            url: "hardware_actions.php",
             data: "action=2&email="+$scope.user+"&id="+val,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
           }).then(function mySuccess(response){
             var data=response.data;
             if(!data.error){
-              swal("Deleted!", "Your room has been deleted.", "success");
-              $scope.getAllRoom();
+              swal("Deleted!", "Your hardware has been deleted.", "success");
+              $scope.getAllHardware();
             }else{
               $scope.showErrorDialog(data.errorMessage);
             }
           });
     		});
       };
-      $scope.setRoomName=function(id,roomName,callback){
-        $scope.beforeRoomName=roomName;
-        $scope.roomReName=roomName;
-        $scope.roomID=id;
+      $scope.setRoomName=function(id,hwName,hwSeries,hwIP,callback){
+        $scope.beforeHwName=hwName;
+        $scope.beforeHwSeries=hwSeries;
+        $scope.beforeHwIP=hwIP;
+        $scope.hwReName=hwName;
+        $scope.hwReSeries=hwSeries;
+        $scope.hwReIP=hwIP;
+        $scope.hwID=id;
         $timeout(callback,10);
       };
-      $scope.editRoom = function(id,roomName){
-        $scope.setRoomName(id,roomName,function(){
-          $("#renameRoom").modal("show");
+      $scope.editHardware = function(id,hwName,hwSeries,hwIP){
+        $scope.setRoomName(id,hwName,hwSeries,hwIP,function(){
+          $("#renameHardware").modal("show");
         });
       };
 
-      $scope.modifyRoom=function(){
-        if($scope.beforeRoomName!=$scope.roomReName){
+      $scope.modifyHardware=function(){
+        if($scope.beforeHwName!=$scope.hwReName || $scope.beforeHwSeries!=$scope.hwReSeries || $scope.beforeHwIP!=$scope.hwReIP){
           $http({
             method: "POST",
-            url: "room_actions.php",
-            data: "action=3&email="+$scope.user+"&roomName="+$scope.roomReName+"&id="+$scope.roomID,
+            url: "hardware_actions.php",
+            data: "action=3&email="+$scope.user+"&hwName="+$scope.hwReName+"&hwSeries="+$scope.hwReSeries+"&hwIP="+$scope.hwReIP+"&id="+$scope.hwID,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
           }).then(function mySuccess(response){
             var data=response.data;
-            $scope.roomReNameForm.$setPristine();
-            $scope.beforeRoomName="";
-            $scope.roomReName="";
+            $scope.hwReForm.$setPristine();
+            $scope.beforeHwName="";
+            $scope.hwReName="";
             if(!data.error && (typeof data.error != 'undefined')){
-              $scope.showSuccessDialog("Room Name Modified");
-              $scope.getAllRoom();
+              $scope.showSuccessDialog("Hardware Modified");
+              $scope.getAllHardware();
             }else{
               $scope.showErrorDialog(data.errorMessage);
             }
@@ -474,50 +534,52 @@ if(isset($_COOKIE['homeID'])){
         }
       };
 
-      $scope.gotoRoom = function(homeID,roomID){
+      $scope.gotoHardware = function(hwID,roomID,homeID){
         $cookies.remove('homeID');
         $cookies.remove('roomID');
+        $cookies.remove('hwID');
         $cookies.put('homeID',homeID);
         $cookies.put('roomID',roomID);
-        $window.location.href="hardware.php";
+        $cookies.put('hwID',hwID);
+        $window.location.href="device.php";
       };
     });
-    function deleteRoom(id){
-      angular.element($("#roomModificationCtrl")).scope().deleteRoom(id);
+    function deleteHardware(id){
+      angular.element($("#hwModificationCtrl")).scope().deleteHardware(id);
     }
-    function editRoom(id,roomName){
-      angular.element($("#roomModificationCtrl")).scope().editRoom(id,roomName);
+    function editHardware(id,hwName,hwSeries,hwIP){
+      angular.element($("#hwModificationCtrl")).scope().editHardware(id,hwName,hwSeries,hwIP);
     }
-    function gotoRoom(homeID,roomID){
-      angular.element($("#roomModificationCtrl")).scope().gotoRoom(homeID,roomID);
+    function gotoHardware(hwID,roomID,homeID){
+      angular.element($("#hwModificationCtrl")).scope().gotoHardware(hwID,roomID,homeID);
     }
-    myApp.directive("roomNameDir",function($rootScope,$http){
+    myApp.directive("hwNameDir",function($rootScope,$http){
       return{
         require: 'ngModel',
         link: function(scope, element, attr, mCtrl){
           function myValidation(value){
             var patt_room=/^[a-zA-Z0-9]+$/;
             if(patt_room.test(value)){
-              mCtrl.$setValidity('roomNameValid',true);
+              mCtrl.$setValidity('hwNameValid',true);
             }else{
-              mCtrl.$setValidity('roomNameValid',false);
+              mCtrl.$setValidity('hwNameValid',false);
             }
             if(value.length>3){
-              mCtrl.$setValidity('roomNameLenValid',true);
+              mCtrl.$setValidity('hwNameLenValid',true);
             }else{
-              mCtrl.$setValidity('roomNameLenValid',false);
+              mCtrl.$setValidity('hwNameLenValid',false);
             }
             var i,flag=0;
-            var len=$rootScope.roomList.length;
+            var len=$rootScope.hwList.length;
             for(i=0;i<len;i++){
-              if($rootScope.roomList[i].roomName==value){
+              if($rootScope.hwList[i].hwName==value){
                 flag=1;
               }
             }
             if(flag==1){
-              mCtrl.$setValidity('roomNameExistsValid',false);
+              mCtrl.$setValidity('hwNameExistsValid',false);
             }else{
-              mCtrl.$setValidity('roomNameExistsValid',true);
+              mCtrl.$setValidity('hwNameExistsValid',true);
             }
             return value;
           }
