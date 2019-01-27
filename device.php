@@ -129,7 +129,11 @@
                     </div>
                 </div>
                 <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-
+                  <div class="row" style="margin:15px;">
+                    <div class="pull-right">
+                      <button class="btn btn-default" ng-click="logout()">Logout</button>
+                    </div>
+                  </div>
                 </div>
             </div>
         </div>
@@ -143,7 +147,7 @@
                     <div class="mobile-menu">
                         <nav id="dropdown">
                             <ul class="mobile-menu-nav">
-                                <li><a data-toggle="collapse" data-target="#Charts" href="profile.php">Home</a>
+                                <li><a href="home.php">Home</a>
                                 </li>
                                 <li><a href="subscription.php">Subscription</a>
                                 </li>
@@ -161,7 +165,7 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
-                        <li class="active"><a data-toggle="tab" href="profile.php"><i class="notika-icon notika-house"></i> Home</a>
+                        <li class="active"><a href="home.php"><i class="notika-icon notika-house"></i> Home</a>
                         </li>
                         <li><a  href="subscription.php"><i class="notika-icon notika-form"></i> Subscription</a>
                         </li>
