@@ -442,7 +442,6 @@ if(isset($_COOKIE['homeID']) && isset($_COOKIE['roomID']) && isset($_COOKIE['hwI
         }
       };
       $scope.addDevice=function(){
-        alert($scope.dvImg);
         $http({
           method: "POST",
           url: "device_actions.php",
