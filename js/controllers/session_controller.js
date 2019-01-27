@@ -1,4 +1,4 @@
-myApp.controller("userController",function($rootScope,$localStorage,$sessionStorage){
+myApp.controller("userController",function($rootScope,$localStorage,$sessionStorage,$window){
   if($localStorage.userID==null || $localStorage.user==null){
     $window.location.href="index.php";
   }
