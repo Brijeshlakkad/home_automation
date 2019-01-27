@@ -1,9 +1,3 @@
-<?php
-include("functions.php");
-checkSession();
-$id=$_SESSION['Userid'];
-$email=$_SESSION['User'];
-?>
 <!doctype html>
 <html class="no-js" lang="">
 
@@ -106,7 +100,7 @@ $email=$_SESSION['User'];
   background-color: rgba(210, 210, 210, 0.8);
 }
  </style>
-<body ng-app="myapp">
+<body ng-app="myapp" ng-controller="userController">
     <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
@@ -319,16 +313,18 @@ $email=$_SESSION['User'];
 		============================================ -->
     <script src="js/tawk-chat.js"></script>
     <script src="js/angular-cookies.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.10/ngStorage.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-sanitize.js"></script>
     <script>
-    var myApp = angular.module("myapp", ['ngCookies']);
+    var myApp = angular.module("myapp", ['ngCookies','ngStorage']);
+
     myApp.controller("HomeController",function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies) {
-      $scope.user="<?php echo $email; ?>";
+      $scope.user=$rootScope.$storage.user;
       $scope.homeReName="";
       $scope.beforeHomeName="";
       $scope.homeID="";
       $rootScope.homeList="";
-      $scope.userID="<?php echo $id; ?>";
+      $scope.userID=$rootScope.$storage.userID;
       $scope.homeNameStyle={
         "border-bottom-width":"2px"
       };
@@ -519,6 +515,7 @@ $email=$_SESSION['User'];
     });
 
     </script>
+    <script src="js/session_controller.js"></script>
 </body>
 
 </html>

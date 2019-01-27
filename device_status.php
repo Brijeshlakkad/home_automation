@@ -1,14 +1,3 @@
-<?php
-include("functions.php");
-checkSession();
-$id=$_SESSION['Userid'];
-$email=$_SESSION['User'];
-if(isset($_COOKIE['homeID']) && isset($_COOKIE['roomID']) && isset($_COOKIE['hwID']) && isset($_COOKIE['dvID'])){
-  $homeID=$_COOKIE['homeID'];
-  $roomID=$_COOKIE['roomID'];
-  $hwID=$_COOKIE['hwID'];
-  $dvID=$_COOKIE['dvID'];
-?>
 <!doctype html>
 <html class="no-js" lang="">
 
@@ -126,7 +115,7 @@ if(isset($_COOKIE['homeID']) && isset($_COOKIE['roomID']) && isset($_COOKIE['hwI
   display: inline-block;
 }
  </style>
-<body ng-app="myapp">
+<body ng-app="myapp" ng-controller="userController">
     <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
@@ -189,20 +178,25 @@ if(isset($_COOKIE['homeID']) && isset($_COOKIE['roomID']) && isset($_COOKIE['hwI
     <!-- Main Menu area End-->
     <div class="container" ng-controller="DeviceStatusController" id="deviceStatusModificationCtrl">
       <div class="row">
-        <div class="row" style="padding:15px;"><h2>Device: {{device.dvName}}</h2></div>
-        <button ng-class="addClass" ng-model="deviceStatus" ng-click="changeDeviceStatus(deviceStatus)">{{deviceStatusPrint}}</button>
-        <div class="row" ng-show="deviceStatus==1 && deviceSlider!='null'" style="padding:20px;">
-          <form name="sliderForm" novalidate>
-            <div class="row">
-            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"><input class="form-control" type="number" id="deviceSliderValue" name="deviceSliderValue" min="0" max="5" ng-model="deviceSliderValue" ng-change="changeDeviceSlider(deviceSliderValue)" slider-dir/></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"><button type="submit" class="btn btn-success" ng-disabled="sliderForm.deviceSliderValue.$invalid">></button></div>
-            </div>
-            <span style="color:red;" ng-show="sliderForm.deviceSliderValue.$dirty && sliderForm.deviceSliderValue.$invalid">
-            <span ng-show="sliderForm.deviceSliderValue.$error.required">Please enter valid value</span>
-            <span ng-show="!sliderForm.deviceSliderValue.$error.required && sliderForm.deviceSliderValue.$error.sliderValid">Please enter valid value</span>
-            </span>
-          </form>
+        <div class="col-lg-1 col-md-1 col-sm-12 col-xs-12">
+          <button class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left" onclick="javascript:window.history.go(-1)"></span></button>
         </div>
-      </div>
+        <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12">
+          <div class="row" style="padding:15px;"><h2>Device: {{device.dvName}}</h2></div>
+          <button ng-class="addClass" ng-model="deviceStatus" ng-click="changeDeviceStatus(deviceStatus)">{{deviceStatusPrint}}</button>
+          <div class="row" ng-show="deviceStatus==1 && deviceSlider!='null'" style="padding:20px;">
+            <form name="sliderForm" novalidate>
+              <div class="row">
+              <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"><input class="form-control" type="number" id="deviceSliderValue" name="deviceSliderValue" min="0" max="5" ng-model="deviceSliderValue" ng-change="changeDeviceSlider(deviceSliderValue)" slider-dir/></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"><button type="submit" class="btn btn-success" ng-disabled="sliderForm.deviceSliderValue.$invalid">></button></div>
+              </div>
+              <span style="color:red;" ng-show="sliderForm.deviceSliderValue.$dirty && sliderForm.deviceSliderValue.$invalid">
+              <span ng-show="sliderForm.deviceSliderValue.$error.required">Please enter valid value</span>
+              <span ng-show="!sliderForm.deviceSliderValue.$error.required && sliderForm.deviceSliderValue.$error.sliderValid">Please enter valid value</span>
+              </span>
+            </form>
+          </div>
+        </div>
+    </div>
     </div>
 
       <div id="extraDiv"></div>
@@ -293,12 +287,14 @@ if(isset($_COOKIE['homeID']) && isset($_COOKIE['roomID']) && isset($_COOKIE['hwI
 		============================================ -->
     <script src="js/tawk-chat.js"></script>
     <script src="js/angular-cookies.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.10/ngStorage.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-sanitize.js"></script>
     <script>
 
-    var myApp = angular.module("myapp", ['ngCookies']);
+    var myApp = angular.module("myapp", ['ngCookies','ngStorage']);
     myApp.controller("DeviceStatusController", function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies) {
-      $scope.user="<?php echo $email; ?>";
+      $scope.user=$rootScope.$storage.user;
+      $scope.userID=$rootScope.$storage.userID;
       $scope.homeID=$cookies.get('homeID');
       $scope.roomID=$cookies.get('roomID');
       $scope.hwID=$cookies.get('hwID');
@@ -427,9 +423,6 @@ if(isset($_COOKIE['homeID']) && isset($_COOKIE['roomID']) && isset($_COOKIE['hwI
     });
 
     </script>
+    <script src="js/session_controller.js"></script>
 </body>
-
 </html>
-<?php
-}
-?>

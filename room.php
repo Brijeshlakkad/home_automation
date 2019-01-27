@@ -1,11 +1,3 @@
-<?php
-include("functions.php");
-checkSession();
-$id=$_SESSION['Userid'];
-$email=$_SESSION['User'];
-if(isset($_COOKIE['homeID'])){
-  $homeID=$_COOKIE['homeID'];
-?>
 <!doctype html>
 <html class="no-js" lang="">
 
@@ -108,7 +100,7 @@ if(isset($_COOKIE['homeID'])){
   background-color: rgba(210, 210, 210, 0.8);
 }
  </style>
-<body ng-app="myapp">
+<body ng-app="myapp" ng-controller="userController">
     <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
@@ -170,9 +162,16 @@ if(isset($_COOKIE['homeID'])){
     </div>
     <!-- Main Menu area End-->
     <div class="container" ng-controller="RoomController" id="roomModificationCtrl">
-      <button class="btn btn-lg notika-btn-lightblue btn-reco-mg btn-button-mg" data-toggle="modal" data-target="#addRoom"><span class="glyphicon glyphicon-plus"></span> Add Room</button>
-      <div class="row" ng-bind-html="showAllRoom">
+      <div class="row">
+        <div class="col-lg-1 col-md-1 col-sm-12 col-xs-12">
+          <button class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left" onclick="javascript:window.history.go(-1)"></span></button>
+        </div>
+        <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12">
+          <button class="btn btn-lg notika-btn-lightblue btn-reco-mg btn-button-mg" data-toggle="modal" data-target="#addRoom"><span class="glyphicon glyphicon-plus"></span> Add Room</button>
+          <div class="row" ng-bind-html="showAllRoom">
 
+          </div>
+        </div>
       </div>
       <div class="modal fade" id="addRoom" role="dialog">
           <div class="modal-dialog modal-sm">
@@ -321,17 +320,19 @@ if(isset($_COOKIE['homeID'])){
 		============================================ -->
     <script src="js/tawk-chat.js"></script>
     <script src="js/angular-cookies.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.10/ngStorage.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-sanitize.js"></script>
+
     <script>
-    var myApp = angular.module("myapp", ['ngCookies']);
+    var myApp = angular.module("myapp", ['ngCookies','ngStorage']);
     myApp.controller("RoomController", function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies) {
-      $scope.user="<?php echo $email; ?>";
+      $scope.user=$rootScope.$storage.user;
+      $scope.userID=$rootScope.$storage.userID;
       $scope.roomReName="";
       $scope.beforeRoomName="";
-      $scope.homeID="<?php echo $homeID; ?>";
+      $scope.homeID=$cookies.get('homeID');
       $scope.roomID="";
       $rootScope.roomList="";
-      $scope.userID="<?php echo $id; ?>";
       $scope.roomNameStyle={
         "border-bottom-width":"2px"
       };
@@ -527,9 +528,6 @@ if(isset($_COOKIE['homeID'])){
     });
 
     </script>
+    <script src="js/session_controller.js"></script>
 </body>
-
 </html>
-<?php
-}
-?>

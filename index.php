@@ -206,9 +206,82 @@
             </div>
         </div>
     </div>
+    <!-- Login Register area End-->
+    <!-- jquery
+    ============================================ -->
+    <script src="js/vendor/jquery-1.12.4.min.js"></script>
+    <!-- bootstrap JS
+    ============================================ -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- wow JS
+    ============================================ -->
+    <script src="js/wow.min.js"></script>
+    <!-- price-slider JS
+    ============================================ -->
+    <script src="js/jquery-price-slider.js"></script>
+    <!-- owl.carousel JS
+    ============================================ -->
+    <script src="js/owl.carousel.min.js"></script>
+    <!-- scrollUp JS
+    ============================================ -->
+    <script src="js/jquery.scrollUp.min.js"></script>
+    <!-- meanmenu JS
+    ============================================ -->
+    <script src="js/meanmenu/jquery.meanmenu.js"></script>
+    <!-- counterup JS
+    ============================================ -->
+    <script src="js/counterup/jquery.counterup.min.js"></script>
+    <script src="js/counterup/waypoints.min.js"></script>
+    <script src="js/counterup/counterup-active.js"></script>
+    <!-- mCustomScrollbar JS
+    ============================================ -->
+    <script src="js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+    <!-- sparkline JS
+    ============================================ -->
+    <script src="js/sparkline/jquery.sparkline.min.js"></script>
+    <script src="js/sparkline/sparkline-active.js"></script>
+    <!-- flot JS
+    ============================================ -->
+    <script src="js/flot/jquery.flot.js"></script>
+    <script src="js/flot/jquery.flot.resize.js"></script>
+    <script src="js/flot/flot-active.js"></script>
+    <!-- knob JS
+    ============================================ -->
+    <script src="js/knob/jquery.knob.js"></script>
+    <script src="js/knob/jquery.appear.js"></script>
+    <script src="js/knob/knob-active.js"></script>
+    <!--  Chat JS
+    ============================================ -->
+    <script src="js/chat/jquery.chat.js"></script>
+    <!--  wave JS
+    ============================================ -->
+    <script src="js/wave/waves.min.js"></script>
+    <script src="js/wave/wave-active.js"></script>
+    <!-- icheck JS
+    ============================================ -->
+    <script src="js/icheck/icheck.min.js"></script>
+    <script src="js/icheck/icheck-active.js"></script>
+    <!--  todo JS
+    ============================================ -->
+    <script src="js/todo/jquery.todo.js"></script>
+    <!-- Login JS
+    ============================================ -->
+    <script src="js/login/login-action.js"></script>
+    <!-- plugins JS
+    ============================================ -->
+    <script src="js/plugins.js"></script>
+    <!-- main JS
+    ============================================ -->
+    <script src="js/main.js"></script>
+    <script src="js/send_mail.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.10/ngStorage.min.js"></script>
 <script>
-var myApp = angular.module("myapp", []);
-myApp.controller("LoginController", function($scope,$http,$window) {
+var myApp = angular.module("myapp", ['ngStorage']);
+myApp.controller("LoginController", function($scope,$http,$window,$localStorage,$sessionStorage) {
+  $scope.$storage = $localStorage.$default({
+    userID: null,
+    user: null
+  });
   $scope.emailStyle = {
     "border-bottom-width":"1.45px"
   };
@@ -245,6 +318,20 @@ myApp.controller("LoginController", function($scope,$http,$window) {
 			{
 				$scope.l_status_0=false;
 				$scope.l_status_1=true;
+        $scope.userID = flag.user.userID;
+        $scope.user = flag.user.email;
+        $scope.$watch('userID', function() {
+            $localStorage.userID = $scope.userID;
+        });
+        $scope.$watch('user', function() {
+            $localStorage.user = $scope.user;
+        });
+        /*$scope.$watch(function() {
+            return angular.toJson($localStorage);
+        }, function() {
+            $scope.userID = $localStorage.userID;
+            $scope.user = $localStorage.user;
+        });*/
         $window.location.href = flag.user.location;
 			}
 			else
@@ -540,75 +627,6 @@ myApp.directive('emailExistsDir', function($http) {
 	};
 });
 </script>
-
-    <!-- Login Register area End-->
-    <!-- jquery
-		============================================ -->
-    <script src="js/vendor/jquery-1.12.4.min.js"></script>
-    <!-- bootstrap JS
-		============================================ -->
-    <script src="js/bootstrap.min.js"></script>
-    <!-- wow JS
-		============================================ -->
-    <script src="js/wow.min.js"></script>
-    <!-- price-slider JS
-		============================================ -->
-    <script src="js/jquery-price-slider.js"></script>
-    <!-- owl.carousel JS
-		============================================ -->
-    <script src="js/owl.carousel.min.js"></script>
-    <!-- scrollUp JS
-		============================================ -->
-    <script src="js/jquery.scrollUp.min.js"></script>
-    <!-- meanmenu JS
-		============================================ -->
-    <script src="js/meanmenu/jquery.meanmenu.js"></script>
-    <!-- counterup JS
-		============================================ -->
-    <script src="js/counterup/jquery.counterup.min.js"></script>
-    <script src="js/counterup/waypoints.min.js"></script>
-    <script src="js/counterup/counterup-active.js"></script>
-    <!-- mCustomScrollbar JS
-		============================================ -->
-    <script src="js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
-    <!-- sparkline JS
-		============================================ -->
-    <script src="js/sparkline/jquery.sparkline.min.js"></script>
-    <script src="js/sparkline/sparkline-active.js"></script>
-    <!-- flot JS
-		============================================ -->
-    <script src="js/flot/jquery.flot.js"></script>
-    <script src="js/flot/jquery.flot.resize.js"></script>
-    <script src="js/flot/flot-active.js"></script>
-    <!-- knob JS
-		============================================ -->
-    <script src="js/knob/jquery.knob.js"></script>
-    <script src="js/knob/jquery.appear.js"></script>
-    <script src="js/knob/knob-active.js"></script>
-    <!--  Chat JS
-		============================================ -->
-    <script src="js/chat/jquery.chat.js"></script>
-    <!--  wave JS
-		============================================ -->
-    <script src="js/wave/waves.min.js"></script>
-    <script src="js/wave/wave-active.js"></script>
-    <!-- icheck JS
-		============================================ -->
-    <script src="js/icheck/icheck.min.js"></script>
-    <script src="js/icheck/icheck-active.js"></script>
-    <!--  todo JS
-		============================================ -->
-    <script src="js/todo/jquery.todo.js"></script>
-    <!-- Login JS
-		============================================ -->
-    <script src="js/login/login-action.js"></script>
-    <!-- plugins JS
-		============================================ -->
-    <script src="js/plugins.js"></script>
-    <!-- main JS
-		============================================ -->
-    <script src="js/main.js"></script>
-    <script src="js/send_mail.js"></script>
 </body>
 
 </html>
