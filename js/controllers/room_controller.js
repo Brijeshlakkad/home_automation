@@ -1,10 +1,9 @@
-var myApp = angular.module("myapp", ['ngCookies','ngStorage']);
-myApp.controller("RoomController", function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies) {
+myApp.controller("RoomController", function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies,$routeParams) {
   $scope.user=$rootScope.$storage.user;
   $scope.userID=$rootScope.$storage.userID;
   $scope.roomReName="";
   $scope.beforeRoomName="";
-  $scope.homeID=$cookies.get('homeID');
+  $scope.homeID=$routeParams.homeID;
   $scope.roomID="";
   $rootScope.roomList="";
   $scope.roomNameStyle={
@@ -150,11 +149,12 @@ myApp.controller("RoomController", function($rootScope,$scope,$http,$window,$sce
   };
 
   $scope.gotoRoom = function(homeID,roomID){
-    $cookies.remove('homeID');
+    alert("GotoRoom");
+    /*$cookies.remove('homeID');
     $cookies.remove('roomID');
     $cookies.put('homeID',homeID);
     $cookies.put('roomID',roomID);
-    $window.location.href="hardware.php";
+    $window.location.href="hardware.php";*/
   };
 });
 function deleteRoom(id){

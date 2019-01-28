@@ -278,10 +278,14 @@
 <script>
 var myApp = angular.module("myapp", ['ngStorage']);
 myApp.controller("LoginController", function($scope,$http,$window,$localStorage,$sessionStorage) {
-  $scope.$storage = $localStorage.$default({
-    userID: null,
-    user: null
-  });
+  if($localStorage.userID==null || $localStorage.user==null){
+    $scope.$storage = $localStorage.$default({
+      userID: null,
+      user: null
+    });
+  }else{
+    $window.location.href="home.php";
+  }
   $scope.emailStyle = {
     "border-bottom-width":"1.45px"
   };

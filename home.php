@@ -91,13 +91,28 @@
   /* Add shadows to create the "card" effect */
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   transition: 0.3s;
-
+  height:150px;
 }
 
 /* On mouse-over, add a deeper shadow */
 .card:hover {
   box-shadow: 0 16px 16px 0 rgba(0,0,0,0.2);
   background-color: rgba(210, 210, 210, 0.8);
+}
+
+.redDot {
+  height: 8px;
+  width: 8px;
+  background-color: rgba(250,0,0,1);
+  border-radius: 50%;
+  display: inline-block;
+}
+.greenDot {
+  height: 8px;
+  width: 8px;
+  background-color: rgba(0,250,0,1);
+  border-radius: 50%;
+  display: inline-block;
 }
  </style>
 <body ng-app="myapp" ng-controller="userController">
@@ -123,113 +138,10 @@
             </div>
         </div>
     </div>
+    <a href="#!home">Home</a>
+    <a href="#!room">Room</a>
     <!-- End Header Top Area -->
-    <!-- Mobile Menu start -->
-    <div class="mobile-menu-area">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="mobile-menu">
-                        <nav id="dropdown">
-                            <ul class="mobile-menu-nav">
-                                <li><a href="home.php">Home</a>
-                                </li>
-                                <li><a href="subscription.php">Subscription</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Mobile Menu end -->
-    <!-- Main Menu area start-->
-    <div class="main-menu-area mg-tb-40">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
-                        <li class="active"><a href="home.php"><i class="notika-icon notika-house"></i> Home</a>
-                        </li>
-                        <li><a  href="subscription.php"><i class="notika-icon notika-form"></i> Subscription</a>
-                        </li>
-                        <li><a href="settings.php"><i class="notika-icon notika-settings"></i> Settings</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content custom-menu-content">
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Main Menu area End-->
-    <div class="container" ng-controller="HomeController" id="homeModificationCtrl">
-      <button class="btn btn-lg notika-btn-lightblue btn-reco-mg btn-button-mg" data-toggle="modal" data-target="#addHome"><span class="glyphicon glyphicon-plus"></span> Add Home</button>
-      <div class="row" ng-bind-html="showAllHome">
-
-      </div>
-      <div class="modal fade" id="addHome" role="dialog">
-          <div class="modal-dialog modal-sm">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  </div>
-                  <div class="modal-body">
-                    <h2>Create new home</h2>
-                    <form name="homeNameForm" novalidate>
-                    <div class="row">
-                      <div class="nk-int-st">
-                        <input class="form-control" name="homeName" data-ng-model="homeName" type="text" placeholder="Home Name" ng-style="homeNameStyle" ng-change="analyzeHomeName(homeName)" required home-name-dir/>
-                      </div>
-                      <span style="color:red;" id="homeName" ng-show="homeNameForm.homeName.$dirty && homeNameForm.homeName.$invalid">
-                      <span ng-show="homeNameForm.homeName.$error.required">Please enter home name</span>
-                      <span ng-show="!homeNameForm.homeName.$error.required && homeNameForm.homeName.$error.homeNameValid">Please enter only alphabetics and digits</span>
-                      <span ng-show="!homeNameForm.homeName.$error.required && !homeNameForm.homeName.$error.homeNameValid && homeNameForm.homeName.$error.homeNameLenValid">Please enter only more than 3 characters</span>
-                      <span ng-show="homeNameForm.homeName.$error.homeNameExistsValid">Home name already exists</span>
-                      </span>
-                    </div>
-                  </form>
-                  </div>
-                  <div class="modal-footer" style="margin:10px;">
-                      <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="homeNameForm.homeName.$invalid" ng-click="addHome()">Create</button>
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  </div>
-              </div>
-          </div>
-      </div>
-      <div class="modal fade" id="renameHome" role="dialog">
-          <div class="modal-dialog modal-sm">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  </div>
-                  <div class="modal-body">
-                    <h2>Modify your home</h2>
-                    <form name="homeReNameForm" novalidate>
-                    <div class="row">
-                      <div class="nk-int-st">
-                        <input class="form-control" name="homeReName" ng-model="homeReName" type="text" placeholder="Home Name" ng-style="homeReNameStyle" ng-change="analyzeHomeName(homeReName)" required home-name-dir/>
-                      </div>
-                      <span style="color:red;" id="homeReName" ng-show="homeReNameForm.homeReName.$dirty && homeReNameForm.homeReName.$invalid">
-                      <span ng-show="homeReNameForm.homeReName.$error.required">Please enter home name</span>
-                      <span ng-show="!homeReNameForm.homeReName.$error.required && homeReNameForm.homeReName.$error.homeNameValid">Please enter only alphabetics and digits</span>
-                      <span ng-show="!homeReNameForm.homeReName.$error.required && !homeReNameForm.homeReName.$error.homeNameValid && homeReNameForm.homeReName.$error.homeNameLenValid">Please enter only more than 3 characters</span>
-                      <span ng-show="homeReNameForm.homeReName.$error.homeNameExistsValid">Home name already exists</span>
-                      </span>
-                    </div>
-                  </form>
-                  </div>
-                  <div class="modal-footer" style="margin:10px;">
-                      <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="homeReNameForm.homeReName.$invalid" ng-click="modifyHome()">Modify</button>
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  </div>
-              </div>
-          </div>
-      </div>
-      </div>
-      <div id="extraDiv"></div>
+    <div ng-view></div>
     <!-- Start Footer area-->
     <div class="footer-copyright-area footerB" style="width:100%">
         <div class="container">
@@ -319,9 +231,36 @@
     <script src="js/angular-cookies.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.10/ngStorage.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-sanitize.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
-    <script src="js/controllers/home_controller.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.28//angular-route.min.js"></script>
+    <script>
+    var myApp = angular.module("myapp", ['ngCookies','ngStorage','ngRoute']);
+    myApp.config(function ($routeProvider) {
+      $routeProvider.when('/', {
+          templateUrl: 'home.html',
+          controller: 'HomeController'
+      }).when('/:homeID', {
+          templateUrl: 'room.html',
+          controller: 'RoomController'
+      }).when('/:homeID/:roomID', {
+          templateUrl: 'hardware.html',
+          controller: 'HardwareController'
+      }).when('/:homeID/:roomID/:hwID', {
+          templateUrl: 'device.html',
+          controller: 'DeviceController'
+      }).when('/:homeID/:roomID/:hwID/:dvID', {
+          templateUrl: 'device_status.html',
+          controller: 'DeviceStatusController'
+      }).otherwise({
+          redirectTo: "/"
+      });
+    });
+    </script>
     <script src="js/controllers/session_controller.js"></script>
+    <script src="js/controllers/home_controller.js"></script>
+    <script src="js/controllers/room_controller.js"></script>
+    <script src="js/controllers/hardware_controller.js"></script>
+    <script src="js/controllers/device_controller.js"></script>
+    <script src="js/controllers/device_status_controller.js"></script>
 </body>
 
 </html>

@@ -1,11 +1,10 @@
-var myApp = angular.module("myapp", ['ngCookies','ngStorage']);
-myApp.controller("DeviceStatusController", function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies) {
+myApp.controller("DeviceStatusController", function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies,$routeParams) {
   $scope.user=$rootScope.$storage.user;
   $scope.userID=$rootScope.$storage.userID;
-  $scope.homeID=$cookies.get('homeID');
-  $scope.roomID=$cookies.get('roomID');
-  $scope.hwID=$cookies.get('hwID');
-  $scope.dvID=$cookies.get('dvID');
+  $scope.homeID=$routeParams.homeID;
+  $scope.roomID=$routeParams.roomID;
+  $scope.hwID=$routeParams.hwID;
+  $scope.dvID=$routeParams.dvID;
   $rootScope.device="";
   $rootScope.deviceSlider="";
   $scope.deviceSliderValue=0;

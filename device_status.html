@@ -1,0 +1,63 @@
+    <!-- Mobile Menu start -->
+    <div class="mobile-menu-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="mobile-menu">
+                        <nav id="dropdown">
+                            <ul class="mobile-menu-nav">
+                                <li><a href="home.php">Home</a>
+                                </li>
+                                <li><a href="subscription.php">Subscription</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Mobile Menu end -->
+    <!-- Main Menu area start-->
+    <div class="main-menu-area mg-tb-40">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
+                        <li class="active"><a href="home.php"><i class="notika-icon notika-house"></i> Home</a>
+                        </li>
+                        <li><a href="subscription.php"><i class="notika-icon notika-form"></i> Subscription</a>
+                        </li>
+                        <li><a href="settings.php"><i class="notika-icon notika-settings"></i> Settings</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content custom-menu-content">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main Menu area End-->
+    <div class="container" id="deviceStatusModificationCtrl">
+      <div class="row">
+        <div class="col-lg-1 col-md-1 col-sm-12 col-xs-12">
+          <button class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left" onclick="javascript:window.history.go(-1)"></span></button>
+        </div>
+        <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12">
+          <div class="row" style="padding:15px;"><h2>Device: {{device.dvName}}</h2></div>
+          <button ng-class="addClass" ng-model="deviceStatus" ng-click="changeDeviceStatus(deviceStatus)">{{deviceStatusPrint}}</button>
+          <div class="row" ng-show="deviceStatus==1 && deviceSlider!='null'" style="padding:20px;">
+            <form name="sliderForm" novalidate>
+              <div class="row">
+              <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"><input class="form-control" type="number" id="deviceSliderValue" name="deviceSliderValue" min="0" max="5" ng-model="deviceSliderValue" ng-change="changeDeviceSlider(deviceSliderValue)" slider-dir/></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"><button type="submit" class="btn btn-success" ng-disabled="sliderForm.deviceSliderValue.$invalid">></button></div>
+              </div>
+              <span style="color:red;" ng-show="sliderForm.deviceSliderValue.$dirty && sliderForm.deviceSliderValue.$invalid">
+              <span ng-show="sliderForm.deviceSliderValue.$error.required">Please enter valid value</span>
+              <span ng-show="!sliderForm.deviceSliderValue.$error.required && sliderForm.deviceSliderValue.$error.sliderValid">Please enter valid value</span>
+              </span>
+            </form>
+          </div>
+        </div>
+    </div>
+    </div>

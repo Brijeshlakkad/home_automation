@@ -1,5 +1,4 @@
-var myApp = angular.module("myapp", ['ngCookies','ngStorage']);
-myApp.controller("DeviceController", function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies) {
+myApp.controller("DeviceController", function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies,$routeParams) {
   $scope.user=$rootScope.$storage.user;
   $scope.userID=$rootScope.$storage.userID;
   $scope.dvReName="";
@@ -8,9 +7,9 @@ myApp.controller("DeviceController", function($rootScope,$scope,$http,$window,$s
   $scope.beforeDvName="";
   $scope.beforeDvPort="";
   $scope.beforeDvImg="";
-  $scope.homeID=$cookies.get('homeID');
-  $scope.roomID=$cookies.get('roomID');
-  $scope.hwID=$cookies.get('hwID');
+  $scope.homeID=$routeParams.homeID;
+  $scope.roomID=$routeParams.roomID;
+  $scope.hwID=$routeParams.hwID;
   $scope.dvID="";
   $rootScope.dvList=[];
   $rootScope.dvImgList=[];

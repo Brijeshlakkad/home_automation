@@ -1,4 +1,3 @@
-var myApp = angular.module("myapp", ['ngCookies','ngStorage']);
 myApp.controller("HomeController",function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies) {
   $scope.user=$rootScope.$storage.user;
   $scope.homeReName="";

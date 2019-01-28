@@ -1,5 +1,4 @@
-var myApp = angular.module("myapp", ['ngCookies','ngStorage']);
-myApp.controller("HardwareController", function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies) {
+myApp.controller("HardwareController", function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies,$routeParams) {
   $scope.user=$rootScope.$storage.user;
   $scope.userID=$rootScope.$storage.userID;
   $scope.hwReName="";
@@ -8,8 +7,8 @@ myApp.controller("HardwareController", function($rootScope,$scope,$http,$window,
   $scope.beforeHwName="";
   $scope.beforeHwSeries="";
   $scope.beforeHwIP="";
-  $scope.homeID=$cookies.get('homeID');
-  $scope.roomID=$cookies.get('roomID');
+  $scope.homeID=$routeParams.homeID;
+  $scope.roomID=$routeParams.roomID;
   $scope.hwID="";
   $rootScope.hwList="";
   $scope.hwNameStyle={
