@@ -1,112 +1,114 @@
-    <!-- Mobile Menu start -->
-    <div class="mobile-menu-area">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="mobile-menu">
-                        <nav id="dropdown">
-                            <ul class="mobile-menu-nav">
-                                <li><a href="home.php">Home</a>
-                                </li>
-                                <li><a href="subscription.php">Subscription</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Mobile Menu end -->
-    <!-- Main Menu area start-->
-    <div class="main-menu-area mg-tb-40">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
-                        <li class="active"><a href="home.php"><i class="notika-icon notika-house"></i> Home</a>
-                        </li>
-                        <li><a  href="subscription.php"><i class="notika-icon notika-form"></i> Subscription</a>
-                        </li>
-                        <li><a href="settings.php"><i class="notika-icon notika-settings"></i> Settings</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content custom-menu-content">
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Main Menu area End-->
-    <div class="container" id="roomModificationCtrl">
+<!-- Mobile Menu start -->
+<div class="mobile-menu-area">
+  <div class="container">
       <div class="row">
-        <div class="col-lg-1 col-md-1 col-sm-12 col-xs-12">
-          <button class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left" onclick="javascript:window.history.go(-1)"></span></button>
-        </div>
-        <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12">
-          <button class="btn btn-lg notika-btn-lightblue btn-reco-mg btn-button-mg" data-toggle="modal" data-target="#addRoom"><span class="glyphicon glyphicon-plus"></span> Add Room</button>
-          <div class="row" ng-bind-html="showAllRoom">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="mobile-menu">
+                  <nav id="dropdown">
+                      <ul class="mobile-menu-nav">
+                        <li><a href="#!home">Home</a>
+                        </li>
+                        <li><a href="#!subscription">Subscription</a>
+                        </li>
+                        <li><a href="#!settings">Settings</a>
+                        </li>
+                      </ul>
+                  </nav>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+<!-- Mobile Menu end -->
+<!-- Main Menu area start-->
+<div class="main-menu-area mg-tb-40">
+  <div class="container">
+      <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
+                  <li class="active"><a href="#!home"><i class="notika-icon notika-house"></i> Home</a>
+                  </li>
+                  <li><a  href="#!subscription"><i class="notika-icon notika-form"></i> Subscription</a>
+                  </li>
+                  <li><a href="#!settings"><i class="notika-icon notika-settings"></i> Settings</a>
+                  </li>
+              </ul>
+              <div class="tab-content custom-menu-content">
 
-          </div>
-        </div>
-      </div>
-      <div class="modal fade" id="addRoom" role="dialog">
-          <div class="modal-dialog modal-sm">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  </div>
-                  <div class="modal-body">
-                    <h2>Create new room</h2>
-                    <form name="roomNameForm" novalidate>
-                    <div class="row">
-                      <div class="nk-int-st">
-                        <input class="form-control" name="roomName" data-ng-model="roomName" type="text" placeholder="Room Name" ng-style="roomNameStyle" ng-change="analyzeRoomName(roomName)" required room-name-dir autofocus/>
-                      </div>
-                      <span style="color:red;" id="roomName" ng-show="roomNameForm.roomName.$dirty && roomNameForm.roomName.$invalid">
-                      <span ng-show="roomNameForm.roomName.$error.required">Please enter room name</span>
-                      <span ng-show="!roomNameForm.roomName.$error.required && roomNameForm.roomName.$error.roomNameValid">Please enter only alphabetics and digits</span>
-                      <span ng-show="!roomNameForm.roomName.$error.required && !roomNameForm.roomName.$error.roomNameValid && roomNameForm.roomName.$error.roomNameLenValid">Please enter only more than 3 characters</span>
-                      <span ng-show="roomNameForm.roomName.$error.roomNameExistsValid">Room name already exists</span>
-                      </span>
-                    </div>
-                  </form>
-                  </div>
-                  <div class="modal-footer" style="margin:10px;">
-                      <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="roomNameForm.roomName.$invalid" ng-click="addRoom()">Create</button>
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  </div>
               </div>
           </div>
       </div>
-      <div class="modal fade" id="renameRoom" role="dialog">
-          <div class="modal-dialog modal-sm">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  </div>
-                  <div class="modal-body">
-                    <h2>Modify your room</h2>
-                    <form name="roomReNameForm" novalidate>
-                    <div class="row">
-                      <div class="nk-int-st">
-                        <input class="form-control" name="roomReName" ng-model="roomReName" type="text" placeholder="Home Name" ng-style="roomReNameStyle" ng-change="analyzeHomeName(roomReName)" required room-name-dir autofocus/>
-                      </div>
-                      <span style="color:red;" id="roomReName" ng-show="roomReNameForm.roomReName.$dirty && roomReNameForm.roomReName.$invalid">
-                      <span ng-show="roomReNameForm.roomReName.$error.required">Please enter room name</span>
-                      <span ng-show="!roomReNameForm.roomReName.$error.required && roomReNameForm.roomReName.$error.roomNameValid">Please enter only alphabetics and digits</span>
-                      <span ng-show="!roomReNameForm.roomReName.$error.required && !roomReNameForm.roomReName.$error.roomNameValid && roomReNameForm.roomReName.$error.roomNameLenValid">Please enter only more than 3 characters</span>
-                      <span ng-show="roomReNameForm.roomReName.$error.roomNameExistsValid">Room name already exists</span>
-                      </span>
-                    </div>
-                  </form>
-                  </div>
-                  <div class="modal-footer" style="margin:10px;">
-                      <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="roomReNameForm.roomReName.$invalid" ng-click="modifyRoom()">Modify</button>
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  </div>
-              </div>
-          </div>
-      </div>
+  </div>
+</div>
+<!-- Main Menu area End-->
+<div class="container" id="roomModificationCtrl">
+<div class="row">
+  <div class="col-lg-1 col-md-1 col-sm-12 col-xs-12">
+    <button class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left" onclick="javascript:window.history.go(-1)"></span></button>
+  </div>
+  <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12">
+    <button class="btn btn-lg notika-btn-lightblue btn-reco-mg btn-button-mg" data-toggle="modal" data-target="#addRoom"><span class="glyphicon glyphicon-plus"></span> Add Room</button>
+    <div class="row" ng-bind-html="showAllRoom">
+
     </div>
+  </div>
+</div>
+<div class="modal fade" id="addRoom" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+              <h2>Create new room</h2>
+              <form name="roomNameForm" novalidate>
+              <div class="row">
+                <div class="nk-int-st">
+                  <input class="form-control" name="roomName" data-ng-model="roomName" type="text" placeholder="Room Name" ng-style="roomNameStyle" ng-change="analyzeRoomName(roomName)" required room-name-dir autofocus/>
+                </div>
+                <span style="color:red;" id="roomName" ng-show="roomNameForm.roomName.$dirty && roomNameForm.roomName.$invalid">
+                <span ng-show="roomNameForm.roomName.$error.required">Please enter room name</span>
+                <span ng-show="!roomNameForm.roomName.$error.required && roomNameForm.roomName.$error.roomNameValid">Please enter only alphabetics and digits</span>
+                <span ng-show="!roomNameForm.roomName.$error.required && !roomNameForm.roomName.$error.roomNameValid && roomNameForm.roomName.$error.roomNameLenValid">Please enter only more than 3 characters</span>
+                <span ng-show="roomNameForm.roomName.$error.roomNameExistsValid">Room name already exists</span>
+                </span>
+              </div>
+            </form>
+            </div>
+            <div class="modal-footer" style="margin:10px;">
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="roomNameForm.roomName.$invalid" ng-click="addRoom()">Create</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="renameRoom" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+              <h2>Modify your room</h2>
+              <form name="roomReNameForm" novalidate>
+              <div class="row">
+                <div class="nk-int-st">
+                  <input class="form-control" name="roomReName" ng-model="roomReName" type="text" placeholder="Home Name" ng-style="roomReNameStyle" ng-change="analyzeHomeName(roomReName)" required room-name-dir autofocus/>
+                </div>
+                <span style="color:red;" id="roomReName" ng-show="roomReNameForm.roomReName.$dirty && roomReNameForm.roomReName.$invalid">
+                <span ng-show="roomReNameForm.roomReName.$error.required">Please enter room name</span>
+                <span ng-show="!roomReNameForm.roomReName.$error.required && roomReNameForm.roomReName.$error.roomNameValid">Please enter only alphabetics and digits</span>
+                <span ng-show="!roomReNameForm.roomReName.$error.required && !roomReNameForm.roomReName.$error.roomNameValid && roomReNameForm.roomReName.$error.roomNameLenValid">Please enter only more than 3 characters</span>
+                <span ng-show="roomReNameForm.roomReName.$error.roomNameExistsValid">Room name already exists</span>
+                </span>
+              </div>
+            </form>
+            </div>
+            <div class="modal-footer" style="margin:10px;">
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="roomReNameForm.roomReName.$invalid" ng-click="modifyRoom()">Modify</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

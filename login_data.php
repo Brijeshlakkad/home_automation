@@ -16,7 +16,7 @@ function check_user($gotData){
       return $gotData;
     }
     $gotData->user->userID=$u->id;
-    $gotData->user->location="index.php";
+    $gotData->user->location="home.php#!/home";
     return $gotData;
   }
   $gotData->error=true;

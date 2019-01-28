@@ -6,7 +6,7 @@ myApp.controller("LoginController", function($scope,$http,$window,$localStorage,
       user: null
     });
   }else{
-    $window.location.href="home.php";
+    $window.location.href="home.php#!/home";
   }
   $scope.emailStyle = {
     "border-bottom-width":"1.45px"

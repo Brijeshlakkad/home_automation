@@ -233,21 +233,27 @@
     <script>
     var myApp = angular.module("myapp", ['ngCookies','ngStorage','ngRoute']);
     myApp.config(function ($routeProvider) {
-      $routeProvider.when('/', {
+      $routeProvider.when('/home', {
           templateUrl: 'home.html',
           controller: 'HomeController'
-      }).when('/:homeID', {
+      }).when('/home/:homeID', {
           templateUrl: 'room.html',
           controller: 'RoomController'
-      }).when('/:homeID/:roomID', {
+      }).when('/home/:homeID/:roomID', {
           templateUrl: 'hardware.html',
           controller: 'HardwareController'
-      }).when('/:homeID/:roomID/:hwID', {
+      }).when('/home/:homeID/:roomID/:hwID', {
           templateUrl: 'device.html',
           controller: 'DeviceController'
-      }).when('/:homeID/:roomID/:hwID/:dvID', {
+      }).when('/home/:homeID/:roomID/:hwID/:dvID', {
           templateUrl: 'device_status.html',
           controller: 'DeviceStatusController'
+      }).when('/settings', {
+          templateUrl: 'settings.html',
+          controller: 'SettingsController'
+      }).when('/subscription', {
+          templateUrl: 'subscription.html',
+          controller: 'SubscriptionController'
       }).otherwise({
           redirectTo: "/"
       });
@@ -258,6 +264,8 @@
     <script src="js/controllers/room_controller.js"></script>
     <script src="js/controllers/hardware_controller.js"></script>
     <script src="js/controllers/device_controller.js"></script>
+    <script src="js/controllers/settings_controller.js"></script>
+    <script src="js/controllers/subscription_controller.js"></script>
     <script src="js/controllers/device_status_controller.js"></script>
 </body>
 
