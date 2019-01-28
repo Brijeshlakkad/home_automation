@@ -142,22 +142,12 @@ myApp.controller("HomeController",function($rootScope,$scope,$http,$window,$sce,
       });
     }
   };
-
-  $scope.gotoHome = function(id){
-    $cookies.remove('homeID');
-    $cookies.put('homeID',id);
-    $window.location.href="room.php";
-  };
-
 });
 function deleteHome(id){
   angular.element($("#homeModificationCtrl")).scope().deleteHome(id);
 }
 function editHome(id,homeName){
   angular.element($("#homeModificationCtrl")).scope().editHome(id,homeName);
-}
-function gotoHome(id){
-  angular.element($("#homeModificationCtrl")).scope().gotoHome(id);
 }
 myApp.directive("homeNameDir",function($rootScope,$http){
   return{

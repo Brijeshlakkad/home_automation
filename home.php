@@ -138,8 +138,6 @@
             </div>
         </div>
     </div>
-    <a href="#!home">Home</a>
-    <a href="#!room">Room</a>
     <!-- End Header Top Area -->
     <div ng-view></div>
     <!-- Start Footer area-->

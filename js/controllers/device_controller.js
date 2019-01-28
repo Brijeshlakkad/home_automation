@@ -214,18 +214,6 @@ myApp.controller("DeviceController", function($rootScope,$scope,$http,$window,$s
       });
     }
   };
-
-  $scope.gotoDevice = function(dvID,hwID,roomID,homeID){
-    $cookies.remove('homeID');
-    $cookies.remove('roomID');
-    $cookies.remove('hwID');
-    $cookies.remove('dvID');
-    $cookies.put('homeID',homeID);
-    $cookies.put('roomID',roomID);
-    $cookies.put('hwID',hwID);
-    $cookies.put('dvID',dvID);
-    $window.location.href="device_status.php";
-  };
 });
 function deleteDevice(id){
   angular.element($("#deviceModificationCtrl")).scope().deleteDevice(id);

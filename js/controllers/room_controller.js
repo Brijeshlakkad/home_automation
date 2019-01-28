@@ -147,24 +147,12 @@ myApp.controller("RoomController", function($rootScope,$scope,$http,$window,$sce
       });
     }
   };
-
-  $scope.gotoRoom = function(homeID,roomID){
-    alert("GotoRoom");
-    /*$cookies.remove('homeID');
-    $cookies.remove('roomID');
-    $cookies.put('homeID',homeID);
-    $cookies.put('roomID',roomID);
-    $window.location.href="hardware.php";*/
-  };
 });
 function deleteRoom(id){
   angular.element($("#roomModificationCtrl")).scope().deleteRoom(id);
 }
 function editRoom(id,roomName){
   angular.element($("#roomModificationCtrl")).scope().editRoom(id,roomName);
-}
-function gotoRoom(homeID,roomID){
-  angular.element($("#roomModificationCtrl")).scope().gotoRoom(homeID,roomID);
 }
 myApp.directive("roomNameDir",function($rootScope,$http){
   return{

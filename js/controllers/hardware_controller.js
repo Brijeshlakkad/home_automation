@@ -176,25 +176,12 @@ myApp.controller("HardwareController", function($rootScope,$scope,$http,$window,
       });
     }
   };
-
-  $scope.gotoHardware = function(hwID,roomID,homeID){
-    $cookies.remove('homeID');
-    $cookies.remove('roomID');
-    $cookies.remove('hwID');
-    $cookies.put('homeID',homeID);
-    $cookies.put('roomID',roomID);
-    $cookies.put('hwID',hwID);
-    $window.location.href="device.php";
-  };
 });
 function deleteHardware(id){
   angular.element($("#hwModificationCtrl")).scope().deleteHardware(id);
 }
 function editHardware(id,hwName,hwSeries,hwIP){
   angular.element($("#hwModificationCtrl")).scope().editHardware(id,hwName,hwSeries,hwIP);
-}
-function gotoHardware(hwID,roomID,homeID){
-  angular.element($("#hwModificationCtrl")).scope().gotoHardware(hwID,roomID,homeID);
 }
 myApp.directive("hwNameDir",function($rootScope,$http){
   return{
