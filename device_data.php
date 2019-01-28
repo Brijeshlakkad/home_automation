@@ -25,20 +25,20 @@ class Device{
     }
   }
 }
-function getDeviceDataUsingID($con,$dvID){
+function getDeviceDataUsingID($con,$userID,$dvID){
   $hw = new Device;
-  $sql="SELECT * FROM room_device where id='$dvID'";
+  $sql="SELECT * FROM room_device where id='$dvID' and uid='$userID'";
   $hw->getData($con,$sql);
   return $hw;
 }
-function getDeviceDataUsingName($con,$dvName,$hwName,$roomName,$homeName){
+function getDeviceDataUsingName($con,$userID,$dvName,$hwName,$roomName,$homeName){
   $dv = new Device;
-  $hw=getHardwareDataUsingName($con,$hwName,$roomName,$homeName);
+  $hw=getHardwareDataUsingName($con,$userID,$hwName,$roomName,$homeName);
   if($hw->error) return $hw;
   $homeID=$hw->homeID;
   $roomID=$hw->roomID;
   $hwID=$hw->hwID;
-  $sql="SELECT * FROM room_device where device_name='$dvName' and hid='$homeID' and room_id='$roomID' and hw_id='$hwID'";
+  $sql="SELECT * FROM room_device where device_name='$dvName' and hid='$homeID' and room_id='$roomID' and hw_id='$hwID' and uid='$userID'";
   $dv->getData($con,$sql);
   return $dv;
 }

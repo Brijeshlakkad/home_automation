@@ -1,0 +1,105 @@
+    <!-- Mobile Menu start -->
+    <div class="mobile-menu-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="mobile-menu">
+                        <nav id="dropdown">
+                            <ul class="mobile-menu-nav">
+                                <li><a href="home.php">Home</a>
+                                </li>
+                                <li><a href="subscription.php">Subscription</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Mobile Menu end -->
+    <!-- Main Menu area start-->
+    <div class="main-menu-area mg-tb-40">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
+                        <li class="active"><a href="home.php"><i class="notika-icon notika-house"></i> Home</a>
+                        </li>
+                        <li><a  href="subscription.php"><i class="notika-icon notika-form"></i> Subscription</a>
+                        </li>
+                        <li><a href="settings.php"><i class="notika-icon notika-settings"></i> Settings</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content custom-menu-content">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main Menu area End-->
+    <div class="container" id="homeModificationCtrl">
+      <button class="btn btn-lg notika-btn-lightblue btn-reco-mg btn-button-mg" data-toggle="modal" data-target="#addHome"><span class="glyphicon glyphicon-plus"></span> Add Home</button>
+      <div class="row" ng-bind-html="showAllHome">
+
+      </div>
+      <div class="modal fade" id="addHome" role="dialog">
+          <div class="modal-dialog modal-sm">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  </div>
+                  <div class="modal-body">
+                    <h2>Create new home</h2>
+                    <form name="homeNameForm" novalidate>
+                    <div class="row">
+                      <div class="nk-int-st">
+                        <input class="form-control" name="homeName" data-ng-model="homeName" type="text" placeholder="Home Name" ng-style="homeNameStyle" ng-change="analyzeHomeName(homeName)" required home-name-dir autofocus/>
+                      </div>
+                      <span style="color:red;" id="homeName" ng-show="homeNameForm.homeName.$dirty && homeNameForm.homeName.$invalid">
+                      <span ng-show="homeNameForm.homeName.$error.required">Please enter home name</span>
+                      <span ng-show="!homeNameForm.homeName.$error.required && homeNameForm.homeName.$error.homeNameValid">Please enter only alphabetics and digits</span>
+                      <span ng-show="!homeNameForm.homeName.$error.required && !homeNameForm.homeName.$error.homeNameValid && homeNameForm.homeName.$error.homeNameLenValid">Please enter only more than 3 characters</span>
+                      <span ng-show="homeNameForm.homeName.$error.homeNameExistsValid">Home name already exists</span>
+                      </span>
+                    </div>
+                  </form>
+                  </div>
+                  <div class="modal-footer" style="margin:10px;">
+                      <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="homeNameForm.homeName.$invalid" ng-click="addHome()">Create</button>
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="modal fade" id="renameHome" role="dialog">
+          <div class="modal-dialog modal-sm">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  </div>
+                  <div class="modal-body">
+                    <h2>Modify your home</h2>
+                    <form name="homeReNameForm" novalidate>
+                    <div class="row">
+                      <div class="nk-int-st">
+                        <input class="form-control" name="homeReName" ng-model="homeReName" type="text" placeholder="Home Name" ng-style="homeReNameStyle" ng-change="analyzeHomeName(homeReName)" required home-name-dir autofocus/>
+                      </div>
+                      <span style="color:red;" id="homeReName" ng-show="homeReNameForm.homeReName.$dirty && homeReNameForm.homeReName.$invalid">
+                      <span ng-show="homeReNameForm.homeReName.$error.required">Please enter home name</span>
+                      <span ng-show="!homeReNameForm.homeReName.$error.required && homeReNameForm.homeReName.$error.homeNameValid">Please enter only alphabetics and digits</span>
+                      <span ng-show="!homeReNameForm.homeReName.$error.required && !homeReNameForm.homeReName.$error.homeNameValid && homeReNameForm.homeReName.$error.homeNameLenValid">Please enter only more than 3 characters</span>
+                      <span ng-show="homeReNameForm.homeReName.$error.homeNameExistsValid">Home name already exists</span>
+                      </span>
+                    </div>
+                  </form>
+                  </div>
+                  <div class="modal-footer" style="margin:10px;">
+                      <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="homeReNameForm.homeReName.$invalid" ng-click="modifyHome()">Modify</button>
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+      </div>

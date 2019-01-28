@@ -15,7 +15,7 @@ myApp.controller("DeviceStatusController", function($rootScope,$scope,$http,$win
     $http({
       method: "POST",
       url: "device_actions.php",
-      data: "action=5&email="+$scope.user+"&deviceName="+$scope.dvID+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID+"&hwName="+$scope.hwID,
+      data: "action=5&email="+$scope.user+"&deviceName="+$scope.dvID+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID+"&hwName="+$scope.hwID+"&userID="+$scope.userID,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function mySuccess(response){
       var data=response.data;
@@ -43,6 +43,7 @@ myApp.controller("DeviceStatusController", function($rootScope,$scope,$http,$win
           }
         }
       }else{
+        $scope.showErrorDialog(data.errorMessage);
       }
     },function myError(response){
 
@@ -58,7 +59,7 @@ myApp.controller("DeviceStatusController", function($rootScope,$scope,$http,$win
     $http({
       method: "POST",
       url: "device_actions.php",
-      data: "action=6&email="+$scope.user+"&deviceName="+$scope.dvID+"&status="+val+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID+"&hwName="+$scope.hwID,
+      data: "action=6&email="+$scope.user+"&deviceName="+$scope.dvID+"&status="+val+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID+"&hwName="+$scope.hwID+"&userID="+$scope.userID,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function mySuccess(response){
       var data=response.data;
@@ -85,10 +86,18 @@ myApp.controller("DeviceStatusController", function($rootScope,$scope,$http,$win
           }
         }
       }else{
+        $scope.showErrorDialog(data.errorMessage);
       }
     },function myError(response){
 
     });
+  };
+  $scope.showErrorDialog=function(error){
+    swal({
+     title: "Try Again!",
+     text: ""+error,
+     timer: 2000
+   });
   };
   $scope.changeDeviceSlider=function(val){
     if(typeof val == 'undefined' || val==null){
@@ -97,13 +106,14 @@ myApp.controller("DeviceStatusController", function($rootScope,$scope,$http,$win
       $http({
         method: "POST",
         url: "device_actions.php",
-        data: "action=7&email="+$scope.user+"&deviceName="+$scope.dvID+"&value="+val+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID+"&hwName="+$scope.hwID,
+        data: "action=7&email="+$scope.user+"&deviceName="+$scope.dvID+"&value="+val+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID+"&hwName="+$scope.hwID+"&userID="+$scope.userID,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       }).then(function mySuccess(response){
         var data=response.data;
         if(!data.error){
           $scope.getDevice();
         }else{
+          $scope.showErrorDialog(data.errorMessage);
         }
       },function myError(response){
 

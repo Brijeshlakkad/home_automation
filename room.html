@@ -62,7 +62,7 @@
                     <form name="roomNameForm" novalidate>
                     <div class="row">
                       <div class="nk-int-st">
-                        <input class="form-control" name="roomName" data-ng-model="roomName" type="text" placeholder="Room Name" ng-style="roomNameStyle" ng-change="analyzeRoomName(roomName)" required room-name-dir/>
+                        <input class="form-control" name="roomName" data-ng-model="roomName" type="text" placeholder="Room Name" ng-style="roomNameStyle" ng-change="analyzeRoomName(roomName)" required room-name-dir autofocus/>
                       </div>
                       <span style="color:red;" id="roomName" ng-show="roomNameForm.roomName.$dirty && roomNameForm.roomName.$invalid">
                       <span ng-show="roomNameForm.roomName.$error.required">Please enter room name</span>
@@ -91,7 +91,7 @@
                     <form name="roomReNameForm" novalidate>
                     <div class="row">
                       <div class="nk-int-st">
-                        <input class="form-control" name="roomReName" ng-model="roomReName" type="text" placeholder="Home Name" ng-style="roomReNameStyle" ng-change="analyzeHomeName(roomReName)" required room-name-dir/>
+                        <input class="form-control" name="roomReName" ng-model="roomReName" type="text" placeholder="Home Name" ng-style="roomReNameStyle" ng-change="analyzeHomeName(roomReName)" required room-name-dir autofocus/>
                       </div>
                       <span style="color:red;" id="roomReName" ng-show="roomReNameForm.roomReName.$dirty && roomReNameForm.roomReName.$invalid">
                       <span ng-show="roomReNameForm.roomReName.$error.required">Please enter room name</span>

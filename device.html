@@ -62,7 +62,7 @@
                     <form name="dvForm" novalidate>
                     <div class="row" style="padding-bottom:10px;">
                       <div class="nk-int-st">
-                        <input class="form-control" name="dvName" data-ng-model="dvName" type="text" placeholder="Device Name" ng-style="dvNameStyle" ng-change="analyzeDvName(dvName)" required dv-name-dir/>
+                        <input class="form-control" name="dvName" data-ng-model="dvName" type="text" placeholder="Device Name" ng-style="dvNameStyle" ng-change="analyzeDvName(dvName)" required dv-name-dir autofocus/>
                       </div>
                       <span style="color:red;" id="dvName" ng-show="dvForm.dvName.$dirty && dvForm.dvName.$invalid">
                       <span ng-show="dvForm.dvName.$error.required">Please enter device name</span>
@@ -116,7 +116,7 @@
                     <form name="dvReForm" novalidate>
                     <div class="row">
                       <div class="nk-int-st">
-                        <input class="form-control" name="dvReName" ng-model="dvReName" type="text" placeholder="Hardware Name" ng-style="dvNameStyle" ng-change="analyzeDvName(dvReName)" required dv-name-dir/>
+                        <input class="form-control" name="dvReName" ng-model="dvReName" type="text" placeholder="Hardware Name" ng-style="dvNameStyle" ng-change="analyzeDvName(dvReName)" required dv-name-dir autofocus/>
                       </div>
                       <span style="color:red;" id="dvReName" ng-show="dvReForm.dvReName.$dirty && dvReForm.dvReName.$invalid">
                       <span ng-show="dvReForm.dvReName.$error.required">Please enter device name</span>

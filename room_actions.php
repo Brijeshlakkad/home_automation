@@ -164,10 +164,11 @@ function getRoomList($gotData){
 }
 if(isset($_REQUEST['action'])){
   $action=$_REQUEST['action'];
-  if($action=="0" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']))
+  if($action=="0" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['userID']))
   {
     $homeName=$_REQUEST['homeName'];
     $email=$_REQUEST['email'];
+    $userID=$_REQUEST['userID'];
     $gotData = (object) null;
     $gotData->user=(object) null;
     $gotData->error=false;
@@ -175,18 +176,22 @@ if(isset($_REQUEST['action'])){
     $gotData->con=$con;
     $gotData->user->email=$email;
     $gotData->user->homeName=$homeName;
-    $h=getHomeDataUsingName($gotData->con,$homeName);
-    if($h->error) return $h;
-    $homeID=$h->homeID;
-    $gotData->user->homeID=$homeID;
-    $gotData=getRoomData($gotData);
-    echo json_encode($gotData);
+    $h=getHomeDataUsingName($gotData->con,$userID,$homeName);
+    if($h->error){
+      echo json_encode($h);
+    }else{
+      $homeID=$h->homeID;
+      $gotData->user->homeID=$homeID;
+      $gotData=getRoomData($gotData);
+      echo json_encode($gotData);
+    }
   }
-  else if($action=="1" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']))
+  else if($action=="1" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['userID']))
     {
       $email=$_REQUEST['email'];
       $roomName=$_REQUEST['roomName'];
       $homeName=$_REQUEST['homeName'];
+      $userID=$_REQUEST['userID'];
       $gotData = (object) null;
       $gotData->user=(object) null;
       $gotData->user->room=(object) null;
@@ -198,12 +203,15 @@ if(isset($_REQUEST['action'])){
       $gotData->user->room->email=$email;
       $gotData->user->room->roomName=$roomName;
       $gotData->user->room->action=$action;
-      $h=getHomeDataUsingName($gotData->con,$homeName);
-      if($h->error) return $h;
-      $homeID=$h->homeID;
-      $gotData->user->room->homeID=$homeID;
-      $gotData=createRoom($gotData);
-      echo json_encode($gotData);
+      $h=getHomeDataUsingName($gotData->con,$userID,$homeName);
+      if($h->error){
+        echo json_encode($h);
+      }else{
+        $homeID=$h->homeID;
+        $gotData->user->room->homeID=$homeID;
+        $gotData=createRoom($gotData);
+        echo json_encode($gotData);
+      }
     }else if($action=="2" && isset($_REQUEST['email']) && isset($_REQUEST['id'])){
       $email=$_REQUEST['email'];
       $id=$_REQUEST['id'];
@@ -236,10 +244,11 @@ if(isset($_REQUEST['action'])){
       $gotData->user->room->action=$action;
       $gotData=renameRoom($gotData);
       echo json_encode($gotData);
-    }else if($action=="4" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']))
+    }else if($action=="4" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['userID']))
     {
       $homeName=$_REQUEST['homeName'];
       $email=$_REQUEST['email'];
+      $userID=$_REQUEST['userID'];
       $gotData = (object) null;
       $gotData->user=(object) null;
       $gotData->error=false;
@@ -247,12 +256,15 @@ if(isset($_REQUEST['action'])){
       $gotData->con=$con;
       $gotData->user->email=$email;
       $gotData->user->homeName=$homeName;
-      $h=getHomeDataUsingName($gotData->con,$homeName);
-      if($h->error) return $h;
-      $homeID=$h->homeID;
-      $gotData->user->homeID=$homeID;
-      $gotData=getRoomList($gotData);
-      echo json_encode($gotData);
+      $h=getHomeDataUsingName($gotData->con,$userID,$homeName);
+      if($h->error){
+        echo json_encode($h);
+      }else{
+        $homeID=$h->homeID;
+        $gotData->user->homeID=$homeID;
+        $gotData=getRoomList($gotData);
+        echo json_encode($gotData);
+      }
     }else{
       $gotData = (object) null;
       $gotData->error=true;

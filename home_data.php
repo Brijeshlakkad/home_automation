@@ -18,15 +18,15 @@ class Home{
     }
   }
 }
-function getHomeDataUsingID($con,$homeID){
+function getHomeDataUsingID($con,$userID,$homeID){
   $h = new Home;
-  $sql="SELECT * FROM home where id='$homeID'";
+  $sql="SELECT * FROM home where id='$homeID' and uid='$userID'";
   $h->getData($con,$sql);
   return $h;
 }
-function getHomeDataUsingName($con,$homeName){
+function getHomeDataUsingName($con,$userID,$homeName){
   $h = new Home;
-  $sql="SELECT * FROM home where homename='$homeName'";
+  $sql="SELECT * FROM home where homename='$homeName' and uid='$userID'";
   $h->getData($con,$sql);
   return $h;
 }

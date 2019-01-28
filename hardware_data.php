@@ -23,19 +23,19 @@ class Hardware{
     }
   }
 }
-function getHardwareDataUsingID($con,$hwID){
+function getHardwareDataUsingID($con,$userID,$hwID){
   $hw = new Hardware;
-  $sql="SELECT * FROM hardware where id='$hwID'";
+  $sql="SELECT * FROM hardware where id='$hwID' and uid='$userID'";
   $hw->getData($con,$sql);
   return $hw;
 }
-function getHardwareDataUsingName($con,$hwName,$roomName,$homeName){
+function getHardwareDataUsingName($con,$userID,$hwName,$roomName,$homeName){
   $hw = new Hardware;
-  $r=getRoomDataUsingName($con,$roomName,$homeName);
+  $r=getRoomDataUsingName($con,$userID,$roomName,$homeName);
   if($r->error) return $r;
   $homeID=$r->homeID;
   $roomID=$r->roomID;
-  $sql="SELECT * FROM hardware where name='$hwName' and hid='$homeID' and rid='$roomID'";
+  $sql="SELECT * FROM hardware where name='$hwName' and hid='$homeID' and rid='$roomID' and uid='$userID'";
   $hw->getData($con,$sql);
   return $hw;
 }

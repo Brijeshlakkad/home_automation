@@ -46,13 +46,12 @@ myApp.controller("HardwareController", function($rootScope,$scope,$http,$window,
     $http({
       method: "POST",
       url: "hardware_actions.php",
-      data: "action=1&email="+$scope.user+"&hwName="+$scope.hwName+"&hwSeries="+$scope.hwSeries+"&hwIP="+$scope.hwIP+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID,
+      data: "action=1&email="+$scope.user+"&hwName="+$scope.hwName+"&hwSeries="+$scope.hwSeries+"&hwIP="+$scope.hwIP+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID+"&userID="+$scope.userID,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function mySuccess(response){
       var data=response.data;
       $scope.hwForm.$setPristine();
       $scope.hwName="";
-      alert(JSON.stringify(data));
       if(!data.error){
         $scope.showSuccessDialog("Hardware Created");
         $scope.getAllHardware();
@@ -67,7 +66,7 @@ myApp.controller("HardwareController", function($rootScope,$scope,$http,$window,
     $http({
       method: "POST",
       url: "hardware_actions.php",
-      data: "action=4&email="+$scope.user+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID,
+      data: "action=4&email="+$scope.user+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID+"&userID="+$scope.userID,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function mySuccess(response){
       var data=response.data;
@@ -98,7 +97,7 @@ myApp.controller("HardwareController", function($rootScope,$scope,$http,$window,
     $http({
       method: "POST",
       url: "hardware_actions.php",
-      data: "action=0&email="+$scope.user+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID,
+      data: "action=0&email="+$scope.user+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID+"&userID="+$scope.userID,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function mySuccess(response){
       var data=response.data;

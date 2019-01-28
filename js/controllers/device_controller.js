@@ -52,7 +52,7 @@ myApp.controller("DeviceController", function($rootScope,$scope,$http,$window,$s
     $http({
       method: "POST",
       url: "device_actions.php",
-      data: "action=1&email="+$scope.user+"&dvName="+$scope.dvName+"&dvPort="+$scope.dvPort+"&dvImg="+$scope.dvImg+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID+"&hwName="+$scope.hwID,
+      data: "action=1&email="+$scope.user+"&dvName="+$scope.dvName+"&dvPort="+$scope.dvPort+"&dvImg="+$scope.dvImg+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID+"&hwName="+$scope.hwID+"&userID="+$scope.userID,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function mySuccess(response){
       var data=response.data;
@@ -94,7 +94,7 @@ myApp.controller("DeviceController", function($rootScope,$scope,$http,$window,$s
     $http({
       method: "POST",
       url: "device_actions.php",
-      data: "action=8&email="+$scope.user+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID+"&hwName="+$scope.hwID,
+      data: "action=8&email="+$scope.user+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID+"&hwName="+$scope.hwID+"&userID="+$scope.userID,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function mySuccess(response){
       var data=response.data;
@@ -125,7 +125,7 @@ myApp.controller("DeviceController", function($rootScope,$scope,$http,$window,$s
     $http({
       method: "POST",
       url: "device_actions.php",
-      data: "action=0&email="+$scope.user+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID+"&hwName="+$scope.hwID,
+      data: "action=0&email="+$scope.user+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID+"&hwName="+$scope.hwID+"&userID="+$scope.userID,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function mySuccess(response){
       var data=response.data;

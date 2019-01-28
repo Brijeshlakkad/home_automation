@@ -176,11 +176,12 @@ function getHardwareList($gotData){
 
 if(isset($_REQUEST['action'])){
   $action=$_REQUEST['action'];
-  if($action=="0" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']))
+  if($action=="0" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['userID']))
   {
     $email=$_REQUEST['email'];
     $homeName=$_REQUEST['homeName'];
     $roomName=$_REQUEST['roomName'];
+    $userID=$_REQUEST['userID'];
     $gotData = (object) null;
     $gotData->error=false;
     $gotData->errorMessage="null";
@@ -190,21 +191,25 @@ if(isset($_REQUEST['action'])){
     $gotData->user->email=$email;
     $gotData->user->roomName=$roomName;
     $gotData->user->action=$action;
-    $r=getRoomDataUsingName($gotData->con,$roomName,$homeName);
-    if($r->error) return $r;
-    $roomID=$r->roomID;
-    $gotData->user->roomID=$roomID;
-    $homeID=$r->homeID;
-    $gotData->user->homeID=$homeID;
-    $gotData=getHardwareData($gotData);
-    echo json_encode($gotData);
-  }else if($action=="1" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName']) && isset($_REQUEST['hwSeries']) && isset($_REQUEST['hwIP'])){
+    $r=getRoomDataUsingName($gotData->con,$userID,$roomName,$homeName);
+    if($r->error){
+      echo json_encode($r);
+    }else{
+      $roomID=$r->roomID;
+      $gotData->user->roomID=$roomID;
+      $homeID=$r->homeID;
+      $gotData->user->homeID=$homeID;
+      $gotData=getHardwareData($gotData);
+      echo json_encode($gotData);
+    }
+  }else if($action=="1" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName']) && isset($_REQUEST['hwSeries']) && isset($_REQUEST['hwIP']) && isset($_REQUEST['userID'])){
     $email=$_REQUEST['email'];
     $homeName=$_REQUEST['homeName'];
     $roomName=$_REQUEST['roomName'];
     $hwName=$_REQUEST['hwName'];
     $hwSeries=$_REQUEST['hwSeries'];
     $hwIP=$_REQUEST['hwIP'];
+    $userID=$_REQUEST['userID'];
     $gotData = (object) null;
     $gotData->user=(object) null;
     $gotData->user->hw=(object) null;
@@ -218,14 +223,17 @@ if(isset($_REQUEST['action'])){
     $gotData->user->hw->hwName=$hwName;
     $gotData->user->hw->hwSeries=$hwSeries;
     $gotData->user->hw->hwIP=$hwIP;
-    $r=getRoomDataUsingName($gotData->con,$roomName,$homeName);
-    if($r->error) return $r;
-    $roomID=$r->roomID;
-    $gotData->user->hw->roomID=$roomID;
-    $homeID=$r->homeID;
-    $gotData->user->hw->homeID=$homeID;
-    $gotData=createHardware($gotData);
-    echo json_encode($gotData);
+    $r=getRoomDataUsingName($gotData->con,$userID,$roomName,$homeName);
+    if($r->error){
+      echo json_encode($r);
+    }else{
+      $roomID=$r->roomID;
+      $gotData->user->hw->roomID=$roomID;
+      $homeID=$r->homeID;
+      $gotData->user->hw->homeID=$homeID;
+      $gotData=createHardware($gotData);
+      echo json_encode($gotData);
+    }
   }
   else if($action=="2" && isset($_REQUEST['email']) && isset($_REQUEST['id'])){
     $email=$_REQUEST['email'];
@@ -263,11 +271,12 @@ if(isset($_REQUEST['action'])){
     $gotData->user->hw->hwIP=$hwIP;
     $gotData=renameHardware($gotData);
     echo json_encode($gotData);
-  }else if($action=="4" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']))
+  }else if($action=="4" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['userID']))
   {
     $email=$_REQUEST['email'];
     $homeName=$_REQUEST['homeName'];
     $roomName=$_REQUEST['roomName'];
+    $userID=$_REQUEST['userID'];
     $gotData = (object) null;
     $gotData->error=false;
     $gotData->errorMessage="null";
@@ -277,14 +286,17 @@ if(isset($_REQUEST['action'])){
     $gotData->user->email=$email;
     $gotData->user->roomName=$roomName;
     $gotData->user->action=$action;
-    $r=getRoomDataUsingName($gotData->con,$roomName,$homeName);
-    if($r->error) return $r;
-    $roomID=$r->roomID;
-    $gotData->user->roomID=$roomID;
-    $homeID=$r->homeID;
-    $gotData->user->homeID=$homeID;
-    $gotData=getHardwareList($gotData);
-    echo json_encode($gotData);
+    $r=getRoomDataUsingName($gotData->con,$userID,$roomName,$homeName);
+    if($r->error){
+      echo json_encode($r);
+    }else{
+      $roomID=$r->roomID;
+      $gotData->user->roomID=$roomID;
+      $homeID=$r->homeID;
+      $gotData->user->homeID=$homeID;
+      $gotData=getHardwareList($gotData);
+      echo json_encode($gotData);
+    }
   }else{
     $gotData = (object) null;
     $gotData->error=true;

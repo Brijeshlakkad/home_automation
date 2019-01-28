@@ -20,18 +20,18 @@ class Room{
     }
   }
 }
-function getRoomDataUsingID($con,$roomID){
+function getRoomDataUsingID($con,$userID,$roomID){
   $r = new Room;
-  $sql="SELECT * FROM room where id='$roomID'";
+  $sql="SELECT * FROM room where id='$roomID' and uid='$userID'";
   $r->getData($con,$sql);
   return $r;
 }
-function getRoomDataUsingName($con,$roomName,$homeName){
+function getRoomDataUsingName($con,$userID,$roomName,$homeName){
   $r = new Room;
-  $h=getHomeDataUsingName($con,$homeName);
+  $h=getHomeDataUsingName($con,$userID,$homeName);
   if($h->error) return $h;
   $homeID=$h->homeID;
-  $sql="SELECT * FROM room where roomname='$roomName' and hid='$homeID'";
+  $sql="SELECT * FROM room where roomname='$roomName' and hid='$homeID' and uid='$userID'";
   $r->getData($con,$sql);
   return $r;
 }

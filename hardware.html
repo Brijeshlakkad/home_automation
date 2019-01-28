@@ -62,7 +62,7 @@
                     <form name="hwForm" novalidate>
                     <div class="row">
                       <div class="nk-int-st">
-                        <input class="form-control" name="hwName" data-ng-model="hwName" type="text" placeholder="Hardware Name" ng-style="hwNameStyle" ng-change="analyzeHwName(hwName)" required hw-name-dir/>
+                        <input class="form-control" name="hwName" data-ng-model="hwName" type="text" placeholder="Hardware Name" ng-style="hwNameStyle" ng-change="analyzeHwName(hwName)" required hw-name-dir autofocus/>
                       </div>
                       <span style="color:red;" id="hwName" ng-show="hwForm.hwName.$dirty && hwForm.hwName.$invalid">
                       <span ng-show="hwForm.hwName.$error.required">Please enter hardware name</span>
@@ -107,7 +107,7 @@
                     <form name="hwReForm" novalidate>
                     <div class="row">
                       <div class="nk-int-st">
-                        <input class="form-control" name="hwReName" ng-model="hwReName" type="text" placeholder="Hardware Name" ng-style="hwNameStyle" ng-change="analyzeHwName(hwReName)" required hw-name-dir/>
+                        <input class="form-control" name="hwReName" ng-model="hwReName" type="text" placeholder="Hardware Name" ng-style="hwNameStyle" ng-change="analyzeHwName(hwReName)" required hw-name-dir autofocus/>
                       </div>
                       <span style="color:red;" id="hwReName" ng-show="hwReForm.hwReName.$dirty && hwReForm.hwReName.$invalid">
                       <span ng-show="hwReForm.hwReName.$error.required">Please enter hardware name</span>
