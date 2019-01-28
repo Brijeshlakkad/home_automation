@@ -15,7 +15,7 @@ myApp.controller("DeviceStatusController", function($rootScope,$scope,$http,$win
     $http({
       method: "POST",
       url: "device_actions.php",
-      data: "action=5&email="+$scope.user+"&deviceID="+$scope.dvID,
+      data: "action=5&email="+$scope.user+"&deviceName="+$scope.dvID+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID+"&hwName="+$scope.hwID,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function mySuccess(response){
       var data=response.data;
@@ -58,7 +58,7 @@ myApp.controller("DeviceStatusController", function($rootScope,$scope,$http,$win
     $http({
       method: "POST",
       url: "device_actions.php",
-      data: "action=6&email="+$scope.user+"&deviceID="+$scope.dvID+"&status="+val,
+      data: "action=6&email="+$scope.user+"&deviceName="+$scope.dvID+"&status="+val+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID+"&hwName="+$scope.hwID,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function mySuccess(response){
       var data=response.data;
@@ -97,7 +97,7 @@ myApp.controller("DeviceStatusController", function($rootScope,$scope,$http,$win
       $http({
         method: "POST",
         url: "device_actions.php",
-        data: "action=7&email="+$scope.user+"&deviceID="+$scope.dvID+"&value="+val,
+        data: "action=7&email="+$scope.user+"&deviceName="+$scope.dvID+"&value="+val+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID+"&hwName="+$scope.hwID,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       }).then(function mySuccess(response){
         var data=response.data;

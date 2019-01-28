@@ -1,5 +1,6 @@
 <?php
 require_once("config.php");
+require_once("device_data.php");
 function getUserID($gotData)
 {
   $email=$gotData->user->email;
@@ -136,6 +137,9 @@ function getDeviceData($gotData){
   $homeID=$gotData->user->homeID;
   $roomID=$gotData->user->roomID;
   $hwID=$gotData->user->hwID;
+  $homeName=$gotData->user->homeName;
+  $roomName=$gotData->user->roomName;
+  $hwName=$gotData->user->hwName;
   $sql="SELECT * FROM room_device where uid='$userID' and hid='$homeID' and room_id='$roomID' and hw_id='$hwID'";
   $check=mysqli_query($gotData->con,$sql);
   $gotData->total=mysqli_num_rows($check);
@@ -169,7 +173,7 @@ function getDeviceData($gotData){
       }
       $deleteButton="<button class='btn btn-default' onclick='deleteDevice($id)' ><span class='glyphicon glyphicon-trash'></span> Delete</button>";
       $editButton="<button class='btn btn-default' onclick=$editFunc><span class='glyphicon glyphicon-pencil'></span> Edit</button>";
-      $allDevice.='<div class="grid-item card"><div class="row pull-right" style="padding-right:10px;">'.$drawStatus.'</div><div class="row"><a href="#!'.$homeID.'/'.$roomID.'/'.$hwID.'/'.$id.'">'.$dvName.'</a></div><div class="row" style="color:rgba(180,180,180,1.0);font-size:15px;">'.$dvImgValue.'</div><div class="row"><div class="col-md-3"></div><div class="col-md-3">'.$editButton.'</div><div class="col-md-3">'.$deleteButton.'</div><div class="col-md-3"></div></div></div>';
+      $allDevice.='<div class="grid-item card"><div class="row pull-right" style="padding-right:10px;">'.$drawStatus.'</div><div class="row"><a href="#!'.$homeName.'/'.$roomName.'/'.$hwName.'/'.$dvName.'">'.$dvName.'</a></div><div class="row" style="color:rgba(180,180,180,1.0);font-size:15px;">'.$dvImgValue.'</div><div class="row"><div class="col-md-3"></div><div class="col-md-3">'.$editButton.'</div><div class="col-md-3">'.$deleteButton.'</div><div class="col-md-3"></div></div></div>';
     }
     $allDevice.='</div>';
     $gotData->user->allDevice=$allDevice;
@@ -386,29 +390,37 @@ function deleteDeviceSlider($dvID,$con){
 }
 if(isset($_REQUEST['action'])){
   $action=$_REQUEST['action'];
-  if($action=="0" && isset($_REQUEST['email']) && isset($_REQUEST['homeID']) && isset($_REQUEST['roomID']) && isset($_REQUEST['hwID']))
+  if($action=="0" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName']))
   {
     $email=$_REQUEST['email'];
-    $hwID=$_REQUEST['hwID'];
-    $roomID=$_REQUEST['roomID'];
-    $homeID=$_REQUEST['homeID'];
+    $hwName=$_REQUEST['hwName'];
+    $roomName=$_REQUEST['roomName'];
+    $homeName=$_REQUEST['homeName'];
     $gotData = (object) null;
     $gotData->error=false;
     $gotData->errorMessage="null";
     $gotData->user=(object) null;
     $gotData->con=$con;
-    $gotData->user->homeID=$homeID;
     $gotData->user->email=$email;
-    $gotData->user->roomID=$roomID;
-    $gotData->user->hwID=$hwID;
+    $gotData->user->homeName=$homeName;
+    $gotData->user->roomName=$roomName;
+    $gotData->user->hwName=$hwName;
     $gotData->user->action=$action;
+    $hw=getHardwareDataUsingName($gotData->con,$hwName,$roomName,$homeName);
+    if($hw->error) return $hw;
+    $hwID=$hw->hwID;
+    $gotData->user->hwID=$hwID;
+    $roomID=$hw->roomID;
+    $gotData->user->roomID=$roomID;
+    $homeID=$hw->homeID;
+    $gotData->user->homeID=$homeID;
     $gotData=getDeviceData($gotData);
     echo json_encode($gotData);
-  }else if($action=="1" && isset($_REQUEST['email']) && isset($_REQUEST['homeID']) && isset($_REQUEST['roomID']) && isset($_REQUEST['hwID']) && isset($_REQUEST['dvName']) && isset($_REQUEST['dvPort']) && isset($_REQUEST['dvImg'])){
+  }else if($action=="1" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName']) && isset($_REQUEST['dvName']) && isset($_REQUEST['dvPort']) && isset($_REQUEST['dvImg'])){
     $email=$_REQUEST['email'];
-    $homeID=$_REQUEST['homeID'];
-    $roomID=$_REQUEST['roomID'];
-    $hwID=$_REQUEST['hwID'];
+    $homeName=$_REQUEST['homeName'];
+    $roomName=$_REQUEST['roomName'];
+    $hwName=$_REQUEST['hwName'];
     $dvName=$_REQUEST['dvName'];
     $dvPort=$_REQUEST['dvPort'];
     $dvImg=$_REQUEST['dvImg'];
@@ -420,13 +432,21 @@ if(isset($_REQUEST['action'])){
     $gotData->con=$con;
     $gotData->user->email=$email;
     $gotData->user->device->email=$email;
-    $gotData->user->device->homeID=$homeID;
-    $gotData->user->device->roomID=$roomID;
-    $gotData->user->device->hwID=$hwID;
+    $gotData->user->device->homeName=$homeName;
+    $gotData->user->device->roomName=$roomName;
+    $gotData->user->device->hwName=$hwName;
     $gotData->user->device->dvName=$dvName;
     $gotData->user->device->dvPort=$dvPort;
     $gotData->user->device->dvImg=$dvImg;
     $gotData->user->device->dvStatus="0";
+    $hw=getHardwareDataUsingName($gotData->con,$hwName,$roomName,$homeName);
+    if($hw->error) return $hw;
+    $hwID=$hw->hwID;
+    $gotData->user->device->hwID=$hwID;
+    $roomID=$hw->roomID;
+    $gotData->user->device->roomID=$roomID;
+    $homeID=$hw->homeID;
+    $gotData->user->device->homeID=$homeID;
     $gotData=createDevice($gotData);
     echo json_encode($gotData);
   }
@@ -476,22 +496,31 @@ if(isset($_REQUEST['action'])){
     $gotData=getDeviceImgs($gotData);
     echo json_encode($gotData);
   }
-  else if($action=="5" && isset($_REQUEST['email']) && isset($_REQUEST['deviceID'])){
+  else if($action=="5" && isset($_REQUEST['email']) && isset($_REQUEST['deviceName']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName'])){
     $email=$_REQUEST['email'];
-    $deviceID=$_REQUEST['deviceID'];
+    $homeName=$_REQUEST['homeName'];
+    $roomName=$_REQUEST['roomName'];
+    $hwName=$_REQUEST['hwName'];
+    $deviceName=$_REQUEST['deviceName'];
     $gotData = (object) null;
     $gotData->error=false;
     $gotData->errorMessage="null";
     $gotData->user=(object) null;
     $gotData->con=$con;
     $gotData->user->email=$email;
+    $dv=getDeviceDataUsingName($gotData->con,$deviceName,$hwName,$roomName,$homeName);
+    if($dv->error) return $dv;
+    $deviceID=$dv->dvID;
     $gotData->user->deviceID=$deviceID;
     $gotData=getDevice($gotData);
     echo json_encode($gotData);
   }
-  else if($action=="6" && isset($_REQUEST['email']) && isset($_REQUEST['deviceID']) && isset($_REQUEST['status'])){
+  else if($action=="6" && isset($_REQUEST['email']) && isset($_REQUEST['deviceName']) && isset($_REQUEST['status']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName'])){
     $email=$_REQUEST['email'];
-    $deviceID=$_REQUEST['deviceID'];
+    $homeName=$_REQUEST['homeName'];
+    $roomName=$_REQUEST['roomName'];
+    $hwName=$_REQUEST['hwName'];
+    $deviceName=$_REQUEST['deviceName'];
     $status=$_REQUEST['status'];
     $gotData = (object) null;
     $gotData->error=false;
@@ -499,14 +528,20 @@ if(isset($_REQUEST['action'])){
     $gotData->user=(object) null;
     $gotData->con=$con;
     $gotData->user->email=$email;
-    $gotData->user->deviceID=$deviceID;
     $gotData->user->status=$status;
+    $dv=getDeviceDataUsingName($gotData->con,$deviceName,$hwName,$roomName,$homeName);
+    if($dv->error) return $dv;
+    $deviceID=$dv->dvID;
+    $gotData->user->deviceID=$deviceID;
     $gotData=changeDeviceStatus($gotData);
     echo json_encode($gotData);
   }
-  else if($action=="7" && isset($_REQUEST['email']) && isset($_REQUEST['deviceID']) & isset($_REQUEST['value'])){
+  else if($action=="7" && isset($_REQUEST['email']) && isset($_REQUEST['deviceName']) & isset($_REQUEST['value']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName'])){
     $email=$_REQUEST['email'];
-    $dvID=$_REQUEST['deviceID'];
+    $homeName=$_REQUEST['homeName'];
+    $roomName=$_REQUEST['roomName'];
+    $hwName=$_REQUEST['hwName'];
+    $deviceName=$_REQUEST['deviceName'];
     $value=$_REQUEST['value'];
     $gotData = (object) null;
     $gotData->error=false;
@@ -516,26 +551,37 @@ if(isset($_REQUEST['action'])){
     $gotData->con=$con;
     $gotData->user->email=$email;
     $gotData->deviceSlider->email=$email;
-    $gotData->deviceSlider->dvID=$dvID;
     $gotData->deviceSlider->value=$value;
+    $dv=getDeviceDataUsingName($gotData->con,$deviceName,$hwName,$roomName,$homeName);
+    if($dv->error) return $dv;
+    $deviceID=$dv->dvID;
+    $gotData->deviceSlider->dvID=$deviceID;
     $gotData=changeDeviceSlider($gotData);
     echo json_encode($gotData);
-  }else if($action=="8" && isset($_REQUEST['email']) && isset($_REQUEST['homeID']) && isset($_REQUEST['roomID']) && isset($_REQUEST['hwID']))
+  }else if($action=="8" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName']))
   {
     $email=$_REQUEST['email'];
-    $hwID=$_REQUEST['hwID'];
-    $roomID=$_REQUEST['roomID'];
-    $homeID=$_REQUEST['homeID'];
+    $hwName=$_REQUEST['hwName'];
+    $roomName=$_REQUEST['roomName'];
+    $homeName=$_REQUEST['homeName'];
     $gotData = (object) null;
     $gotData->error=false;
     $gotData->errorMessage="null";
     $gotData->user=(object) null;
     $gotData->con=$con;
-    $gotData->user->homeID=$homeID;
     $gotData->user->email=$email;
-    $gotData->user->roomID=$roomID;
-    $gotData->user->hwID=$hwID;
+    $gotData->user->homeName=$homeName;
+    $gotData->user->roomName=$roomName;
+    $gotData->user->hwName=$hwName;
     $gotData->user->action=$action;
+    $hw=getHardwareDataUsingName($gotData->con,$hwName,$roomName,$homeName);
+    if($hw->error) return $hw;
+    $hwID=$hw->hwID;
+    $gotData->user->hwID=$hwID;
+    $roomID=$hw->roomID;
+    $gotData->user->roomID=$roomID;
+    $homeID=$hw->homeID;
+    $gotData->user->homeID=$homeID;
     $gotData=getDeviceList($gotData);
     echo json_encode($gotData);
   }else{

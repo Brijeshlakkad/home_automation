@@ -21,7 +21,7 @@ myApp.controller("RoomController", function($rootScope,$scope,$http,$window,$sce
     $http({
       method: "POST",
       url: "room_actions.php",
-      data: "action=1&email="+$scope.user+"&roomName="+$scope.roomName+"&homeID="+$scope.homeID,
+      data: "action=1&email="+$scope.user+"&roomName="+$scope.roomName+"&homeName="+$scope.homeID,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function mySuccess(response){
       var data=response.data;
@@ -41,7 +41,7 @@ myApp.controller("RoomController", function($rootScope,$scope,$http,$window,$sce
     $http({
       method: "POST",
       url: "room_actions.php",
-      data: "action=4&email="+$scope.user+"&homeID="+$scope.homeID,
+      data: "action=4&email="+$scope.user+"&homeName="+$scope.homeID,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function mySuccess(response){
       var data=response.data;
@@ -72,7 +72,7 @@ myApp.controller("RoomController", function($rootScope,$scope,$http,$window,$sce
     $http({
       method: "POST",
       url: "room_actions.php",
-      data: "action=0&email="+$scope.user+"&homeID="+$scope.homeID,
+      data: "action=0&email="+$scope.user+"&homeName="+$scope.homeID,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function mySuccess(response){
       var data=response.data;
