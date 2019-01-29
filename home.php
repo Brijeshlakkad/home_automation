@@ -66,14 +66,24 @@
     <script src="js/angular.js"></script>
 </head>
 <style>
-.footerB
- {
-     position: absolute;
-     bottom: 0;
-     padding: 1rem;
-     text-align: center;
+* {
+  margin: 0;
+}
+html, body {
+  height: 100%;
+}
+.page-wrap {
+  min-height: 100%;
+  /* equal to footer height */
+  margin-bottom: -20px;
+}
+.page-wrap:after {
+  content: "";
+  display: block;
+}
+ .footerB .page-wrap:after {
+   height: 130px;
  }
-
  .grid-container {
    display: grid;
    grid-column-gap: 50px;
@@ -140,7 +150,7 @@
         </div>
     </div>
     <!-- End Header Top Area -->
-    <div ng-view></div>
+    <div ng-view class="page-wrap"></div>
     <!-- Start Footer area-->
     <div class="footer-copyright-area footerB" style="width:100%">
         <div class="container">
