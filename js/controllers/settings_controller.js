@@ -166,6 +166,72 @@ myApp.controller("SettingsController",function($rootScope,$scope,$http,$window,$
 			});
 		};
     $scope.get_user_details();
+
+    var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+    var mediumRegex = new RegExp("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})");
+  /*  $scope.old_passwordStrength = {
+      "border-width":"1.45px"
+    };
+    $scope.analyze_old = function(value) {
+        if(strongRegex.test(value)) {
+            $scope.old_passwordStrength["border-color"] = "green";
+        } else if(mediumRegex.test(value)) {
+            $scope.old_passwordStrength["border-color"] = "orange";
+        } else {
+            $scope.old_passwordStrength["border-color"] = "red";
+        }
+    };*/
+		$scope.new_passwordStrength = {
+		    "border-width":"1.45px"
+    };
+    $scope.analyze_new = function(value) {
+        if(strongRegex.test(value)) {
+            $scope.new_passwordStrength["border-color"] = "green";
+        } else if(mediumRegex.test(value)) {
+            $scope.new_passwordStrength["border-color"] = "orange";
+        } else {
+            $scope.new_passwordStrength["border-color"] = "red";
+        }
+    };
+		$scope.cnew_passwordStrength = {
+      "border-width":"1.45px"
+    };
+    $scope.analyze_cnew = function(value) {
+        if(strongRegex.test(value)) {
+            $scope.cnew_passwordStrength["border-color"] = "green";
+        } else if(mediumRegex.test(value)) {
+            $scope.cnew_passwordStrength["border-color"] = "orange";
+        } else {
+            $scope.cnew_passwordStrength["border-color"] = "red";
+        }
+    };
+    $scope.submit_password = function() {
+			if($scope.new_password==$scope.confirm_new_password)
+			{
+        $http({
+  				method : "POST",
+  				url : "customer_interface.php",
+  				data : "action=2&oldPassword="+$scope.old_password+"&newPassword="+$scope.new_password+"&userID="+$scope.userID,
+  				headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+  			}).then(function mySuccess(response) {
+  				$scope.passwordForm.$setPristine();
+  				$scope.old_password="";
+  				$scope.new_password="";
+  				$scope.confirm_new_password="";
+  				var data = response.data;
+          alert(JSON.stringify(data));
+  				if(data.error){
+            alert(data.errorMessage);
+          }else{
+            alert("Password is changed");
+          }
+  			}, function myError(response) {
+  				alert("error");
+  			});
+      }else{
+        alert("passwords are not matching");
+      }
+    };
 });
 myApp.directive('contactDir', function($rootScope,$http) {
 				return {
@@ -273,6 +339,23 @@ myApp.directive('nameslenDir', function() {
 								mCtrl.$setValidity('nameslenvalid', true);
 							} else {
 								mCtrl.$setValidity('nameslenvalid', false);
+							}
+							return value;
+						}
+						mCtrl.$parsers.push(myValidation);
+					}
+				};
+});
+myApp.directive('passwordDir', function($rootScope) {
+				return {
+					require: 'ngModel',
+					link: function(scope, element, attr, mCtrl) {
+						function myValidation(value) {
+							var patt=new RegExp("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})");
+							if (patt.test(value)) {
+								mCtrl.$setValidity('passvalid', true);
+							} else {
+								mCtrl.$setValidity('passvalid', false);
 							}
 							return value;
 						}

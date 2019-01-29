@@ -113,6 +113,54 @@
     </div>
   </div>
   <div id="change_password" class="tabcontent" align="center">
-    hi
+    <form name="passwordForm" novalidate>
+    			  <h3>Change Password</h3>
+    			  <div class="row">
+    		  			<table class="myTable">
+    			  			<div class="form-group">
+    						<tr>
+    						<td><label for="old_password">Old Password:</label><br></td>
+    						<td><input type="password" class="form-control" name="old_password" placeholder="Enter first name" ng-model="old_password" required/></td>
+    						<td>
+    						<span style="color:red" id="old_password" ng-show="passwordForm.old_password.$dirty && passwordForm.old_password.$invalid">
+    						<span ng-show="passwordForm.old_password.$error.required">Old Password is required</span>
+    						</span>
+    						</td>
+    						</tr>
+    						</div>
+    						<div class="form-group">
+    						<tr>
+    						<td><label for="new_password">New Password:</label><br></td>
+    						<td><input type="password" class="form-control" name="new_password" placeholder="Enter first name" ng-model="new_password"  ng-style="new_passwordStrength" ng-change="analyze_new(new_password)" required  password-dir/></td>
+    						<td><a class="badge my_badge" data-toggle="tooltip" data-placement="top" title="Password should contain at least one number and at least one character">?</a>
+    						<span style="color:red" id="new_password" ng-show="passwordForm.new_password.$dirty && passwordForm.new_password.$invalid">
+    						<span ng-show="passwordForm.new_password.$error.required">New Password is required</span>
+    						<span ng-show="!passwordForm.new_password.$error.required && passwordForm.new_password.$error.passvalid">read instructions</span>
+    						</span>
+    						</td>
+    						</tr>
+    						</div>
+    						<div class="form-group">
+    						<tr>
+    						<td><label for="confirm_new_password">Confirm New Password:</label><br></td>
+    						<td><input type="password" class="form-control" name="confirm_new_password" placeholder="Enter first name" ng-model="confirm_new_password" ng-disabled="!passwordForm.new_password.$valid" ng-style="cnew_passwordStrength" ng-change="analyze_cnew(new_password,confirm_new_password)" required  password-dir/></td>
+    						<td>
+    						<span style="color:red" id="confirm_new_password" ng-show="passwordForm.confirm_new_password.$dirty && passwordForm.confirm_new_password.$invalid">
+    						<span ng-show="passwordForm.confirm_new_password.$error.required">Password is required</span>
+    						<span ng-show="!passwordForm.confirm_new_password.$error.required && passwordForm.confirm_new_password.$error.passvalid">read instructions</span>
+    						</span>
+    						</td>
+    						</tr>
+    						</div>
+    						<div class="form-group">
+    							<tr>
+    								<td><input type="submit" ng-click="submit_password()" id="submit_btn" value="Submit" class="btn btn-primary" ng-disabled="passwordForm.old_password.$invalid || passwordForm.new_password.$invalid || passwordForm.confirm_new_password.$invalid" /></td>
+    								<td id="status_part2"><img src="images/small_loader.gif" ng-if="spinner_part2" id="spinner_part2" style="height:30px;width:30px;" alt="Loading" /></td>
+    								<td></td>
+    							</tr>
+    						</div>
+    					</table>
+    			  </div>
+    	</form>
   </div>
 </div>
