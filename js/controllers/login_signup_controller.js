@@ -140,12 +140,12 @@ myApp.controller("SignupController", function($scope,$http,$window) {
       }
   };
 
-  var patt = new RegExp("^[0-9]{10}$");
+  var patt_contact = new RegExp("^[0-9]{10}$");
 	$scope.contactStyle = {
 		"border-bottom-width":"1.45px"
   };
   $scope.analyzeContact = function(value) {
-		if(patt.test(value) && value.length>3) {
+		if(patt_contact.test(value)) {
   		$http({
   			method : "POST",
   			url : "check_data_exists.php",
@@ -163,7 +163,7 @@ myApp.controller("SignupController", function($scope,$http,$window) {
           $scope.contactStyle["border-bottom-color"] = "green";
         }
       }, function myError(response) {
-        $scope.emailStyle["border-bottom-color"] = "red";
+        $scope.contactStyle["border-bottom-color"] = "red";
       });
     }
     else{
@@ -203,28 +203,28 @@ myApp.directive('contactDir', function($http) {
 							var patt = new RegExp("^[0-9]{10}$");
 							if (patt.test(value)) {
 								mCtrl.$setValidity('contactValid', true);
+                $http({
+            			method : "POST",
+            			url : "check_data_exists.php",
+            			data: "contact="+value,
+            			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            		}).then(function mySuccess(response) {
+                  flag = response.data;
+                  // we should be using flag in only this block so logic in following
+                  if(flag.error || flag.user.contactExists)
+                  {
+                    mCtrl.$setValidity('contactExists', false);
+                  }
+                  else
+                  {
+                    mCtrl.$setValidity('contactExists', true);
+                  }
+                }, function myError(response) {
+                  mCtrl.$setValidity('contactExists', false);
+                });
 							} else {
 								mCtrl.$setValidity('contactValid', false);
 							}
-              $http({
-          			method : "POST",
-          			url : "check_data_exists.php",
-          			data: "contact="+value,
-          			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-          		}).then(function mySuccess(response) {
-                flag = response.data;
-                // we should be using flag in only this block so logic in following
-                if(flag.error || flag.user.contactExists)
-                {
-                  mCtrl.$setValidity('contactExists', false);
-                }
-                else
-                {
-                  mCtrl.$setValidity('contactExists', true);
-                }
-              }, function myError(response) {
-                mCtrl.$setValidity('contactExists', false);
-              });
 							return value;
 						}
 						mCtrl.$parsers.push(myValidation);
