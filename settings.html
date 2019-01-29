@@ -1,0 +1,118 @@
+<div class="mobile-menu-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="mobile-menu">
+                    <nav id="dropdown">
+                        <ul class="mobile-menu-nav">
+                            <li><a href="#!home">Home</a>
+                            </li>
+                            <li><a href="#!subscription">Subscription</a>
+                            </li>
+                            <li><a href="#!settings">Settings</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Mobile Menu end -->
+<!-- Main Menu area start-->
+<div class="main-menu-area mg-tb-40">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
+                    <li><a href="#!home"><i class="notika-icon notika-house"></i> Home</a>
+                    </li>
+                    <li><a href="#!subscription"><i class="notika-icon notika-form"></i> Subscription</a>
+                    </li>
+                    <li class="active"><a href="#!settings"><i class="notika-icon notika-settings"></i> Settings</a>
+                    </li>
+                </ul>
+                <div class="tab-content custom-menu-content">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Menu area End-->
+<div class="container" id="settingsModificationCtrl">
+  <div class="tab">
+    <button ng-click="openTab('0','account_details')" class="tablinks" id="0">Account Details</button>
+	  <button ng-click="openTab('1','change_password')" class="tablinks" id="1">Change Password</button>
+  </div>
+	<div id="account_details" class="tabcontent" align="center">
+    <div class="form-element-area">
+      <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <form name="editForm" method="post" novalidate>
+              <div class="nk-form" style="padding:15px;">
+                  <div class="input-group mg-t-15">
+                      <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-user"></i></span>
+                      <div class="nk-int-st">
+                          <input type="text" class="form-control" placeholder="Name" ng-model="s_name" name="s_name" ng-style="nameStyle" ng-change="analyzeName(s_name)" required  names-dir nameslen-dir>
+                      </div>
+                      <span style="color:red" id="s_name" ng-show="editForm.s_name.$dirty && editForm.s_name.$invalid">
+                      <span ng-show="editForm.s_name.$error.required">First name is required</span>
+                      <span ng-show="!editForm.s_name.$error.required && editForm.s_name.$error.namesvalid">Enter only characters</span>
+                      <span ng-show="!editForm.s_name.$error.required && editForm.s_name.$error.nameslenvalid">Enter more than three characters</span>
+                      </span>
+                  </div>
+
+                  <div class="input-group mg-t-15">
+                      <span class="input-group-addon nk-ic-st-pro"><i class="	glyphicon glyphicon-envelope"></i></span>
+                      <div class="nk-int-st">
+                          <input type="text" class="form-control" placeholder="Email Address" name="s_email" ng-model="s_email"  readonly disabled>
+                      </div>
+                  </div>
+
+                  <div class="input-group mg-t-15">
+                      <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-book"></i></span>
+                      <div class="nk-int-st">
+                          <input type="text" class="form-control" placeholder="Address" name="s_address" ng-model="s_address"  ng-style="addressStyle" ng-change="analyzeAddress(s_address)" required address-dir>
+                          </div><span style="color:red" id="s_address" ng-show="editForm.s_address.$dirty && editForm.s_address.$invalid">
+                          <span ng-show="editForm.s_address.$error.required">Address is required</span>
+                          <span ng-show="!editForm.s_address.$error.required && editForm.s_address.$error.addressvalid">Do not use unused character.</span>
+                          <span ng-show="!editForm.s_address.$error.required && editForm.s_address.$error.addresslengthvalid">Enter more details so we can understand</span>
+                          </span>
+                  </div>
+
+                  <div class="input-group mg-t-15">
+                      <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-home"></i></span>
+                      <div class="nk-int-st">
+                          <input type="text" class="form-control" placeholder="City" name="s_city" ng-model="s_city"  ng-style="cityStyle" ng-change="analyzeCity(s_city)" required  names-dir>
+                      </div>
+                      <span style="color:red" id="s_city" ng-show="editForm.s_city.$dirty && editForm.s_city.$invalid">
+                      <span ng-show="editForm.s_city.$error.required">City is required</span>
+                      <span ng-show="!editForm.s_city.$error.required && editForm.s_city.$error.namesvalid">Enter only characters</span>
+                      </span>
+                  </div>
+
+                  <div class="input-group mg-t-15">
+                      <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-phone"></i></span>
+                      <div class="nk-int-st">
+                          <input type="text" class="form-control" placeholder="Contact" name="s_contact" ng-style="contactStyle" ng-model="s_contact" ng-change="analyzeContact(s_contact)" required contact-dir>
+                      </div>
+                      <span style="color:red"  id="s_email" ng-show="editForm.s_contact.$dirty && editForm.s_contact.$invalid"><span ng-show="editForm.s_contact.$error.required">Contact is required.</span><span ng-show="!editForm.s_contact.$error.required && editForm.s_contact.$error.contactValid">Please enter valid contact</span>
+                      <span ng-show="!(editForm.s_contact.$error.required || editForm.s_contact.$error.contactValid) && editForm.s_contact.$error.contactExists">Contact already exists</span>
+                      </span>
+                  </div>
+                  <div style="padding:10px;">
+                    <button class="btn btn-login btn-success" ng-click="editDetails()" ng-disabled="(editForm.s_email.$invalid || editForm.s_name.$invalid || editForm.s_address.$invalid || editForm.s_city.$invalid || editForm.s_contact.$invalid) || (editForm.s_name.$pristine && editForm.s_city.$pristine && editForm.s_address.$pristine && editForm.s_contact.$pristine)"><i class="notika-icon notika-right-arrow right-arrow-ant"></i></button>
+                  </div>
+              </div>
+              <div ng-show="s_status_0" class="alert alert-danger">Please fill details carefully!</div><div ng-show="s_status_1" class="alert alert-success">{{editStatus}}</div>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="change_password" class="tabcontent" align="center">
+    hi
+  </div>
+</div>

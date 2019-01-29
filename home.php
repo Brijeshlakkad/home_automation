@@ -61,6 +61,7 @@
     <link rel="stylesheet" href="css/dialog/sweetalert2.min.css">
     <link rel="stylesheet" href="css/dialog/dialog.css">
     <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" type="text/css" href="css/vertical_tab.css" />
     <script src="js/vendor/modernizr-2.8.3.min.js"></script>
     <script src="js/angular.js"></script>
 </head>
@@ -154,7 +155,6 @@
         </div>
     </div>
     <!-- End Footer area-->
-
     <!-- jquery
 		============================================ -->
     <script src="js/vendor/jquery-1.12.4.min.js"></script>

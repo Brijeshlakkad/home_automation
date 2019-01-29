@@ -1,6 +1,6 @@
 <?php
 class User{
-  var $id,$email,$password,$contact,$city,$address,$error,$errorMessage;
+  var $id,$email,$name,$password,$contact,$city,$address,$error,$errorMessage;
   function getData($con,$sql){
     $check=mysqli_query($con,$sql);
     if($check && (mysqli_num_rows($check)==1))
