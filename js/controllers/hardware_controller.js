@@ -1,6 +1,7 @@
 myApp.controller("HardwareController", function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies,$routeParams) {
   $scope.user=$rootScope.$storage.user;
   $scope.userID=$rootScope.$storage.userID;
+  $scope.showAddHardware=false;
   $scope.hwReName="";
   $scope.hwReSeries="";
   $scope.hwReIP="";
@@ -105,11 +106,13 @@ myApp.controller("HardwareController", function($rootScope,$scope,$http,$window,
         var showAllHardware=data.user.allHardware;
         $scope.showAllHardware=$sce.trustAsHtml(showAllHardware);
         $scope.getHardwareList();
+        $scope.showAddHardware=true;
       }else{
         $scope.showErrorDialog(data.errorMessage);
+        $scope.showAddHardware=false;
       }
     },function myError(response){
-
+      $scope.showAddHardware=false;
     });
   };
   $scope.getAllHardware();

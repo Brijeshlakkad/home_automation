@@ -1,10 +1,11 @@
 myApp.controller("HomeController",function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies) {
   $scope.user=$rootScope.$storage.user;
+  $scope.userID=$rootScope.$storage.userID;
+  $scope.showAddHome=false;
   $scope.homeReName="";
   $scope.beforeHomeName="";
   $scope.homeID="";
   $rootScope.homeList="";
-  $scope.userID=$rootScope.$storage.userID;
   $scope.homeNameStyle={
     "border-bottom-width":"2px"
   };
@@ -75,11 +76,13 @@ myApp.controller("HomeController",function($rootScope,$scope,$http,$window,$sce,
         var showAllHome=data.user.allHome;
         $scope.showAllHome=$sce.trustAsHtml(showAllHome);
         $scope.getHomeList();
+        $scope.showAddHome=true;
       }else{
         $scope.showErrorDialog(data.errorMessage);
+        $scope.showAddHome=false;
       }
     },function myError(response){
-
+      $scope.showAddHome=false;
     });
   };
   $scope.getAllHome();

@@ -47,7 +47,7 @@
     <button class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left" onclick="javascript:window.history.go(-1)"></span></button>
   </div>
   <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12">
-    <button class="btn btn-lg notika-btn-lightblue btn-reco-mg btn-button-mg" data-toggle="modal" data-target="#addDevice"><span class="glyphicon glyphicon-plus"></span> Add Device</button>
+    <button class="btn btn-lg notika-btn-lightblue btn-reco-mg btn-button-mg" ng-show="showAddDevice" data-toggle="modal" data-target="#addDevice"><span class="glyphicon glyphicon-plus"></span> Add Device</button>
     <div class="row" ng-bind-html="showAllDevice">
 
     </div>

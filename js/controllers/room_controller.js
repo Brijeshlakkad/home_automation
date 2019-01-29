@@ -1,6 +1,7 @@
 myApp.controller("RoomController", function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies,$routeParams) {
   $scope.user=$rootScope.$storage.user;
   $scope.userID=$rootScope.$storage.userID;
+  $scope.showAddRoom=false;
   $scope.roomReName="";
   $scope.beforeRoomName="";
   $scope.homeID=$routeParams.homeID;
@@ -80,11 +81,13 @@ myApp.controller("RoomController", function($rootScope,$scope,$http,$window,$sce
         var showAllRoom=data.user.allRoom;
         $scope.showAllRoom=$sce.trustAsHtml(showAllRoom);
         $scope.getRoomList();
+        $scope.showAddRoom=true;
       }else{
         $scope.showErrorDialog(data.errorMessage);
+        $scope.showAddRoom=false;
       }
     },function myError(response){
-
+      $scope.showAddRoom=false;
     });
   };
   $scope.getAllRoom();

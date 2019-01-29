@@ -1,6 +1,7 @@
 myApp.controller("DeviceController", function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies,$routeParams) {
   $scope.user=$rootScope.$storage.user;
   $scope.userID=$rootScope.$storage.userID;
+  $scope.showAddDevice=false;
   $scope.dvReName="";
   $scope.dvRePort="";
   $scope.dvReImg="";
@@ -134,11 +135,13 @@ myApp.controller("DeviceController", function($rootScope,$scope,$http,$window,$s
         $scope.showAllDevice=$sce.trustAsHtml(showAllDevice);
         $scope.getDeviceList();
         $scope.getDeviceImgList();
+        $scope.showAddDevice=true;
       }else{
         $scope.showErrorDialog(data.errorMessage);
+        $scope.showAddDevice=false;
       }
     },function myError(response){
-
+      $scope.showAddDevice=false;
     });
   };
   $scope.getAllDevice();
