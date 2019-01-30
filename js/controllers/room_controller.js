@@ -19,6 +19,7 @@ myApp.controller("RoomController", function($rootScope,$scope,$http,$window,$sce
     }
   };
   $scope.addRoom=function(){
+    $rootScope.body.addClass("loading");
     $http({
       method: "POST",
       url: "room_actions.php",
@@ -31,11 +32,13 @@ myApp.controller("RoomController", function($rootScope,$scope,$http,$window,$sce
       if(!data.error){
         $scope.showSuccessDialog("Room Created");
         $scope.getAllRoom();
+        $rootScope.body.removeClass("loading");
       }else{
+        $rootScope.body.removeClass("loading");
         $scope.showErrorDialog(data.errorMessage);
       }
     },function myError(response){
-
+      $rootScope.body.removeClass("loading");
     });
   };
   $scope.getRoomList=function(){
@@ -70,6 +73,7 @@ myApp.controller("RoomController", function($rootScope,$scope,$http,$window,$sce
     swal(""+val, "", "success");
   };
   $scope.getAllRoom=function(){
+    $rootScope.body.addClass("loading");
     $http({
       method: "POST",
       url: "room_actions.php",
@@ -82,12 +86,15 @@ myApp.controller("RoomController", function($rootScope,$scope,$http,$window,$sce
         $scope.showAllRoom=$sce.trustAsHtml(showAllRoom);
         $scope.getRoomList();
         $scope.showAddRoom=true;
+        $rootScope.body.removeClass("loading");
       }else{
-        $scope.showErrorDialog(data.errorMessage);
         $scope.showAddRoom=false;
+        $rootScope.body.removeClass("loading");
+        $scope.showErrorDialog(data.errorMessage);
       }
     },function myError(response){
       $scope.showAddRoom=false;
+      $rootScope.body.removeClass("loading");
     });
   };
   $scope.getAllRoom();
@@ -99,12 +106,14 @@ myApp.controller("RoomController", function($rootScope,$scope,$http,$window,$sce
       showCancelButton: true,
       confirmButtonText: "Yes, delete it!",
     }).then(function(){
+      $rootScope.body.addClass("loading");
       $http({
         method: "POST",
         url: "room_actions.php",
         data: "action=2&email="+$scope.user+"&id="+val,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       }).then(function mySuccess(response){
+        $rootScope.body.removeClass("loading");
         var data=response.data;
         if(!data.error){
           swal("Deleted!", "Your room has been deleted.", "success");
@@ -129,6 +138,7 @@ myApp.controller("RoomController", function($rootScope,$scope,$http,$window,$sce
 
   $scope.modifyRoom=function(){
     if($scope.beforeRoomName!=$scope.roomReName){
+      $rootScope.body.addClass("loading");
       $http({
         method: "POST",
         url: "room_actions.php",
@@ -142,11 +152,13 @@ myApp.controller("RoomController", function($rootScope,$scope,$http,$window,$sce
         if(!data.error && (typeof data.error != 'undefined')){
           $scope.showSuccessDialog("Room Name Modified");
           $scope.getAllRoom();
+          $rootScope.body.removeClass("loading");
         }else{
+          $rootScope.body.removeClass("loading");
           $scope.showErrorDialog(data.errorMessage);
         }
       },function myError(response){
-
+        $rootScope.body.removeClass("loading");
       });
     }
   };

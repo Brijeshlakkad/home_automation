@@ -18,6 +18,7 @@ myApp.controller("HomeController",function($rootScope,$scope,$http,$window,$sce,
     }
   };
   $scope.addHome=function(){
+    $rootScope.body.addClass("loading");
     $http({
       method: "POST",
       url: "home_actions.php",
@@ -30,11 +31,13 @@ myApp.controller("HomeController",function($rootScope,$scope,$http,$window,$sce,
       if(!data.error){
         $scope.showSuccessDialog("Home Created");
         $scope.getAllHome();
+        $rootScope.body.removeClass("loading");
       }else{
+        $rootScope.body.removeClass("loading");
         $scope.showErrorDialog(data.errorMessage);
       }
     },function myError(response){
-
+      $rootScope.body.removeClass("loading");
     });
   };
   $scope.getHomeList=function(){
@@ -65,6 +68,7 @@ myApp.controller("HomeController",function($rootScope,$scope,$http,$window,$sce,
     swal(""+val, "", "success");
   };
   $scope.getAllHome=function(){
+    $rootScope.body.addClass("loading");
     $http({
       method: "POST",
       url: "home_actions.php",
@@ -77,12 +81,15 @@ myApp.controller("HomeController",function($rootScope,$scope,$http,$window,$sce,
         $scope.showAllHome=$sce.trustAsHtml(showAllHome);
         $scope.getHomeList();
         $scope.showAddHome=true;
+        $rootScope.body.removeClass("loading");
       }else{
-        $scope.showErrorDialog(data.errorMessage);
         $scope.showAddHome=false;
+        $rootScope.body.removeClass("loading");
+        $scope.showErrorDialog(data.errorMessage);
       }
     },function myError(response){
       $scope.showAddHome=false;
+      $rootScope.body.removeClass("loading");
     });
   };
   $scope.getAllHome();
@@ -94,12 +101,14 @@ myApp.controller("HomeController",function($rootScope,$scope,$http,$window,$sce,
       showCancelButton: true,
       confirmButtonText: "Yes, delete it!",
     }).then(function(){
+      $rootScope.body.addClass("loading");
       $http({
         method: "POST",
         url: "home_actions.php",
         data: "action=2&email="+$scope.user+"&id="+val,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       }).then(function mySuccess(response){
+        $rootScope.body.removeClass("loading");
         var data=response.data;
         if(!data.error){
           swal("Deleted!", "Your home has been deleted.", "success");
@@ -124,6 +133,7 @@ myApp.controller("HomeController",function($rootScope,$scope,$http,$window,$sce,
 
   $scope.modifyHome=function(){
     if($scope.beforeHomeName!=$scope.homeReName){
+      $rootScope.body.addClass("loading");
       $http({
         method: "POST",
         url: "home_actions.php",
@@ -137,11 +147,13 @@ myApp.controller("HomeController",function($rootScope,$scope,$http,$window,$sce,
         if(!data.error && (typeof data.error != 'undefined')){
           $scope.showSuccessDialog("Home Name Modified");
           $scope.getAllHome();
+          $rootScope.body.removeClass("loading");
         }else{
+          $rootScope.body.removeClass("loading");
           $scope.showErrorDialog(data.errorMessage);
         }
       },function myError(response){
-
+        $rootScope.body.removeClass("loading");
       });
     }
   };

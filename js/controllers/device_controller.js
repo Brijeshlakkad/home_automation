@@ -50,12 +50,14 @@ myApp.controller("DeviceController", function($rootScope,$scope,$http,$window,$s
     }
   };
   $scope.addDevice=function(){
+    $rootScope.body.addClass("loading");
     $http({
       method: "POST",
       url: "device_actions.php",
       data: "action=1&email="+$scope.user+"&dvName="+$scope.dvName+"&dvPort="+$scope.dvPort+"&dvImg="+$scope.dvImg+"&homeName="+$scope.homeID+"&roomName="+$scope.roomID+"&hwName="+$scope.hwID+"&userID="+$scope.userID,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function mySuccess(response){
+      $rootScope.body.removeClass("loading");
       var data=response.data;
       $scope.dvForm.$setPristine();
       $scope.dvName="";
@@ -67,7 +69,7 @@ myApp.controller("DeviceController", function($rootScope,$scope,$http,$window,$s
         $scope.showErrorDialog(data.errorMessage);
       }
     },function myError(response){
-
+      $rootScope.body.removeClass("loading");
     });
   };
   $scope.getDeviceImgList=function(){
@@ -123,6 +125,7 @@ myApp.controller("DeviceController", function($rootScope,$scope,$http,$window,$s
     swal(""+val, "", "success");
   };
   $scope.getAllDevice=function(){
+    $rootScope.body.addClass("loading");
     $http({
       method: "POST",
       url: "device_actions.php",
@@ -136,12 +139,15 @@ myApp.controller("DeviceController", function($rootScope,$scope,$http,$window,$s
         $scope.getDeviceList();
         $scope.getDeviceImgList();
         $scope.showAddDevice=true;
+        $rootScope.body.removeClass("loading");
       }else{
-        $scope.showErrorDialog(data.errorMessage);
         $scope.showAddDevice=false;
+        $rootScope.body.removeClass("loading");
+        $scope.showErrorDialog(data.errorMessage);
       }
     },function myError(response){
       $scope.showAddDevice=false;
+      $rootScope.body.removeClass("loading");
     });
   };
   $scope.getAllDevice();
@@ -153,12 +159,14 @@ myApp.controller("DeviceController", function($rootScope,$scope,$http,$window,$s
       showCancelButton: true,
       confirmButtonText: "Yes, delete it!",
     }).then(function(){
+      $rootScope.body.addClass("loading");
       $http({
         method: "POST",
         url: "device_actions.php",
         data: "action=2&email="+$scope.user+"&id="+val,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       }).then(function mySuccess(response){
+        $rootScope.body.removeClass("loading");
         var data=response.data;
         if(!data.error){
           swal("Deleted!", "Your device has been deleted.", "success");
@@ -196,6 +204,7 @@ myApp.controller("DeviceController", function($rootScope,$scope,$http,$window,$s
 
   $scope.modifyDevice=function(){
     if($scope.beforeDvName!=$scope.dvReName || $scope.beforeDvPort!=$scope.dvRePort || $scope.beforeDvImg!=$scope.dvReImg){
+      $rootScope.body.addClass("loading");
       $http({
         method: "POST",
         url: "device_actions.php",
@@ -203,18 +212,20 @@ myApp.controller("DeviceController", function($rootScope,$scope,$http,$window,$s
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       }).then(function mySuccess(response){
         var data=response.data;
-        alert(JSON.stringify(data));
+        $rootScope.body.removeClass("loading");
         $scope.dvReForm.$setPristine();
         $scope.beforeDvName="";
         $scope.dvReName="";
         if(!data.error && (typeof data.error != 'undefined')){
           $scope.showSuccessDialog("Device Modified");
           $scope.getAllDevice();
+          $rootScope.body.removeClass("loading");
         }else{
+          $rootScope.body.removeClass("loading");
           $scope.showErrorDialog(data.errorMessage);
         }
       },function myError(response){
-
+        $rootScope.body.removeClass("loading");
       });
     }
   };

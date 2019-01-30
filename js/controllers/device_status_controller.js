@@ -12,6 +12,7 @@ myApp.controller("DeviceStatusController", function($rootScope,$scope,$http,$win
   $scope.addClass={"btn":true,"btn-danger":false,"btn-primary":false};
   $scope.deviceStatusPrint="Connection Problem!";
   $scope.getDevice=function(){
+    $rootScope.body.addClass("loading");
     $http({
       method: "POST",
       url: "device_actions.php",
@@ -42,11 +43,13 @@ myApp.controller("DeviceStatusController", function($rootScope,$scope,$http,$win
             $scope.addClass['btn-danger']=true;
           }
         }
+        $rootScope.body.removeClass("loading");
       }else{
+        $rootScope.body.removeClass("loading");
         $scope.showErrorDialog(data.errorMessage);
       }
     },function myError(response){
-
+      $rootScope.body.removeClass("loading");
     });
   };
   $scope.getDevice();
@@ -56,6 +59,7 @@ myApp.controller("DeviceStatusController", function($rootScope,$scope,$http,$win
     }else{
       val=0;
     }
+    $rootScope.body.addClass("loading");
     $http({
       method: "POST",
       url: "device_actions.php",
@@ -85,11 +89,13 @@ myApp.controller("DeviceStatusController", function($rootScope,$scope,$http,$win
             $scope.addClass['btn-danger']=true;
           }
         }
+        $rootScope.body.removeClass("loading");
       }else{
+        $rootScope.body.removeClass("loading");
         $scope.showErrorDialog(data.errorMessage);
       }
     },function myError(response){
-
+      $rootScope.body.removeClass("loading");
     });
   };
   $scope.showErrorDialog=function(error){
@@ -103,6 +109,7 @@ myApp.controller("DeviceStatusController", function($rootScope,$scope,$http,$win
     if(typeof val == 'undefined' || val==null){
 
     }else{
+      $rootScope.body.addClass("loading");
       $http({
         method: "POST",
         url: "device_actions.php",
@@ -112,11 +119,13 @@ myApp.controller("DeviceStatusController", function($rootScope,$scope,$http,$win
         var data=response.data;
         if(!data.error){
           $scope.getDevice();
+          $rootScope.body.removeClass("loading");
         }else{
+          $rootScope.body.removeClass("loading");
           $scope.showErrorDialog(data.errorMessage);
         }
       },function myError(response){
-
+        $rootScope.body.removeClass("loading");
       });
     }
   };

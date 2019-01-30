@@ -44,6 +44,7 @@ myApp.controller("HardwareController", function($rootScope,$scope,$http,$window,
     }
   };
   $scope.addHardware=function(){
+    $rootScope.body.addClass("loading");
     $http({
       method: "POST",
       url: "hardware_actions.php",
@@ -56,11 +57,13 @@ myApp.controller("HardwareController", function($rootScope,$scope,$http,$window,
       if(!data.error){
         $scope.showSuccessDialog("Hardware Created");
         $scope.getAllHardware();
+        $rootScope.body.removeClass("loading");
       }else{
+        $rootScope.body.removeClass("loading");
         $scope.showErrorDialog(data.errorMessage);
       }
     },function myError(response){
-
+      $rootScope.body.removeClass("loading");
     });
   };
   $scope.getHardwareList=function(){
@@ -95,6 +98,7 @@ myApp.controller("HardwareController", function($rootScope,$scope,$http,$window,
     swal(""+val, "", "success");
   };
   $scope.getAllHardware=function(){
+    $rootScope.body.addClass("loading");
     $http({
       method: "POST",
       url: "hardware_actions.php",
@@ -107,12 +111,15 @@ myApp.controller("HardwareController", function($rootScope,$scope,$http,$window,
         $scope.showAllHardware=$sce.trustAsHtml(showAllHardware);
         $scope.getHardwareList();
         $scope.showAddHardware=true;
+        $rootScope.body.removeClass("loading");
       }else{
-        $scope.showErrorDialog(data.errorMessage);
         $scope.showAddHardware=false;
+        $rootScope.body.removeClass("loading");
+        $scope.showErrorDialog(data.errorMessage);
       }
     },function myError(response){
       $scope.showAddHardware=false;
+      $rootScope.body.removeClass("loading");
     });
   };
   $scope.getAllHardware();
@@ -124,12 +131,14 @@ myApp.controller("HardwareController", function($rootScope,$scope,$http,$window,
       showCancelButton: true,
       confirmButtonText: "Yes, delete it!",
     }).then(function(){
+      $rootScope.body.addClass("loading");
       $http({
         method: "POST",
         url: "hardware_actions.php",
         data: "action=2&email="+$scope.user+"&id="+val,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       }).then(function mySuccess(response){
+        $rootScope.body.removeClass("loading");
         var data=response.data;
         if(!data.error){
           swal("Deleted!", "Your hardware has been deleted.", "success");
@@ -158,6 +167,7 @@ myApp.controller("HardwareController", function($rootScope,$scope,$http,$window,
 
   $scope.modifyHardware=function(){
     if($scope.beforeHwName!=$scope.hwReName || $scope.beforeHwSeries!=$scope.hwReSeries || $scope.beforeHwIP!=$scope.hwReIP){
+      $rootScope.body.addClass("loading");
       $http({
         method: "POST",
         url: "hardware_actions.php",
@@ -171,11 +181,13 @@ myApp.controller("HardwareController", function($rootScope,$scope,$http,$window,
         if(!data.error && (typeof data.error != 'undefined')){
           $scope.showSuccessDialog("Hardware Modified");
           $scope.getAllHardware();
+          $rootScope.body.removeClass("loading");
         }else{
           $scope.showErrorDialog(data.errorMessage);
+          $rootScope.body.removeClass("loading");
         }
       },function myError(response){
-
+        $rootScope.body.removeClass("loading");
       });
     }
   };
