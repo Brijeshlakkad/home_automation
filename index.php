@@ -234,6 +234,7 @@ html, body {
     <!-- main JS
 		============================================ -->
     <script src="js/main.js"></script>
+
 	<!-- tawk chat JS
 		============================================ -->
     <script src="js/tawk-chat.js"></script>
@@ -245,6 +246,9 @@ html, body {
     var myApp = angular.module("myapp", ['ngCookies','ngStorage','ngRoute']);
     myApp.config(function ($routeProvider) {
       $routeProvider.when('/', {
+          templateUrl: 'home_page/home_page.html',
+          controller: 'HomePageController'
+      }).when('/login', {
           templateUrl: 'login.html',
           controller: 'LoginController'
       }).when('/register', {
@@ -273,14 +277,17 @@ html, body {
       }).when('/subscription', {
           templateUrl: 'subscription.html',
           controller: 'SubscriptionController'
+      }).when('/404-not-found', {
+          templateUrl: '404.html',
       }).otherwise({
-          redirectTo: "/"
+          redirectTo: "/404-not-found"
       });
     });
     </script>
     <script src="js/controllers/session_controller.js"></script>
     <script src="js/controllers/login_controller.js"></script>
     <script src="js/controllers/signup_controller.js"></script>
+    <script src="js/controllers/home_page_controller.js"></script>
     <script src="js/controllers/home_controller.js"></script>
     <script src="js/controllers/room_controller.js"></script>
     <script src="js/controllers/hardware_controller.js"></script>
