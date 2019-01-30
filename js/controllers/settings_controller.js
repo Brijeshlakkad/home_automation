@@ -1,6 +1,7 @@
 myApp.controller("SettingsController",function($rootScope,$scope,$http,$window,$sce,$timeout,$cookies) {
   $scope.user=$rootScope.$storage.user;
   $scope.userID=$rootScope.$storage.userID;
+  $scope.dataLoading = false;
   $scope.editStatus="";
   $rootScope.userDetails={};
   $scope.openTab = function(index,tabName) {
@@ -97,18 +98,22 @@ myApp.controller("SettingsController",function($rootScope,$scope,$http,$window,$
   };
 
   $scope.editDetails=function(){
+    $scope.dataLoading = true;
     if($rootScope.userDetails['name']!=$scope.s_name || $rootScope.userDetails['city']!=$scope.s_city || $rootScope.userDetails['address']!=$scope.s_address || $rootScope.userDetails['contact']!=$scope.s_contact){
+      $rootScope.body.addClass("loading");
       $http({
   			method : "POST",
   			url : "customer_interface.php",
   			data: "action=1&email="+$scope.s_email+"&name="+$scope.s_name+"&address="+$scope.s_address+"&city="+$scope.s_city+"&contact="+$scope.s_contact,
   			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
   		}).then(function mySuccess(response) {
+        $rootScope.body.removeClass("loading");
   			flag = response.data;
   			// we should be using flag in only this block so logic in following
   			if(!flag.error)
   			{
           $scope.editStatus="Details Updated!";
+          $scope.dataLoading = false;
   				$scope.s_status_0=false;
   				$scope.s_status_1=true;
   			}
@@ -118,7 +123,7 @@ myApp.controller("SettingsController",function($rootScope,$scope,$http,$window,$
   				$scope.s_status_0=true;
   			}
   		}, function myError(response) {
-
+        $rootScope.body.removeClass("loading");
   		});
     }else
     {
@@ -154,11 +159,7 @@ myApp.controller("SettingsController",function($rootScope,$scope,$http,$window,$
           $scope.s_city= data.city;
           $scope.s_address = data.address;
           $scope.s_contact = data.contact;
-          $rootScope.userDetails['name']=$scope.s_name;
-          $rootScope.userDetails['email']=$scope.s_email;
-          $rootScope.userDetails['city']=$scope.s_city;
-          $rootScope.userDetails['address']=$scope.s_address;
-          $rootScope.userDetails['contact']=$scope.s_contact;
+          $rootScope.userDetails=data;
         }else{
           $scope.showErrorDialog(data.errorMessage);
         }

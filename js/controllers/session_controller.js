@@ -7,4 +7,6 @@ myApp.controller("userController",function($rootScope,$scope,$localStorage,$sess
     $localStorage.$reset();
     $window.location.href="index.php";
   };
+  var body=document.getElementsByTagName("BODY");
+  $rootScope.body=angular.element(body);
 });

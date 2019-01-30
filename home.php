@@ -62,6 +62,7 @@
     <link rel="stylesheet" href="css/dialog/dialog.css">
     <link rel="stylesheet" href="css/custom.css">
     <link rel="stylesheet" type="text/css" href="css/vertical_tab.css" />
+    <link rel="stylesheet" type="text/css" href="css/please_wait.css" />
     <script src="js/vendor/modernizr-2.8.3.min.js"></script>
     <script src="js/angular.js"></script>
 </head>
@@ -150,6 +151,7 @@ html, body {
         </div>
     </div>
     <!-- End Header Top Area -->
+    <div class="please_wait_modal"> </div>
     <div ng-view class="page-wrap"></div>
     <!-- Start Footer area-->
     <div class="footer-copyright-area footerB" style="width:100%">
