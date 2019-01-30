@@ -1,8 +1,9 @@
 myApp.controller("SignupController", function($scope,$http,$window) {
   var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
   var mediumRegex = new RegExp("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})");
+  $scope.signupStatus="";
   $scope.passwordStrength = {
-"border-bottom-width":"1.45px"
+    "border-bottom-width":"1.45px"
   };
   $scope.analyzePasswordStrength = function(value) {
       if(strongRegex.test(value)) {
@@ -108,11 +109,13 @@ myApp.controller("SignupController", function($scope,$http,$window) {
 			// we should be using flag in only this block so logic in following
 			if(!flag.error)
 			{
+        $scope.signupStatus=flag.message;
 				$scope.s_status_0=false;
 				$scope.s_status_1=true;
 			}
 			else
 			{
+        $scope.signupStatus="";
 				$scope.s_status_1=false;
 				$scope.s_status_0=true;
 			}

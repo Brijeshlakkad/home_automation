@@ -1,6 +1,22 @@
 <?php
 require_once("config.php");
+function checkUserExists($con,$email)
+{
+  $sql="SELECT * FROM user where email='$email'";
+  $check=mysqli_query($con,$sql);
+  if($check && (mysqli_num_rows($check)==1))
+  {
+    return true;
+  }
+  return false;
+}
 function create_user($gotData){
+  if(checkUserExists($gotData->con,$gotData->user->email)){
+    $gotData->error=false;
+    $gotData->message="Account is already created";
+    $gotData->errorMessage=null;
+    return $gotData;
+  }
   $name=$gotData->user->name;
   $email=$gotData->user->email;
   $password=$gotData->user->password;
@@ -12,6 +28,7 @@ function create_user($gotData){
   if($result)
   {
     $gotData->error=false;
+    $gotData->message="Account created";
     $gotData->errorMessage=null;
     return $gotData;
   }
