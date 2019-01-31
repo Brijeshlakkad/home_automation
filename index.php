@@ -159,7 +159,7 @@ html, body {
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="footer-copy-right">
                         <p>Copyright © 2018
-. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+. All rights reserved by Home Automation.</p>
                     </div>
                 </div>
             </div>
@@ -247,7 +247,6 @@ html, body {
     myApp.config(function ($routeProvider) {
       $routeProvider.when('/', {
           templateUrl: 'home_page/home_page.html',
-          controller: 'HomePageController'
       }).when('/login', {
           templateUrl: 'login.html',
           controller: 'LoginController'
@@ -277,6 +276,9 @@ html, body {
       }).when('/subscription', {
           templateUrl: 'subscription.html',
           controller: 'SubscriptionController'
+      }).when('/dealer_login', {
+          templateUrl: 'dealer_login.html',
+          controller: 'DealerLoginController'
       }).when('/404-not-found', {
           templateUrl: '404.html',
       }).otherwise({
@@ -287,7 +289,6 @@ html, body {
     <script src="js/controllers/session_controller.js"></script>
     <script src="js/controllers/login_controller.js"></script>
     <script src="js/controllers/signup_controller.js"></script>
-    <script src="js/controllers/home_page_controller.js"></script>
     <script src="js/controllers/home_controller.js"></script>
     <script src="js/controllers/room_controller.js"></script>
     <script src="js/controllers/hardware_controller.js"></script>
@@ -295,5 +296,6 @@ html, body {
     <script src="js/controllers/settings_controller.js"></script>
     <script src="js/controllers/subscription_controller.js"></script>
     <script src="js/controllers/device_status_controller.js"></script>
+    <script src="js/controllers/dealer/dealer_login_controller.js"></script>
 </body>
 </html>
