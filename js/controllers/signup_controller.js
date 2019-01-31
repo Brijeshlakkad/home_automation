@@ -1,103 +1,5 @@
 myApp.controller("SignupController", function($scope,$http,$window) {
-  var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
-  var mediumRegex = new RegExp("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})");
   $scope.signupStatus="";
-  $scope.passwordStrength = {
-    "border-bottom-width":"1.45px"
-  };
-  $scope.analyzePasswordStrength = function(value) {
-      if(strongRegex.test(value)) {
-          $scope.passwordStrength["border-bottom-color"] = "green";
-      } else if(mediumRegex.test(value)) {
-          $scope.passwordStrength["border-bottom-color"] = "orange";
-      } else {
-          $scope.passwordStrength["border-bottom-color"] = "red";
-      }
-  };
-  $scope.nameStyle = {
-    "border-bottom-width":"1.45px"
-  };
-  var patt_name = /^[a-zA-Z]+$/;
-  $scope.analyzeName = function(value) {
-    if(patt_name.test(value) && value.length>3) {
-        $scope.nameStyle["border-bottom-color"] = "green";
-    }else {
-        $scope.nameStyle["border-bottom-color"] = "red";
-    }
-  };
-  $scope.emailStyle = {
-    "border-bottom-width":"1.45px"
-  };
-  $scope.analyzeEmail = function(value) {
-    var pattEmail=/^[a-z0-9._]+@[a-z]+\.[a-z.]{2,5}$/;
-    if(pattEmail.test(value)) {
-      $http({
-        method : "POST",
-        url : "check_data_exists.php",
-        data: "email="+value,
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-      }).then(function mySuccess(response) {
-        flag = response.data;
-        // we should be using flag in only this block so logic in following
-        if(flag.error || flag.user.emailExists)
-        {
-          $scope.emailStyle["border-bottom-color"] = "red";
-        }
-        else
-        {
-          $scope.emailStyle["border-bottom-color"] = "green";
-        }
-      }, function myError(response) {
-        $scope.emailStyle["border-bottom-color"] = "red";
-      });
-    }
-    else {
-      $scope.emailStyle["border-bottom-color"] = "red";
-    }
-  };
-  var patt_address = new RegExp("^[0-9a-zA-Z,/. ]+$");
-	$scope.addressStyle = {
-		"border-bottom-width":"1.45px"
-  };
-  $scope.analyzeAddress = function(value) {
-      if(patt_address.test(value) && value.length >= 10) {
-          $scope.addressStyle["border-bottom-color"] = "green";
-      }else {
-          $scope.addressStyle["border-bottom-color"] = "red";
-      }
-  };
-
-  var patt_contact = new RegExp("^[0-9]{10}$");
-	$scope.contactStyle = {
-		"border-bottom-width":"1.45px"
-  };
-  $scope.analyzeContact = function(value) {
-		if(patt_contact.test(value)) {
-  		$http({
-  			method : "POST",
-  			url : "check_data_exists.php",
-  			data: "contact="+value,
-  			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-  		}).then(function mySuccess(response) {
-        flag = response.data;
-        // we should be using flag in only this block so logic in following
-        if(flag.error || flag.user.contactExists)
-        {
-          $scope.contactStyle["border-bottom-color"] = "red";
-        }
-        else
-        {
-          $scope.contactStyle["border-bottom-color"] = "green";
-        }
-      }, function myError(response) {
-        $scope.contactStyle["border-bottom-color"] = "red";
-      });
-    }
-    else{
-				$scope.contactStyle["border-bottom-color"] = "red";
-		}
-  };
-
   $scope.signup_status=function(){
     $http({
 			method : "POST",
@@ -129,12 +31,16 @@ myApp.directive('contactDir', function($http) {
 					require: 'ngModel',
 					link: function(scope, element, attr, mCtrl) {
 						function myValidation(value) {
-							var patt = new RegExp("^[0-9]{10}$");
+              var url="check_data_exists.php";
+              if(attr.for=="dealer"){
+                url="dealer/check_data_exists.php";
+              }
+							var patt = /^[0-9]{10}$/;
 							if (patt.test(value)) {
 								mCtrl.$setValidity('contactValid', true);
                 $http({
             			method : "POST",
-            			url : "check_data_exists.php",
+            			url : url,
             			data: "contact="+value,
             			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             		}).then(function mySuccess(response) {
@@ -143,16 +49,20 @@ myApp.directive('contactDir', function($http) {
                   if(flag.error || flag.user.contactExists)
                   {
                     mCtrl.$setValidity('contactExists', false);
+                    element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
                   }
                   else
                   {
                     mCtrl.$setValidity('contactExists', true);
+                    element.css({"border-bottom-width":"1.45px","border-bottom-color":'green'});
                   }
                 }, function myError(response) {
                   mCtrl.$setValidity('contactExists', false);
+                  element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
                 });
 							} else {
 								mCtrl.$setValidity('contactValid', false);
+                element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
 							}
 							return value;
 						}
@@ -168,14 +78,17 @@ myApp.directive('addressDir', function() {
 							var patt = new RegExp("^[0-9a-zA-Z,/. ]+$");
 							if (patt.test(value)) {
 								mCtrl.$setValidity('addressvalid', true);
+                if(value.length>=8)
+  							{
+  								mCtrl.$setValidity('addresslengthvalid', true);
+                  element.css({"border-bottom-width":"1.45px","border-bottom-color":'green'});
+  							} else {
+  								mCtrl.$setValidity('addresslengthvalid', false);
+                  element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
+  							}
 							} else {
 								mCtrl.$setValidity('addressvalid', false);
-							}
-							if(value.length>=8)
-							{
-								mCtrl.$setValidity('addresslengthvalid', true);
-							} else {
-								mCtrl.$setValidity('addresslengthvalid', false);
+                element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
 							}
 							return value;
 						}
@@ -188,11 +101,17 @@ myApp.directive('passDir', function() {
 					require: 'ngModel',
 					link: function(scope, element, attr, mCtrl) {
 						function myValidation(value) {
-							var patt=new RegExp("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})");
-							if (patt.test(value)) {
+              var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+              var mediumRegex = new RegExp("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})");
+              if(strongRegex.test(value)) {
+                mCtrl.$setValidity('passvalid', true);
+                element.css({"border-bottom-width":"1.45px","border-bottom-color":'green'});
+              } else if(mediumRegex.test(value)) {
 								mCtrl.$setValidity('passvalid', true);
+                element.css({"border-bottom-width":"1.45px","border-bottom-color":'orange'});
 							} else {
 								mCtrl.$setValidity('passvalid', false);
+                element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
 							}
 							return value;
 						}
@@ -207,9 +126,12 @@ myApp.directive('namesDir', function() {
 						function myValidation(value) {
 							var patt =  /^[a-zA-Z]+$/
 							if (patt.test(value)) {
+                alert();
 								mCtrl.$setValidity('namesvalid', true);
+                element.css({"border-bottom-width":"1.45px","border-bottom-color":'green'});
 							} else {
 								mCtrl.$setValidity('namesvalid', false);
+                element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
 							}
 							return value;
 						}
@@ -224,8 +146,10 @@ myApp.directive('nameslenDir', function() {
 						function myValidation(value) {
 							if (value.length>3) {
 								mCtrl.$setValidity('nameslenvalid', true);
+                element.css({"border-bottom-width":"1.45px","border-bottom-color":'green'});
 							} else {
 								mCtrl.$setValidity('nameslenvalid', false);
+                element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
 							}
 							return value;
 						}
@@ -233,7 +157,7 @@ myApp.directive('nameslenDir', function() {
 					}
 				};
 });
-myApp.directive('emailDir', function() {
+myApp.directive('emailDir', function($http) {
 	return {
 		require: 'ngModel',
 		link: function(scope, element, attr, mCtrl) {
@@ -241,40 +165,39 @@ myApp.directive('emailDir', function() {
 				var patt = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 				if (patt.test(value)) {
 					mCtrl.$setValidity('emailValid', true);
+          if(typeof attr.for != 'undefined'){
+            var url="check_data_exists.php";
+            if(attr.for=="dealer"){
+              url="dealer/check_data_exists.php";
+            }
+            $http({
+        			method : "POST",
+        			url : url,
+        			data: "email="+value,
+        			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        		}).then(function mySuccess(response) {
+
+        			var flag = response.data;
+        			// we should be using flag in only this block so logic in following
+        			if(flag.error || flag.user.emailExists)
+        			{
+                mCtrl.$setValidity('emailExists', false);
+                element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
+        			}
+        			else
+        			{
+        				mCtrl.$setValidity('emailExists', true);
+                element.css({"border-bottom-width":"1.45px","border-bottom-color":'green'});
+        			}
+        		}, function myError(response) {
+              mCtrl.$setValidity('emailExists', false);
+              element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
+        		});
+          }
 				} else {
+          element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
 					mCtrl.$setValidity('emailValid', false);
 				}
-				return value;
-			}
-			mCtrl.$parsers.push(myValidation);
-		}
-	};
-});
-myApp.directive('emailExistsDir', function($http) {
-	return {
-		require: 'ngModel',
-		link: function(scope, element, attr, mCtrl) {
-			function myValidation(value) {
-        $http({
-    			method : "POST",
-    			url : "check_data_exists.php",
-    			data: "email="+value,
-    			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    		}).then(function mySuccess(response) {
-
-    			var flag = response.data;
-    			// we should be using flag in only this block so logic in following
-    			if(flag.error || flag.user.emailExists)
-    			{
-            mCtrl.$setValidity('emailExists', false);
-    			}
-    			else
-    			{
-    				mCtrl.$setValidity('emailExists', true);
-    			}
-    		}, function myError(response) {
-          mCtrl.$setValidity('emailExists', false);
-    		});
 				return value;
 			}
 			mCtrl.$parsers.push(myValidation);

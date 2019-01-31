@@ -11,7 +11,7 @@
             <div class="input-group">
                 <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-user"></i></span>
                 <div class="nk-int-st">
-                    <input type="text" class="form-control" placeholder="Name" ng-model="s_name" name="s_name" ng-style="nameStyle" ng-change="analyzeName(s_name)" required  names-dir nameslen-dir>
+                    <input type="text" class="form-control" placeholder="Name" ng-model="s_name" name="s_name" required  names-dir nameslen-dir>
                 </div>
                 <span style="color:red" id="s_name" ng-show="signupForm.s_name.$dirty && signupForm.s_name.$invalid">
                 <span ng-show="signupForm.s_name.$error.required">First name is required</span>
@@ -23,7 +23,7 @@
             <div class="input-group mg-t-15">
                 <span class="input-group-addon nk-ic-st-pro"><i class="	glyphicon glyphicon-envelope"></i></span>
                 <div class="nk-int-st">
-                    <input type="text" class="form-control" placeholder="Email Address" name="s_email" ng-model="s_email" ng-style="emailStyle" ng-change="analyzeEmail(s_email)" onKeyUp="check_exists(this.value,'s_email')" required email-dir email-exists-dir>
+                    <input type="text" class="form-control" placeholder="Email Address" name="s_email" ng-model="s_email" required email-dir for="user"/>
                 </div>
                 <span style="color:red"  id="s_email" ng-show="signupForm.s_email.$dirty && signupForm.s_email.$invalid"><span ng-show="signupForm.s_email.$error.required">Email is required.</span><span ng-show="!signupForm.s_email.$error.required && signupForm.s_email.$error.emailValid">Invalid email address.</span>
                 <span ng-show="!(signupForm.s_email.$error.required || signupForm.s_email.$error.emailValid) && signupForm.s_email.$error.emailExists">Email address already exists</span>
@@ -33,7 +33,7 @@
             <div class="input-group mg-t-15">
                 <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-edit"></i></span>
                 <div class="nk-int-st">
-                    <input type="password" class="form-control" placeholder="Password" name="s_password" ng-model="s_password" ng-style="passwordStrength" ng-change="analyzePasswordStrength(s_password)" required pass-dir>
+                    <input type="password" class="form-control" placeholder="Password" name="s_password" ng-model="s_password" required pass-dir>
                 </div>
                 <span style="color:red" id="s_password" ng-show="signupForm.s_password.$dirty && signupForm.s_password.$invalid">
                 <span ng-show="signupForm.s_password.$error.required">Password is required</span>
@@ -44,7 +44,7 @@
             <div class="input-group mg-t-15">
                 <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-book"></i></span>
                 <div class="nk-int-st">
-                    <input type="text" class="form-control" placeholder="Address" name="s_address" ng-model="s_address"  ng-style="addressStyle" ng-change="analyzeAddress(s_address)" required address-dir>
+                    <input type="text" class="form-control" placeholder="Address" name="s_address" ng-model="s_address"  required address-dir>
                     </div><span style="color:red" id="s_address" ng-show="signupForm.s_address.$dirty && signupForm.s_address.$invalid">
                     <span ng-show="signupForm.s_address.$error.required">Address is required</span>
                     <span ng-show="!signupForm.s_address.$error.required && signupForm.s_address.$error.addressvalid">Do not use unused character.</span>
@@ -55,7 +55,7 @@
             <div class="input-group mg-t-15">
                 <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-home"></i></span>
                 <div class="nk-int-st">
-                    <input type="text" class="form-control" placeholder="City" name="s_city" ng-model="s_city"  ng-style="cityStyle" ng-change="analyzeCity(s_city)" required  names-dir>
+                    <input type="text" class="form-control" placeholder="City" name="s_city" ng-model="s_city" required  names-dir>
                 </div>
                 <span style="color:red" id="s_city" ng-show="signupForm.s_city.$dirty && signupForm.s_city.$invalid">
                 <span ng-show="signupForm.s_city.$error.required">City is required</span>
@@ -66,10 +66,11 @@
             <div class="input-group mg-t-15">
                 <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-phone"></i></span>
                 <div class="nk-int-st">
-                    <input type="text" class="form-control" placeholder="Contact" name="s_contact" ng-style="contactStyle" ng-model="s_contact" ng-change="analyzeContact(s_contact)" required contact-dir>
+                    <input type="text" class="form-control" placeholder="Contact" name="s_contact" ng-model="s_contact" required contact-dir for="user"/>
                 </div>
-                <span style="color:red"  id="s_email" ng-show="signupForm.s_contact.$dirty && signupForm.s_contact.$invalid"><span ng-show="signupForm.s_contact.$error.required">Contact is required.</span><span ng-show="!signupForm.s_contact.$error.required && signupForm.s_contact.$error.contactValid">Please enter valid contact</span>
-                <span ng-show="!(signupForm.s_contact.$error.required || signupForm.s_contact.$error.contactValid) && signupForm.s_contact.$error.contactExists">Contact already exists</span>
+                <span style="color:red"  id="s_email" ng-show="signupForm.s_contact.$dirty && signupForm.s_contact.$invalid">
+                <span ng-show="signupForm.s_contact.$error.required">Contact is required.</span><span ng-show="!signupForm.s_contact.$error.required && signupForm.s_contact.$error.contactValid">Please enter valid contact</span>
+                <span ng-show="!(signupForm.s_contact.$error.required) && signupForm.s_contact.$error.contactExists">Contact already exists</span>
                 </span>
             </div>
 
