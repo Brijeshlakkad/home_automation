@@ -1,10 +1,9 @@
 <?php
-require_once('config.php');
-require_once('home_data.php');
+require_once('../config.php');
 function checkEmailExists($gotData)
 {
   $email=$gotData->user->email;
-  $sql="SELECT * FROM user where email='$email'";
+  $sql="SELECT * FROM dealer where email='$email'";
   $result=mysqli_query($gotData->con,$sql);
   if($result){
     if(mysqli_num_rows($result)==1){
@@ -25,7 +24,7 @@ function checkContactExists($gotData)
     $gotData->errorMessage="contact is not valid";
     return $gotData;
   }
-  $sql="SELECT * FROM user where mobile='$contact'";
+  $sql="SELECT * FROM dealer where mobile='$contact'";
   $result=mysqli_query($gotData->con,$sql);
   if($result){
     if(mysqli_num_rows($result)==1){

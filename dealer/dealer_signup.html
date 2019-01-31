@@ -1,0 +1,98 @@
+<div class="login-content">
+    <!-- Register -->
+    <div class="nk-block toggled" id="l-register">
+      <!-- Start my code -->
+        <div><b><h3>Registration</h3></b></div>
+        <hr/>
+
+      <!-- End my code -->
+      <form name="dealerSignupForm" method="post" novalidate>
+        <div class="nk-form">
+            <div class="input-group">
+                <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-user"></i></span>
+                <div class="nk-int-st">
+                    <input type="text" class="form-control" placeholder="Name" ng-model="s_name" name="s_name" required  names-dir nameslen-dir>
+                </div>
+                <span style="color:red" id="s_name" ng-show="dealerSignupForm.s_name.$dirty && dealerSignupForm.s_name.$invalid">
+                <span ng-show="dealerSignupForm.s_name.$error.required">First name is required</span>
+                <span ng-show="!dealerSignupForm.s_name.$error.required && dealerSignupForm.s_name.$error.namesvalid">Enter only characters</span>
+                <span ng-show="!dealerSignupForm.s_name.$error.required && dealerSignupForm.s_name.$error.nameslenvalid">Enter more than three characters</span>
+                </span>
+            </div>
+
+            <div class="input-group mg-t-15">
+                <span class="input-group-addon nk-ic-st-pro"><i class="	glyphicon glyphicon-envelope"></i></span>
+                <div class="nk-int-st">
+                    <input type="text" class="form-control" placeholder="Email Address" name="s_email" ng-model="s_email" required email-dir for="dealer"/>
+                </div>
+                <span style="color:red"  id="s_email" ng-show="dealerSignupForm.s_email.$dirty && dealerSignupForm.s_email.$invalid"><span ng-show="dealerSignupForm.s_email.$error.required">Email is required.</span><span ng-show="!dealerSignupForm.s_email.$error.required && dealerSignupForm.s_email.$error.emailValid">Invalid email address.</span>
+                <span ng-show="!(dealerSignupForm.s_email.$error.required || dealerSignupForm.s_email.$error.emailValid) && dealerSignupForm.s_email.$error.emailExists">Email address already exists</span>
+                </span>
+            </div>
+
+            <div class="input-group mg-t-15">
+                <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-edit"></i></span>
+                <div class="nk-int-st">
+                    <input type="password" class="form-control" placeholder="Password" name="s_password" ng-model="s_password" required pass-dir>
+                </div>
+                <span style="color:red" id="s_password" ng-show="dealerSignupForm.s_password.$dirty && dealerSignupForm.s_password.$invalid">
+                <span ng-show="dealerSignupForm.s_password.$error.required">Password is required</span>
+                <span ng-show="!dealerSignupForm.s_password.$error.required && dealerSignupForm.s_password.$error.passvalid">Password should contain at least one number and at least one character. Its length should be of 6 characters</span>
+                </span>
+            </div>
+
+            <div class="input-group mg-t-15">
+                <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-book"></i></span>
+                <div class="nk-int-st">
+                    <input type="text" class="form-control" placeholder="Address" name="s_address" ng-model="s_address"  required address-dir>
+                    </div><span style="color:red" id="s_address" ng-show="dealerSignupForm.s_address.$dirty && dealerSignupForm.s_address.$invalid">
+                    <span ng-show="dealerSignupForm.s_address.$error.required">Address is required</span>
+                    <span ng-show="!dealerSignupForm.s_address.$error.required && dealerSignupForm.s_address.$error.addressvalid">Do not use unused character.</span>
+                    <span ng-show="!dealerSignupForm.s_address.$error.required && dealerSignupForm.s_address.$error.addresslengthvalid">Enter more details so we can understand</span>
+                    </span>
+            </div>
+
+            <div class="input-group mg-t-15">
+                <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-home"></i></span>
+                <div class="nk-int-st">
+                    <input type="text" class="form-control" placeholder="City" name="s_city" ng-model="s_city" required  names-dir>
+                </div>
+                <span style="color:red" id="s_city" ng-show="dealerSignupForm.s_city.$dirty && dealerSignupForm.s_city.$invalid">
+                <span ng-show="dealerSignupForm.s_city.$error.required">City is required</span>
+                <span ng-show="!dealerSignupForm.s_city.$error.required && dealerSignupForm.s_city.$error.namesvalid">Enter only characters</span>
+                </span>
+            </div>
+
+            <div class="input-group mg-t-15">
+                <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-phone"></i></span>
+                <div class="nk-int-st">
+                    <input type="tel" class="form-control" placeholder="Contact" name="s_contact" ng-model="s_contact" required ng-style="contactStyle" ng-change="analyzeContact(s_contact)" for="dealer"/>
+                </div>
+                <span style="color:red;">{{showContactStatus}}</span>
+                <span style="color:red"  id="s_contact" ng-show="dealerSignupForm.s_contact.$dirty && dealerSignupForm.s_contact.$invalid">
+                <span ng-show="dealerSignupForm.s_contact.$error.required">Contact is required.</span><span ng-show="!dealerSignupForm.s_contact.$error.required && dealerSignupForm.s_contact.$error.tel">Please enter valid contact</span>
+                </span>
+            </div>
+
+            <center>
+            <div class="input-group mg-t-15">
+                <div class="bootstrap-select fm-cmp-mg">
+                    <select class="selectpicker" name="s_type" ng-model="s_type" ng-options="option.value for option in typeList track by option.key">
+                    </select>
+                </div>
+                <span style="color:red;" id="s_type" ng-show="dealerSignupForm.s_type.$dirty && dealerSignupForm.s_type.$invalid">
+                <span ng-show="dealerSignupForm.s_type.$error.required">Please select a category</span>
+                </span>
+            </div>
+            </center>
+
+            <button class="btn btn-login btn-success btn-float" ng-click="signup_status()" ng-disabled="dealerSignupForm.s_email.$invalid || dealerSignupForm.s_password.$invalid || dealerSignupForm.s_name.$invalid || dealerSignupForm.s_address.$invalid || dealerSignupForm.s_city.$invalid || dealerSignupForm.s_contact.$invalid || dealerSignupForm.s_type.$invalid"><i class="notika-icon notika-right-arrow right-arrow-ant"></i></button>
+        </div>
+        <div ng-show="s_status_0" class="alert alert-danger">Please fill details carefully!</div><div ng-show="s_status_1" class="alert alert-success">{{signupStatus}}</div>
+      </form>
+        <div class="nk-navigation rg-ic-stl">
+            <a href="#!/login" data-ma-action="nk-login-switch" data-ma-block="#l-login"><i class="notika-icon notika-right-arrow"></i> <span>Sign in</span></a>
+            <a href="#!/forget_password" data-ma-action="nk-login-switch" data-ma-block="#l-forget-password"><i>?</i> <span>Forgot Password</span></a>
+        </div>
+    </div>
+</div>

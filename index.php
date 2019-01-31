@@ -57,13 +57,16 @@
     <link rel="stylesheet" href="css/responsive.css">
     <!-- modernizr JS
 		============================================ -->
+    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+    <!-- bootstrap select CSS
+		============================================ -->
+    <link rel="stylesheet" href="css/bootstrap-select/bootstrap-select.css">
     <link rel="stylesheet" href="css/dialog/sweetalert2.min.css">
     <link rel="stylesheet" href="css/dialog/dialog.css">
     <link rel="stylesheet" href="css/custom.css">
     <link rel="stylesheet" type="text/css" href="css/vertical_tab.css" />
     <link rel="stylesheet" type="text/css" href="css/please_wait.css" />
-    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
-    <script src="js/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular.min.js"></script>
 </head>
 <style>
 * {
@@ -238,6 +241,9 @@ html, body {
 	<!-- tawk chat JS
 		============================================ -->
     <script src="js/tawk-chat.js"></script>
+    <!-- bootstrap select JS
+		============================================ -->
+    <script src="js/bootstrap-select/bootstrap-select.js"></script>
     <script src="js/angular-cookies.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.10/ngStorage.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-sanitize.js"></script>
@@ -277,8 +283,11 @@ html, body {
           templateUrl: 'subscription.html',
           controller: 'SubscriptionController'
       }).when('/dealer_login', {
-          templateUrl: 'dealer_login.html',
+          templateUrl: 'dealer/dealer_login.html',
           controller: 'DealerLoginController'
+      }).when('/dealer_signup', {
+          templateUrl: 'dealer/dealer_signup.html',
+          controller: 'DealerSignupController'
       }).when('/404-not-found', {
           templateUrl: '404.html',
       }).otherwise({
@@ -297,5 +306,6 @@ html, body {
     <script src="js/controllers/subscription_controller.js"></script>
     <script src="js/controllers/device_status_controller.js"></script>
     <script src="js/controllers/dealer/dealer_login_controller.js"></script>
+    <script src="js/controllers/dealer/dealer_signup_controller.js"></script>
 </body>
 </html>

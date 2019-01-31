@@ -1,5 +1,32 @@
 myApp.controller("SignupController", function($scope,$http,$window) {
   $scope.signupStatus="";
+  $scope.contactStyle = {
+		"border-bottom-width":"1.45px"
+  };
+  $scope.analyzeContact = function(value) {
+    $http({
+      method : "POST",
+      url : "check_data_exists.php",
+      data: "contact="+value,
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    }).then(function mySuccess(response) {
+      flag = response.data;
+      // we should be using flag in only this block so logic in following
+      if(flag.error)
+      {
+        $scope.showContactStatus=flag.errorMessage;
+        $scope.contactStyle["border-bottom-color"] = "red";
+      }
+      else
+      {
+        $scope.showContactStatus="";
+        $scope.contactStyle["border-bottom-color"] = "green";
+      }
+    }, function myError(response) {
+      $scope.showContactStatus="";
+      $scope.contactStyle["border-bottom-color"] = "red";
+    });
+  };
   $scope.signup_status=function(){
     $http({
 			method : "POST",
@@ -26,50 +53,8 @@ myApp.controller("SignupController", function($scope,$http,$window) {
 		});
   };
 });
-myApp.directive('contactDir', function($http) {
-				return {
-					require: 'ngModel',
-					link: function(scope, element, attr, mCtrl) {
-						function myValidation(value) {
-              var url="check_data_exists.php";
-              if(attr.for=="dealer"){
-                url="dealer/check_data_exists.php";
-              }
-							var patt = /^[0-9]{10}$/;
-							if (patt.test(value)) {
-								mCtrl.$setValidity('contactValid', true);
-                $http({
-            			method : "POST",
-            			url : url,
-            			data: "contact="+value,
-            			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-            		}).then(function mySuccess(response) {
-                  flag = response.data;
-                  // we should be using flag in only this block so logic in following
-                  if(flag.error || flag.user.contactExists)
-                  {
-                    mCtrl.$setValidity('contactExists', false);
-                    element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
-                  }
-                  else
-                  {
-                    mCtrl.$setValidity('contactExists', true);
-                    element.css({"border-bottom-width":"1.45px","border-bottom-color":'green'});
-                  }
-                }, function myError(response) {
-                  mCtrl.$setValidity('contactExists', false);
-                  element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
-                });
-							} else {
-								mCtrl.$setValidity('contactValid', false);
-                element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
-							}
-							return value;
-						}
-						mCtrl.$parsers.push(myValidation);
-					}
-				};
-});
+
+
 myApp.directive('addressDir', function() {
 				return {
 					require: 'ngModel',
@@ -126,7 +111,6 @@ myApp.directive('namesDir', function() {
 						function myValidation(value) {
 							var patt =  /^[a-zA-Z]+$/
 							if (patt.test(value)) {
-                alert();
 								mCtrl.$setValidity('namesvalid', true);
                 element.css({"border-bottom-width":"1.45px","border-bottom-color":'green'});
 							} else {

@@ -1,7 +1,17 @@
-myApp.controller("userController",function($rootScope,$scope,$localStorage,$sessionStorage,$window){
+myApp.controller("userController",function($rootScope,$scope,$localStorage,$sessionStorage,$window,$location){
+  $scope.index=['/','/login','/register','/dealer_login','/dealer_signup'];
+  $scope.path=0;
+  var i;
+  for(i=0;i<$scope.index.length;i++){
+    if($location.path()==$scope.index[i]){
+      $scope.path=1;
+    }
+  }
   if($localStorage.userID==null || $localStorage.user==null){
     $rootScope.isLoggedIn=false;
-    $window.location.href="#!/";
+    if($scope.path!=1){
+      $window.location.href="#!/";
+    }
   }else{
     $rootScope.isLoggedIn=true;
   }
