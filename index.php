@@ -253,41 +253,43 @@ html, body {
     myApp.config(function ($routeProvider) {
       $routeProvider.when('/', {
           templateUrl: 'home_page/home_page.html',
-      }).when('/login', {
+      }).when('/customer/login', {
           templateUrl: 'login.html',
           controller: 'LoginController'
-      }).when('/register', {
+      }).when('/customer/register', {
           templateUrl: 'register.html',
           controller: 'SignupController'
-      }).when('/forget_password', {
+      }).when('/customer/forget_password', {
           templateUrl: 'forget_password.html'
-      }).when('/home', {
+      }).when('/customer', {
           templateUrl: 'home.html',
           controller: 'HomeController'
-      }).when('/home/:homeID', {
+      }).when('/customer/:homeID', {
           templateUrl: 'room.html',
           controller: 'RoomController'
-      }).when('/home/:homeID/:roomID', {
+      }).when('/customer/:homeID/:roomID', {
           templateUrl: 'hardware.html',
           controller: 'HardwareController'
-      }).when('/home/:homeID/:roomID/:hwID', {
+      }).when('/customer/:homeID/:roomID/:hwID', {
           templateUrl: 'device.html',
           controller: 'DeviceController'
-      }).when('/home/:homeID/:roomID/:hwID/:dvID', {
+      }).when('/customer/:homeID/:roomID/:hwID/:dvID', {
           templateUrl: 'device_status.html',
           controller: 'DeviceStatusController'
-      }).when('/settings', {
+      }).when('/customer/settings', {
           templateUrl: 'settings.html',
           controller: 'SettingsController'
-      }).when('/subscription', {
+      }).when('/customer/subscription', {
           templateUrl: 'subscription.html',
           controller: 'SubscriptionController'
-      }).when('/dealer_login', {
+      }).when('/dealer/login', {
           templateUrl: 'dealer/dealer_login.html',
           controller: 'DealerLoginController'
-      }).when('/dealer_signup', {
+      }).when('/dealer/signup', {
           templateUrl: 'dealer/dealer_signup.html',
           controller: 'DealerSignupController'
+      }).when('/dealer/forget_password', {
+          templateUrl: 'dealer/forget_password.html'
       }).when('/404-not-found', {
           templateUrl: '404.html',
       }).otherwise({

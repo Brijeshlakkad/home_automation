@@ -1,5 +1,5 @@
-myApp.controller("userController",function($rootScope,$scope,$localStorage,$sessionStorage,$window,$location){
-  $scope.index=['/','/login','/register','/dealer_login','/dealer_signup'];
+myApp.controller("userController",function($rootScope,$scope,$localStorage,$sessionStorage,$window,$location,$interval){
+  $scope.index=['/customer','/customer/login','/customer/register','/dealer/login','/dealer/signup'];
   $scope.path=0;
   var i;
   for(i=0;i<$scope.index.length;i++){

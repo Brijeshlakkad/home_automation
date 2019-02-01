@@ -114,7 +114,7 @@ function getHomeData($gotData){
       $editFunc = "editHome($id,'".$homeName."')";
       $deleteButton="<button class='btn btn-default' onclick='deleteHome($id)' ><span class='glyphicon glyphicon-trash'></span> Delete</button>";
       $editButton="<button class='btn btn-default' onclick=$editFunc><span class='glyphicon glyphicon-pencil'></span> Edit</button>";
-      $allHome.='<div class="grid-item card"><div class="row"><a href="#!home/'.$homeName.'">'.$homeName.'</a></div><div class="row"><div class="col-md-3"></div><div class="col-md-3">'.$editButton.'</div><div class="col-md-3">'.$deleteButton.'</div><div class="col-md-3"></div></div></div>';
+      $allHome.='<div class="grid-item card"><div class="row"><a href="#!customer/'.$homeName.'">'.$homeName.'</a></div><div class="row"><div class="col-md-3"></div><div class="col-md-3">'.$editButton.'</div><div class="col-md-3">'.$deleteButton.'</div><div class="col-md-3"></div></div></div>';
     }
     $allHome.='</div>';
     $gotData->user->allHome=$allHome;

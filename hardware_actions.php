@@ -128,7 +128,7 @@ function getHardwareData($gotData){
       $editFunc = "editHardware($id,'".$hwName."','".$hwSeries."','".$hwIP."')";
       $deleteButton="<button class='btn btn-default' onclick='deleteHardware($id)' ><span class='glyphicon glyphicon-trash'></span> Delete</button>";
       $editButton="<button class='btn btn-default' onclick=$editFunc><span class='glyphicon glyphicon-pencil'></span> Edit</button>";
-      $allHardware.='<div class="grid-item card"><div class="row"><a href="#!home/'.$homeName.'/'.$roomName.'/'.$hwName.'">'.$hwName.'</a></div><div class="row"><div class="col-md-3"></div><div class="col-md-3">'.$editButton.'</div><div class="col-md-3">'.$deleteButton.'</div><div class="col-md-3"></div></div></div>';
+      $allHardware.='<div class="grid-item card"><div class="row"><a href="#!customer/'.$homeName.'/'.$roomName.'/'.$hwName.'">'.$hwName.'</a></div><div class="row"><div class="col-md-3"></div><div class="col-md-3">'.$editButton.'</div><div class="col-md-3">'.$deleteButton.'</div><div class="col-md-3"></div></div></div>';
     }
     $allHardware.='</div>';
     $gotData->user->allHardware=$allHardware;
