@@ -57,7 +57,7 @@
               <form name="homeNameForm" novalidate>
               <div class="row">
                 <div class="nk-int-st">
-                  <input class="form-control" name="homeName" data-ng-model="homeName" type="text" placeholder="Home Name" ng-style="homeNameStyle" ng-change="analyzeHomeName(homeName)" required home-name-dir autofocus/>
+                  <input class="form-control" name="homeName" data-ng-model="homeName" type="text" placeholder="Home Name" ng-required="true" home-name-dir autofocus/>
                 </div>
                 <span style="color:red;" id="homeName" ng-show="homeNameForm.homeName.$dirty && homeNameForm.homeName.$invalid">
                 <span ng-show="homeNameForm.homeName.$error.required">Please enter home name</span>
@@ -86,7 +86,7 @@
               <form name="homeReNameForm" novalidate>
               <div class="row">
                 <div class="nk-int-st">
-                  <input class="form-control" name="homeReName" ng-model="homeReName" type="text" placeholder="Home Name" ng-style="homeReNameStyle" ng-change="analyzeHomeName(homeReName)" required home-name-dir autofocus/>
+                  <input class="form-control" name="homeReName" ng-model="homeReName" type="text" placeholder="Home Name" ng-required="true" home-name-dir autofocus/>
                 </div>
                 <span style="color:red;" id="homeReName" ng-show="homeReNameForm.homeReName.$dirty && homeReNameForm.homeReName.$invalid">
                 <span ng-show="homeReNameForm.homeReName.$error.required">Please enter home name</span>

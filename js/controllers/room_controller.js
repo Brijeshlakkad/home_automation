@@ -7,17 +7,6 @@ myApp.controller("RoomController", function($rootScope,$scope,$http,$window,$sce
   $scope.homeID=$routeParams.homeID;
   $scope.roomID="";
   $rootScope.roomList="";
-  $scope.roomNameStyle={
-    "border-bottom-width":"2px"
-  };
-  $scope.analyzeRoomName=function(val){
-    var patt_room=new RegExp("^[a-zA-Z0-9]+$");
-    if(patt_room.test(val) && val.length>3){
-      $scope.roomNameStyle['border-bottom-color']="green";
-    }else{
-      $scope.roomNameStyle['border-bottom-color']="red";
-    }
-  };
   $scope.addRoom=function(){
     $rootScope.body.addClass("loading");
     $http({
@@ -174,28 +163,37 @@ myApp.directive("roomNameDir",function($rootScope,$http){
     require: 'ngModel',
     link: function(scope, element, attr, mCtrl){
       function myValidation(value){
-        var patt_room=/^[a-zA-Z0-9]+$/;
-        if(patt_room.test(value)){
-          mCtrl.$setValidity('roomNameValid',true);
-        }else{
-          mCtrl.$setValidity('roomNameValid',false);
-        }
-        if(value.length>3){
-          mCtrl.$setValidity('roomNameLenValid',true);
-        }else{
-          mCtrl.$setValidity('roomNameLenValid',false);
-        }
+        mCtrl.$setValidity('roomNameExistsValid',true);
+        var pattRoom=/^[a-zA-Z0-9]+$/;
         var i,flag=0;
         var len=$rootScope.roomList.length;
-        for(i=0;i<len;i++){
-          if($rootScope.roomList[i].roomName==value){
-            flag=1;
+        if(pattRoom.test(value) && value.length>3){
+          mCtrl.$setValidity('roomNameValid',true);
+          mCtrl.$setValidity('roomNameLenValid',true);
+          for(i=0;i<len;i++){
+            if($rootScope.roomList[i].roomName==value){
+              flag=1;
+            }
           }
-        }
-        if(flag==1){
-          mCtrl.$setValidity('roomNameExistsValid',false);
+          if(flag==1){
+            mCtrl.$setValidity('roomNameExistsValid',false);
+            element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
+          }else{
+            mCtrl.$setValidity('roomNameExistsValid',true);
+            element.css({"border-bottom-width":"1.45px","border-bottom-color":'green'});
+          }
+        }else if(!pattHome.test(value) && value.length>3){
+          mCtrl.$setValidity('roomNameValid',false);
+          mCtrl.$setValidity('roomNameLenValid',true);
+          element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
+        }else if(pattHome.test(value) && value.length<=3){
+          mCtrl.$setValidity('roomNameValid',true);
+          mCtrl.$setValidity('roomNameLenValid',false);
+          element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
         }else{
-          mCtrl.$setValidity('roomNameExistsValid',true);
+          mCtrl.$setValidity('roomNameValid',false);
+          mCtrl.$setValidity('roomNameLenValid',false);
+          element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
         }
         return value;
       }

@@ -64,7 +64,7 @@
               <form name="hwForm" novalidate>
               <div class="row">
                 <div class="nk-int-st">
-                  <input class="form-control" name="hwName" data-ng-model="hwName" type="text" placeholder="Hardware Name" ng-style="hwNameStyle" ng-change="analyzeHwName(hwName)" required hw-name-dir autofocus/>
+                  <input class="form-control" name="hwName" data-ng-model="hwName" type="text" placeholder="Hardware Name" ng-required="true" hw-name-dir autofocus/>
                 </div>
                 <span style="color:red;" id="hwName" ng-show="hwForm.hwName.$dirty && hwForm.hwName.$invalid">
                 <span ng-show="hwForm.hwName.$error.required">Please enter hardware name</span>
@@ -75,7 +75,7 @@
               </div>
               <div class="row">
                 <div class="nk-int-st">
-                  <input class="form-control" name="hwSeries" data-ng-model="hwSeries" type="text" placeholder="Hardware Series" ng-style="hwSeriesStyle" ng-change="analyzeHwSeries(hwSeries)" required/>
+                  <input class="form-control" name="hwSeries" data-ng-model="hwSeries" type="text" placeholder="Hardware Series" ng-required="true" />
                 </div>
                 <span style="color:red;" id="hwSeries" ng-show="hwForm.hwSeries.$dirty && hwForm.hwSeries.$invalid">
                 <span ng-show="hwForm.hwSeries.$error.required">Please enter hardware series</span>
@@ -83,7 +83,7 @@
               </div>
               <div class="row">
                 <div class="nk-int-st">
-                  <input class="form-control" name="hwIP" data-ng-model="hwIP" type="text" placeholder="Hardware Series" ng-style="hwIPStyle" ng-change="analyzeHwIP(hwIP)" required/>
+                  <input class="form-control" name="hwIP" data-ng-model="hwIP" type="text" placeholder="Hardware Series" ng-required="true" />
                 </div>
                 <span style="color:red;" id="hwIP" ng-show="hwForm.hwIP.$dirty && hwForm.hwIP.$invalid">
                 <span ng-show="hwForm.hwIP.$error.required">Please enter hardware IP</span>
@@ -109,7 +109,7 @@
               <form name="hwReForm" novalidate>
               <div class="row">
                 <div class="nk-int-st">
-                  <input class="form-control" name="hwReName" ng-model="hwReName" type="text" placeholder="Hardware Name" ng-style="hwNameStyle" ng-change="analyzeHwName(hwReName)" required hw-name-dir autofocus/>
+                  <input class="form-control" name="hwReName" ng-model="hwReName" type="text" placeholder="Hardware Name" ng-required="true" hw-name-dir autofocus/>
                 </div>
                 <span style="color:red;" id="hwReName" ng-show="hwReForm.hwReName.$dirty && hwReForm.hwReName.$invalid">
                 <span ng-show="hwReForm.hwReName.$error.required">Please enter hardware name</span>
@@ -120,7 +120,7 @@
               </div>
               <div class="row">
                 <div class="nk-int-st">
-                  <input class="form-control" name="hwReSeries" data-ng-model="hwReSeries" type="text" placeholder="Hardware Series" ng-style="hwSeriesStyle" ng-change="analyzeHwSeries(hwReSeries)" required/>
+                  <input class="form-control" name="hwReSeries" data-ng-model="hwReSeries" type="text" placeholder="Hardware Series" ng-required="true" />
                 </div>
                 <span style="color:red;" id="hwReSeries" ng-show="hwForm.hwReSeries.$dirty && hwForm.hwReSeries.$invalid">
                 <span ng-show="hwForm.hwReSeries.$error.required">Please enter hardware series</span>
@@ -128,7 +128,7 @@
               </div>
               <div class="row">
                 <div class="nk-int-st">
-                  <input class="form-control" name="hwReIP" data-ng-model="hwReIP" type="text" placeholder="Hardware Series" ng-style="hwIPStyle" ng-change="analyzeHwIP(hwReIP)" required/>
+                  <input class="form-control" name="hwReIP" data-ng-model="hwReIP" type="text" placeholder="Hardware Series" ng-required="true"/>
                 </div>
                 <span style="color:red;" id="hwReIP" ng-show="hwForm.hwReIP.$dirty && hwForm.hwReIP.$invalid">
                 <span ng-show="hwForm.hwReIP.$error.required">Please enter hardware IP</span>

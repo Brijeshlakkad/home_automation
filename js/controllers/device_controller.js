@@ -244,23 +244,27 @@ myApp.directive("dvNameDir",function($rootScope,$http){
     require: 'ngModel',
     link: function(scope, element, attr, mCtrl){
       function myValidation(value){
-        var patt_room=/^[a-zA-Z0-9]+$/;
-        if(patt_room.test(value)){
-          mCtrl.$setValidity('dvNameValid',true);
-        }else{
-          mCtrl.$setValidity('dvNameValid',false);
-        }
+        mCtrl.$setValidity('dvNameExistsValid',true);
+        var pattDevice=/^[a-zA-Z0-9]+$/;
         var i,flag=0;
         var len=$rootScope.dvList.length;
-        for(i=0;i<len;i++){
-          if($rootScope.dvList[i].dvName==value){
-            flag=1;
+        if(pattDevice.test(value)){
+          mCtrl.$setValidity('dvNameValid',true);
+          for(i=0;i<len;i++){
+            if($rootScope.dvList[i].dvName==value){
+              flag=1;
+            }
           }
-        }
-        if(flag==1){
-          mCtrl.$setValidity('dvNameExistsValid',false);
+          if(flag==1){
+            mCtrl.$setValidity('dvNameExistsValid',false);
+            element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
+          }else{
+            mCtrl.$setValidity('dvNameExistsValid',true);
+            element.css({"border-bottom-width":"1.45px","border-bottom-color":'green'});
+          }
         }else{
-          mCtrl.$setValidity('dvNameExistsValid',true);
+          mCtrl.$setValidity('dvNameValid',false);
+          element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
         }
         return value;
       }

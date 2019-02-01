@@ -6,17 +6,7 @@ myApp.controller("HomeController",function($rootScope,$scope,$http,$window,$sce,
   $scope.beforeHomeName="";
   $scope.homeID="";
   $rootScope.homeList="";
-  $scope.homeNameStyle={
-    "border-bottom-width":"2px"
-  };
-  $scope.analyzeHomeName=function(val){
-    var patt_home=new RegExp("^[a-zA-Z0-9]+$");
-    if(patt_home.test(val) && val.length>3){
-      $scope.homeNameStyle['border-bottom-color']="green";
-    }else{
-      $scope.homeNameStyle['border-bottom-color']="red";
-    }
-  };
+  $rootScope.editHomeName="";
   $scope.addHome=function(){
     $rootScope.body.addClass("loading");
     $http({
@@ -126,6 +116,7 @@ myApp.controller("HomeController",function($rootScope,$scope,$http,$window,$sce,
     $timeout(callback,10);
   };
   $scope.editHome = function(id,homeName){
+    $rootScope.editHomeName=homeName;
     $scope.setHomeName(id,homeName,function(){
       $("#renameHome").modal("show");
     });
@@ -169,28 +160,37 @@ myApp.directive("homeNameDir",function($rootScope,$http){
     require: 'ngModel',
     link: function(scope, element, attr, mCtrl){
       function myValidation(value){
-        var patt_home=/^[a-zA-Z0-9]+$/;
-        if(patt_home.test(value)){
-          mCtrl.$setValidity('homeNameValid',true);
-        }else{
-          mCtrl.$setValidity('homeNameValid',false);
-        }
-        if(value.length>3){
-          mCtrl.$setValidity('homeNameLenValid',true);
-        }else{
-          mCtrl.$setValidity('homeNameLenValid',false);
-        }
+        mCtrl.$setValidity('homeNameExistsValid',true);
+        var pattHome=/^[a-zA-Z0-9]+$/;
         var i,flag=0;
         var len=$rootScope.homeList.length;
-        for(i=0;i<len;i++){
-          if($rootScope.homeList[i].homeName==value){
-            flag=1;
+        if(pattHome.test(value) && value.length>3){
+          mCtrl.$setValidity('homeNameValid',true);
+          mCtrl.$setValidity('homeNameLenValid',true);
+          for(i=0;i<len;i++){
+            if($rootScope.homeList[i].homeName==value){
+              flag=1;
+            }
           }
-        }
-        if(flag==1){
-          mCtrl.$setValidity('homeNameExistsValid',false);
+          if(flag==1){
+            mCtrl.$setValidity('homeNameExistsValid',false);
+            element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
+          }else{
+            mCtrl.$setValidity('homeNameExistsValid',true);
+            element.css({"border-bottom-width":"1.45px","border-bottom-color":'green'});
+          }
+        }else if(!pattHome.test(value) && value.length>3){
+          mCtrl.$setValidity('homeNameValid',false);
+          mCtrl.$setValidity('homeNameLenValid',true);
+          element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
+        }else if(pattHome.test(value) && value.length<=3){
+          mCtrl.$setValidity('homeNameValid',true);
+          mCtrl.$setValidity('homeNameLenValid',false);
+          element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
         }else{
-          mCtrl.$setValidity('homeNameExistsValid',true);
+          mCtrl.$setValidity('homeNameValid',false);
+          mCtrl.$setValidity('homeNameLenValid',false);
+          element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
         }
         return value;
       }

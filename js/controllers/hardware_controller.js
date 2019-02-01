@@ -12,17 +12,7 @@ myApp.controller("HardwareController", function($rootScope,$scope,$http,$window,
   $scope.roomID=$routeParams.roomID;
   $scope.hwID="";
   $rootScope.hwList="";
-  $scope.hwNameStyle={
-    "border-bottom-width":"2px"
-  };
-  $scope.analyzeHwName=function(val){
-    var patt_room=new RegExp("^[a-zA-Z0-9]+$");
-    if(patt_room.test(val) && val.length>3){
-      $scope.hwNameStyle['border-bottom-color']="green";
-    }else{
-      $scope.hwNameStyle['border-bottom-color']="red";
-    }
-  };
+
   $scope.hwSeriesStyle={
     "border-bottom-width":"2px"
   };
@@ -203,28 +193,37 @@ myApp.directive("hwNameDir",function($rootScope,$http){
     require: 'ngModel',
     link: function(scope, element, attr, mCtrl){
       function myValidation(value){
-        var patt_room=/^[a-zA-Z0-9]+$/;
-        if(patt_room.test(value)){
-          mCtrl.$setValidity('hwNameValid',true);
-        }else{
-          mCtrl.$setValidity('hwNameValid',false);
-        }
-        if(value.length>3){
-          mCtrl.$setValidity('hwNameLenValid',true);
-        }else{
-          mCtrl.$setValidity('hwNameLenValid',false);
-        }
+        mCtrl.$setValidity('hwNameExistsValid',true);
+        var pattHardware=/^[a-zA-Z0-9]+$/;
         var i,flag=0;
         var len=$rootScope.hwList.length;
-        for(i=0;i<len;i++){
-          if($rootScope.hwList[i].hwName==value){
-            flag=1;
+        if(pattHardware.test(value) && value.length>3){
+          mCtrl.$setValidity('hwNameValid',true);
+          mCtrl.$setValidity('hwNameLenValid',true);
+          for(i=0;i<len;i++){
+            if($rootScope.hwList[i].hwName==value){
+              flag=1;
+            }
           }
-        }
-        if(flag==1){
-          mCtrl.$setValidity('hwNameExistsValid',false);
+          if(flag==1){
+            mCtrl.$setValidity('hwNameExistsValid',false);
+            element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
+          }else{
+            mCtrl.$setValidity('hwNameExistsValid',true);
+            element.css({"border-bottom-width":"1.45px","border-bottom-color":'green'});
+          }
+        }else if(!pattHardware.test(value) && value.length>3){
+          mCtrl.$setValidity('hwNameValid',false);
+          mCtrl.$setValidity('hwNameLenValid',true);
+          element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
+        }else if(pattHardware.test(value) && value.length<=3){
+          mCtrl.$setValidity('hwNameValid',true);
+          mCtrl.$setValidity('hwNameLenValid',false);
+          element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
         }else{
-          mCtrl.$setValidity('hwNameExistsValid',true);
+          mCtrl.$setValidity('hwNameValid',false);
+          mCtrl.$setValidity('hwNameLenValid',false);
+          element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
         }
         return value;
       }
