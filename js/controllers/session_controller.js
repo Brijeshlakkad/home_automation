@@ -13,7 +13,6 @@ myApp.controller("userController",function($rootScope,$scope,$localStorage,$sess
       $window.location.href="#!/";
     }
   }else{
-    alert($localStorage.userType);
     $rootScope.isLoggedIn=true;
   }
   $rootScope.$storage = $localStorage;
