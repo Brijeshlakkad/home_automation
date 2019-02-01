@@ -1,6 +1,6 @@
 <?php
-require_once("config.php");
-require_once("user_data.php");
+require_once("../config.php");
+require_once("../user_data.php");
 function check_user($gotData){
   $email=$gotData->user->email;
   $password=$gotData->user->password;
@@ -16,7 +16,7 @@ function check_user($gotData){
       return $gotData;
     }
     $gotData->user->userID=$u->id;
-    $gotData->user->location="#!/dealer/";
+    $gotData->user->location="#!/dealer/home";
     return $gotData;
   }
   $gotData->error=true;

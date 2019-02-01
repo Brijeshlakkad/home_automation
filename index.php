@@ -290,6 +290,9 @@ html, body {
           controller: 'DealerSignupController'
       }).when('/dealer/forget_password', {
           templateUrl: 'dealer/forget_password.html'
+      }).when('/admin/login', {
+          templateUrl: 'admin/admin_login.html',
+          controller: 'AdminLoginController'
       }).when('/404-not-found', {
           templateUrl: '404.html',
       }).otherwise({
@@ -297,6 +300,7 @@ html, body {
       });
     });
     </script>
+    <script src="js/controllers/directives/registration_dir.js"></script>
     <script src="js/controllers/session_controller.js"></script>
     <script src="js/controllers/login_controller.js"></script>
     <script src="js/controllers/signup_controller.js"></script>
@@ -309,5 +313,6 @@ html, body {
     <script src="js/controllers/device_status_controller.js"></script>
     <script src="js/controllers/dealer/dealer_login_controller.js"></script>
     <script src="js/controllers/dealer/dealer_signup_controller.js"></script>
+    <script src="js/controllers/admin/admin_login_controller.js"></script>
 </body>
 </html>

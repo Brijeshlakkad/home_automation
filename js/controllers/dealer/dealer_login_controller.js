@@ -1,27 +1,7 @@
 myApp.controller("DealerLoginController", function($rootScope,$scope,$http,$window,$localStorage,$sessionStorage) {
   if($localStorage.userID!=null && $localStorage.user!=null){
-    $window.location.href="#!/home";
+    $window.location.href="#!customer/home";
   }
-  $scope.typeList=[{
-    "key":"0",
-    "value":"Dealer"
-  },
-  {
-    "key":"1",
-    "value":"Distributor"
-  }];
-  $scope.emailStyle = {
-    "border-bottom-width":"1.45px"
-  };
-  $scope.analyzeEmail = function(value) {
-    var pattEmail=/^[a-z0-9._]+@[a-z]+\.[a-z.]{2,5}$/;
-    if(pattEmail.test(value)) {
-      $scope.emailStyle["border-bottom-color"] = "green";
-    }
-    else {
-      $scope.emailStyle["border-bottom-color"] = "red";
-    }
-  };
   $scope.passwordStyle = {
     "border-bottom-width":"1.45px"
   };
@@ -73,21 +53,4 @@ myApp.controller("DealerLoginController", function($rootScope,$scope,$http,$wind
 		});
   };
 
-});
-myApp.directive('emailDir', function() {
-	return {
-		require: 'ngModel',
-		link: function(scope, element, attr, mCtrl) {
-			function myValidation(value) {
-				var patt = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-				if (patt.test(value)) {
-					mCtrl.$setValidity('emailValid', true);
-				} else {
-					mCtrl.$setValidity('emailValid', false);
-				}
-				return value;
-			}
-			mCtrl.$parsers.push(myValidation);
-		}
-	};
 });
