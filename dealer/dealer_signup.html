@@ -77,8 +77,8 @@
 
             <center>
             <div class="input-group mg-t-15">
-                <div class="bootstrap-select fm-cmp-mg">
-                    <select class="selectpicker" name="s_type" ng-model="s_type" ng-options="option.value for option in typeList track by option.key">
+                <div>
+                    <select class="form-control" name="s_type" ng-model="s_type" ng-options="option.value for option in typeList track by option.key">
                     </select>
                 </div>
                 <span style="color:red;" id="s_type" ng-show="dealerSignupForm.s_type.$dirty && dealerSignupForm.s_type.$invalid">

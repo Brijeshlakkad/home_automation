@@ -75,18 +75,21 @@
               </div>
               <div class="row">
                 <div class="nk-int-st">
-                  <input class="form-control" name="hwSeries" data-ng-model="hwSeries" type="text" placeholder="Hardware Series" ng-required="true" />
+                  <input class="form-control" name="hwSeries" data-ng-model="hwSeries" type="text" placeholder="Hardware Series" ng-required="true" hw-series-dir/>
                 </div>
                 <span style="color:red;" id="hwSeries" ng-show="hwForm.hwSeries.$dirty && hwForm.hwSeries.$invalid">
                 <span ng-show="hwForm.hwSeries.$error.required">Please enter hardware series</span>
+                <span ng-show="!hwForm.hwSeries.$error.required && hwForm.hwSeries.$error.hwSeriesValid">Incorrect hardware series</span>
+                <span ng-show="!hwForm.hwSeries.$error.required && hwForm.hwSeries.$error.hwSeriesExists">Hardware series is not registered with us.</span>
                 </span>
               </div>
               <div class="row">
                 <div class="nk-int-st">
-                  <input class="form-control" name="hwIP" data-ng-model="hwIP" type="text" placeholder="Hardware Series" ng-required="true" />
+                  <input class="form-control" name="hwIP" data-ng-model="hwIP" type="text" ng-pattern="patternIP"  placeholder="Hardware IP" ng-required="true"/>
                 </div>
                 <span style="color:red;" id="hwIP" ng-show="hwForm.hwIP.$dirty && hwForm.hwIP.$invalid">
                 <span ng-show="hwForm.hwIP.$error.required">Please enter hardware IP</span>
+                <span ng-show="hwForm.hwIP.$error.pattern">Please enter IP from 0.0.0.0 to 255.255.255.255</span>
                 </span>
               </div>
             </form>
@@ -120,24 +123,27 @@
               </div>
               <div class="row">
                 <div class="nk-int-st">
-                  <input class="form-control" name="hwReSeries" data-ng-model="hwReSeries" type="text" placeholder="Hardware Series" ng-required="true" />
+                  <input class="form-control" name="hwReSeries" data-ng-model="hwReSeries" type="text" placeholder="Hardware Series" ng-required="true" hw-series-dir/>
                 </div>
-                <span style="color:red;" id="hwReSeries" ng-show="hwForm.hwReSeries.$dirty && hwForm.hwReSeries.$invalid">
-                <span ng-show="hwForm.hwReSeries.$error.required">Please enter hardware series</span>
+                <span style="color:red;" id="hwReSeries" ng-show="hwReForm.hwReSeries.$dirty && hwReForm.hwReSeries.$invalid">
+                <span ng-show="hwReForm.hwReSeries.$error.required">Please enter hardware series</span>
+                <span ng-show="!hwReForm.hwReSeries.$error.required && hwReForm.hwReSeries.$error.hwSeriesValid">Incorrect hardware series</span>
+                <span ng-show="!hwReForm.hwReSeries.$error.required && hwReForm.hwReSeries.$error.hwSeriesExists">Hardware series is not registered with us.</span>
                 </span>
               </div>
               <div class="row">
                 <div class="nk-int-st">
-                  <input class="form-control" name="hwReIP" data-ng-model="hwReIP" type="text" placeholder="Hardware Series" ng-required="true"/>
+                  <input class="form-control" name="hwReIP" data-ng-model="hwReIP" type="text" placeholder="Hardware IP" ng-pattern="patternIP" ng-required="true"/>
                 </div>
-                <span style="color:red;" id="hwReIP" ng-show="hwForm.hwReIP.$dirty && hwForm.hwReIP.$invalid">
-                <span ng-show="hwForm.hwReIP.$error.required">Please enter hardware IP</span>
+                <span style="color:red;" id="hwReIP" ng-show="hwReForm.hwReIP.$dirty && hwReForm.hwReIP.$invalid">
+                <span ng-show="hwReForm.hwReIP.$error.required">Please enter hardware IP</span>
+                <span ng-show="hwReForm.hwReIP.$error.pattern">Please enter IP from 0.0.0.0 to 255.255.255.255</span>
                 </span>
               </div>
             </form>
             </div>
             <div class="modal-footer" style="margin:10px;">
-                <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="hwReForm.hwReName.$invalid" ng-click="modifyHardware()">Modify</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="hwReForm.hwReName.$invalid || hwReForm.hwReSeries.$invalid || hwReForm.hwReIP.$invalid" ng-click="modifyHardware()">Modify</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>

@@ -174,6 +174,23 @@ function getHardwareList($gotData){
   return $gotData;
 }
 
+function checkHardwareSeries($gotData){
+  $hwSeries = $gotData->user->hwSeries;
+  $sql="SELECT * FROM product_serial WHERE serial_no='$hwSeries'";
+  $check=mysqli_query($gotData->con,$sql);
+  if($check){
+    if(mysqli_num_rows($check)==1){
+      $gotData->user->hwSeriesExists=true;
+      return $gotData;
+    }
+    $gotData->user->hwSeriesExists=false;
+    return $gotData;
+  }
+  $gotData->error=true;
+  $gotData->errorMessage="Try Again!";
+  return $gotData;
+}
+
 if(isset($_REQUEST['action'])){
   $action=$_REQUEST['action'];
   if($action=="0" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['userID']))
@@ -297,6 +314,17 @@ if(isset($_REQUEST['action'])){
       $gotData=getHardwareList($gotData);
       echo json_encode($gotData);
     }
+  }else if($action=="5" && isset($_REQUEST['hwSeries'])){
+    $hwSeries=$_REQUEST['hwSeries'];
+    $gotData = (object) null;
+    $gotData->error=false;
+    $gotData->errorMessage="null";
+    $gotData->user=(object) null;
+    $gotData->con=$con;
+    $gotData->user->hwSeries=$hwSeries;
+    $gotData=checkHardwareSeries($gotData);
+    $gotData->con=(object) null;
+    echo json_encode($gotData);
   }else{
     $gotData = (object) null;
     $gotData->error=true;
