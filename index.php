@@ -261,19 +261,19 @@ html, body {
           controller: 'SignupController'
       }).when('/customer/forget_password', {
           templateUrl: 'forget_password.html'
-      }).when('/customer', {
+      }).when('/customer/home', {
           templateUrl: 'home.html',
           controller: 'HomeController'
-      }).when('/customer/:homeID', {
+      }).when('/customer/home/:homeID', {
           templateUrl: 'room.html',
           controller: 'RoomController'
-      }).when('/customer/:homeID/:roomID', {
+      }).when('/customer/home/:homeID/:roomID', {
           templateUrl: 'hardware.html',
           controller: 'HardwareController'
-      }).when('/customer/:homeID/:roomID/:hwID', {
+      }).when('/customer/home/:homeID/:roomID/:hwID', {
           templateUrl: 'device.html',
           controller: 'DeviceController'
-      }).when('/customer/:homeID/:roomID/:hwID/:dvID', {
+      }).when('/customer/home/:homeID/:roomID/:hwID/:dvID', {
           templateUrl: 'device_status.html',
           controller: 'DeviceStatusController'
       }).when('/customer/settings', {

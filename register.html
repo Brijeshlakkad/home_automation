@@ -66,11 +66,12 @@
             <div class="input-group mg-t-15">
                 <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-phone"></i></span>
                 <div class="nk-int-st">
-                  <input type="tel" class="form-control" placeholder="Contact" name="s_contact" ng-model="s_contact" required ng-style="contactStyle" ng-change="analyzeContact(s_contact)" for="user"/>
+                  <input type="text" class="form-control" placeholder="Contact" name="s_contact" ng-model="s_contact" ng-required="true" contact-dir for="user"/>
                 </div>
-                <span style="color:red;">{{showContactStatus}}</span>
                 <span style="color:red"  id="s_contact" ng-show="signupForm.s_contact.$dirty && signupForm.s_contact.$invalid">
                 <span ng-show="signupForm.s_contact.$error.required">Contact is required.</span>
+                <span ng-show="!signupForm.s_contact.$error.required && signupForm.s_contact.$error.contactValid">Contact is invalid.</span>
+                <span ng-show="!signupForm.s_contact.$error.required && signupForm.s_contact.$error.contactExists">Contact is already exists.</span>
                 </span>
             </div>
 

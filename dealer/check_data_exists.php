@@ -27,7 +27,7 @@ function checkContactExists($gotData)
   $sql="SELECT * FROM dealer where mobile='$contact'";
   $result=mysqli_query($gotData->con,$sql);
   if($result){
-    if(mysqli_num_rows($result)==1){
+    if(mysqli_num_rows($result)>0){
       $gotData->error=true;
       $gotData->user->contactExists=true;
       $gotData->errorMessage="contact already exists";

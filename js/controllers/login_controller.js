@@ -1,6 +1,6 @@
 myApp.controller("LoginController", function($rootScope,$scope,$http,$window,$localStorage,$sessionStorage) {
   if($localStorage.userID!=null && $localStorage.user!=null){
-    $window.location.href="#!/home";
+    $window.location.href="#!customer/home";
   }
   $scope.emailStyle = {
     "border-bottom-width":"1.45px"

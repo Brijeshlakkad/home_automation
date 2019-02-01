@@ -124,7 +124,7 @@ function getRoomData($gotData){
       $editFunc = "editRoom($id,'".$roomName."')";
       $deleteButton="<button class='btn btn-default' onclick='deleteRoom($id)' ><span class='glyphicon glyphicon-trash'></span> Delete</button>";
       $editButton="<button class='btn btn-default' onclick=$editFunc><span class='glyphicon glyphicon-pencil'></span> Edit</button>";
-      $allRoom.='<div class="grid-item card"><div class="row"><a href="#!customer/'.$homeName.'/'.$roomName.'">'.$roomName.'</a></div><div class="row"><div class="col-md-3"></div><div class="col-md-3">'.$editButton.'</div><div class="col-md-3">'.$deleteButton.'</div><div class="col-md-3"></div></div></div>';
+      $allRoom.='<div class="grid-item card"><div class="row"><a href="#!customer/home/'.$homeName.'/'.$roomName.'">'.$roomName.'</a></div><div class="row"><div class="col-md-3"></div><div class="col-md-3">'.$editButton.'</div><div class="col-md-3">'.$deleteButton.'</div><div class="col-md-3"></div></div></div>';
     }
     $allRoom.='</div>';
     $gotData->user->allRoom=$allRoom;

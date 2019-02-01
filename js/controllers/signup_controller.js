@@ -1,32 +1,5 @@
 myApp.controller("SignupController", function($scope,$http,$window) {
   $scope.signupStatus="";
-  $scope.contactStyle = {
-		"border-bottom-width":"1.45px"
-  };
-  $scope.analyzeContact = function(value) {
-    $http({
-      method : "POST",
-      url : "check_data_exists.php",
-      data: "contact="+value,
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).then(function mySuccess(response) {
-      flag = response.data;
-      // we should be using flag in only this block so logic in following
-      if(flag.error)
-      {
-        $scope.showContactStatus=flag.errorMessage;
-        $scope.contactStyle["border-bottom-color"] = "red";
-      }
-      else
-      {
-        $scope.showContactStatus="";
-        $scope.contactStyle["border-bottom-color"] = "green";
-      }
-    }, function myError(response) {
-      $scope.showContactStatus="";
-      $scope.contactStyle["border-bottom-color"] = "red";
-    });
-  };
   $scope.signup_status=function(){
     $http({
 			method : "POST",
@@ -181,6 +154,59 @@ myApp.directive('emailDir', function($http) {
 				} else {
           element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
 					mCtrl.$setValidity('emailValid', false);
+				}
+				return value;
+			}
+			mCtrl.$parsers.push(myValidation);
+		}
+	};
+});
+
+myApp.directive('contactDir', function($rootScope,$http,$location) {
+	return {
+		require: 'ngModel',
+		link: function(scope, element, attr, mCtrl) {
+			function myValidation(value) {
+        mCtrl.$setValidity('contactExists', true);
+				var patt = /^\+?\d{10}$/;
+				if (patt.test(value)) {
+					mCtrl.$setValidity('contactValid', true);
+          if($location.path()=="/customer/settings" && $rootScope.userDetails['contact']==value){
+            mCtrl.$setValidity('contactExists', true);
+            element.css({"border-bottom-width":"1.45px","border-bottom-color":'green'});
+          }else{
+            if(typeof attr.for != 'undefined'){
+              var url="check_data_exists.php";
+              if(attr.for=="dealer"){
+                url="dealer/check_data_exists.php";
+              }
+              $http({
+          			method : "POST",
+          			url : url,
+          			data: "contact="+value,
+          			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+          		}).then(function mySuccess(response) {
+          			var flag = response.data;
+          			// we should be using flag in only this block so logic in following
+          			if(flag.user.contactExists)
+          			{
+                  mCtrl.$setValidity('contactExists', false);
+                  element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
+          			}
+          			else
+          			{
+          				mCtrl.$setValidity('contactExists', true);
+                  element.css({"border-bottom-width":"1.45px","border-bottom-color":'green'});
+          			}
+          		}, function myError(response) {
+                mCtrl.$setValidity('contactExists', false);
+                element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
+          		});
+            }
+          }
+				} else {
+          element.css({"border-bottom-width":"1.45px","border-bottom-color":'red'});
+					mCtrl.$setValidity('contactValid', false);
 				}
 				return value;
 			}

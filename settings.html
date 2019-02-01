@@ -5,11 +5,11 @@
                 <div class="mobile-menu">
                     <nav id="dropdown">
                         <ul class="mobile-menu-nav">
-                            <li><a href="#!home">Home</a>
+                            <li><a href="#!customer/home">Home</a>
                             </li>
-                            <li><a href="#!subscription">Subscription</a>
+                            <li><a href="#!customer/subscription">Subscription</a>
                             </li>
-                            <li><a href="#!settings">Settings</a>
+                            <li><a href="#!customer/settings">Settings</a>
                             </li>
                         </ul>
                     </nav>
@@ -25,11 +25,11 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
-                    <li><a href="#!home"><i class="notika-icon notika-house"></i> Home</a>
+                    <li><a href="#!customer/home"><i class="notika-icon notika-house"></i> Home</a>
                     </li>
-                    <li><a href="#!subscription"><i class="notika-icon notika-form"></i> Subscription</a>
+                    <li><a href="#!customer/subscription"><i class="notika-icon notika-form"></i> Subscription</a>
                     </li>
-                    <li class="active"><a href="#!settings"><i class="notika-icon notika-settings"></i> Settings</a>
+                    <li class="active"><a href="#!customer/settings"><i class="notika-icon notika-settings"></i> Settings</a>
                     </li>
                 </ul>
                 <div class="tab-content custom-menu-content">
@@ -92,14 +92,15 @@
                       <span ng-show="!editForm.s_city.$error.required && editForm.s_city.$error.namesvalid">Enter only characters</span>
                       </span>
                   </div>
-
                   <div class="input-group mg-t-15">
                       <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-phone"></i></span>
                       <div class="nk-int-st">
-                          <input type="text" class="form-control" placeholder="Contact" name="s_contact" ng-style="contactStyle" ng-model="s_contact" ng-change="analyzeContact(s_contact)" required contact-dir>
+                        <input type="text" class="form-control" placeholder="Contact" name="s_contact" ng-model="s_contact" ng-required="true" contact-dir for="user"/>
                       </div>
-                      <span style="color:red"  id="s_email" ng-show="editForm.s_contact.$dirty && editForm.s_contact.$invalid"><span ng-show="editForm.s_contact.$error.required">Contact is required.</span><span ng-show="!editForm.s_contact.$error.required && editForm.s_contact.$error.contactValid">Please enter valid contact</span>
-                      <span ng-show="!(editForm.s_contact.$error.required || editForm.s_contact.$error.contactValid) && editForm.s_contact.$error.contactExists">Contact already exists</span>
+                      <span style="color:red"  id="s_contact" ng-show="editForm.s_contact.$dirty && editForm.s_contact.$invalid">
+                      <span ng-show="editForm.s_contact.$error.required">Contact is required.</span>
+                      <span ng-show="!editForm.s_contact.$error.required && editForm.s_contact.$error.contactValid">Contact is invalid.</span>
+                      <span ng-show="!editForm.s_contact.$error.required && editForm.s_contact.$error.contactExists">Contact is already exists.</span>
                       </span>
                   </div>
                   <div style="padding:10px;">

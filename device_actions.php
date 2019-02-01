@@ -173,7 +173,7 @@ function getDeviceData($gotData){
       }
       $deleteButton="<button class='btn btn-default' onclick='deleteDevice($id)' ><span class='glyphicon glyphicon-trash'></span> Delete</button>";
       $editButton="<button class='btn btn-default' onclick=$editFunc><span class='glyphicon glyphicon-pencil'></span> Edit</button>";
-      $allDevice.='<div class="grid-item card"><div class="row pull-right" style="padding-right:10px;">'.$drawStatus.'</div><div class="row"><a href="#!customer/'.$homeName.'/'.$roomName.'/'.$hwName.'/'.$dvName.'">'.$dvName.'</a></div><div class="row" style="color:rgba(180,180,180,1.0);font-size:15px;">'.$dvImgValue.'</div><div class="row"><div class="col-md-3"></div><div class="col-md-3">'.$editButton.'</div><div class="col-md-3">'.$deleteButton.'</div><div class="col-md-3"></div></div></div>';
+      $allDevice.='<div class="grid-item card"><div class="row pull-right" style="padding-right:10px;">'.$drawStatus.'</div><div class="row"><a href="#!customer/home/'.$homeName.'/'.$roomName.'/'.$hwName.'/'.$dvName.'">'.$dvName.'</a></div><div class="row" style="color:rgba(180,180,180,1.0);font-size:15px;">'.$dvImgValue.'</div><div class="row"><div class="col-md-3"></div><div class="col-md-3">'.$editButton.'</div><div class="col-md-3">'.$deleteButton.'</div><div class="col-md-3"></div></div></div>';
     }
     $allDevice.='</div>';
     $gotData->user->allDevice=$allDevice;
