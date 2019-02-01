@@ -1,6 +1,6 @@
 <?php
 require_once("../config.php");
-require_once("../user_data.php");
+require_once("dealer_data.php");
 function check_user($gotData){
   $email=$gotData->user->email;
   $password=$gotData->user->password;
@@ -9,13 +9,14 @@ function check_user($gotData){
   if($result && (mysqli_num_rows($result)==1))
   {
     $gotData->error=false;
-    $u=getUserDataUsingEmail($gotData->con,$email);
+    $u=getDealerDataUsingEmail($gotData->con,$email);
     if($u->error){
       $gotData->error=true;
       $gotData->errorMessege="Email or Password is wrong!";
       return $gotData;
     }
     $gotData->user->userID=$u->id;
+    $gotData->user->userType=$u->type;
     $gotData->user->location="#!/dealer/home";
     return $gotData;
   }

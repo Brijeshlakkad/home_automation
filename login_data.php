@@ -16,6 +16,7 @@ function check_user($gotData){
       return $gotData;
     }
     $gotData->user->userID=$u->id;
+    $gotData->user->userType="customer";
     $gotData->user->location="#!/customer/home";
     return $gotData;
   }

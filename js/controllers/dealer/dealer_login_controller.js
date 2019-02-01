@@ -1,6 +1,6 @@
 myApp.controller("DealerLoginController", function($rootScope,$scope,$http,$window,$localStorage,$sessionStorage) {
-  if($localStorage.userID!=null && $localStorage.user!=null){
-    $window.location.href="#!customer/home";
+  if($localStorage.userID!=null && $localStorage.user!=null && $localStorage.userType!=null){
+    $window.location.href="#!dealer/home";
   }
   $scope.passwordStyle = {
     "border-bottom-width":"1.45px"
@@ -28,6 +28,7 @@ myApp.controller("DealerLoginController", function($rootScope,$scope,$http,$wind
 				$scope.l_status_1=true;
         $localStorage.userID = flag.user.userID;
         $localStorage.user = flag.user.email;
+        $localStorage.userType = flag.user.userType;
         /*$scope.$watch('userID', function() {
             $localStorage.userID = $scope.userID;
         });

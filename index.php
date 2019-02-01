@@ -293,6 +293,9 @@ html, body {
       }).when('/admin/login', {
           templateUrl: 'admin/admin_login.html',
           controller: 'AdminLoginController'
+      }).when('/admin/home', {
+          templateUrl: 'admin/admin_home.html',
+          controller: 'AdminController'
       }).when('/404-not-found', {
           templateUrl: '404.html',
       }).otherwise({
@@ -314,5 +317,6 @@ html, body {
     <script src="js/controllers/dealer/dealer_login_controller.js"></script>
     <script src="js/controllers/dealer/dealer_signup_controller.js"></script>
     <script src="js/controllers/admin/admin_login_controller.js"></script>
+    <script src="js/controllers/admin/admin_controller.js"></script>
 </body>
 </html>

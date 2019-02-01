@@ -1,5 +1,5 @@
 myApp.controller("LoginController", function($rootScope,$scope,$http,$window,$localStorage,$sessionStorage) {
-  if($localStorage.userID!=null && $localStorage.user!=null){
+  if($localStorage.userID!=null && $localStorage.user!=null && $localStorage.userType!=null){
     $window.location.href="#!customer/home";
   }
   $scope.passwordStyle = {
@@ -28,6 +28,7 @@ myApp.controller("LoginController", function($rootScope,$scope,$http,$window,$lo
 				$scope.l_status_1=true;
         $localStorage.userID = flag.user.userID;
         $localStorage.user = flag.user.email;
+        $localStorage.userType = flag.user.userType;
         /*$scope.$watch('userID', function() {
             $localStorage.userID = $scope.userID;
         });

@@ -7,19 +7,21 @@ myApp.controller("userController",function($rootScope,$scope,$localStorage,$sess
       $scope.path=1;
     }
   }
-  if($localStorage.userID==null || $localStorage.user==null){
+  if($localStorage.userID==null || $localStorage.user==null || $localStorage.userType==null){
     $rootScope.isLoggedIn=false;
     if($scope.path!=1){
       $window.location.href="#!/";
     }
   }else{
+    alert($localStorage.userType);
     $rootScope.isLoggedIn=true;
   }
   $rootScope.$storage = $localStorage;
   $rootScope.logout=function(){
     $localStorage.$reset({
         userID: null,
-        user: null
+        user: null,
+        userType: null
     });
     $window.location.href="#!/";
     $rootScope.isLoggedIn=false;
