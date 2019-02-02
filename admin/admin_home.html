@@ -1,1 +1,161 @@
-hi
+<div class="container">
+  <div class="form-element-list">
+    <form name="productForm" novalidate>
+      <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-3"></div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 product-block">
+          <div class="row product-form-title">
+            Product Details
+            <hr />
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="margin-top:8px;">
+              Product Name
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <div class="nk-int-st">
+                  <input type="text" class="form-control" placeholder="Enter Name" name="name" ng-model="name" ng-required="true" product-exists-dir/>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-mg-3 col-sm-3 col-xs-12">
+              <span style="color:red;">
+                <span ng-show="productForm.name.$dirty && productForm.name.$invalid">
+                  <span ng-show="productForm.name.$error.required">Product name is required</span>
+                  <span ng-show="!productForm.name.$error.required && productForm.name.$error.productNameValid">Product name is incorrect</span>
+                  <span ng-show="productForm.name.$error.productNameExists">Product name is already exists</span>
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="margin-top:8px;">
+              Product Selling Rate
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <div class="nk-int-st">
+                  <input type="text" class="form-control" placeholder="Enter Selling Rate" name="s_rate" ng-model="s_rate" ng-required="true" ng-pattern="/^[0-9]+$/" />
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-mg-3 col-sm-3 col-xs-12">
+              <span style="color:red;">
+                <span ng-show="productForm.s_rate.$dirty && productForm.s_rate.$invalid">
+                  <span ng-show="productForm.s_rate.$error.required">Product selling rate is required</span>
+                  <span ng-show="productForm.s_rate.$error.pattern">Product selling rate is incorrect</span>
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="margin-top:8px;">
+              Product Purchase Rate
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <div class="nk-int-st">
+                  <input type="text" class="form-control" placeholder="Enter Purchase Rate" name="p_rate" ng-model="p_rate" ng-required="true" ng-pattern="/^[0-9]+$/" />
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-mg-3 col-sm-3 col-xs-12">
+              <span style="color:red;">
+                <span ng-show="productForm.p_rate.$dirty && productForm.p_rate.$invalid">
+                  <span ng-show="productForm.p_rate.$error.required">Product purchase rate is required</span>
+                  <span ng-show="productForm.p_rate.$error.pattern">Product selling rate is incorrect</span>
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="margin-top:8px;">
+              Product Description
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <div class="nk-int-st">
+                  <textarea class="form-control" placeholder="Enter product description here" name="description" ng-model="description" ng-required="true" ng-pattern="/^[a-zA-Z0-9.\s-_!%]+$/"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-mg-3 col-sm-3 col-xs-12">
+              <span style="color:red;">
+                <span ng-show="productForm.description.$dirty && productForm.description.$invalid">
+                  <span ng-show="productForm.description.$error.required">Product description is required</span>
+                  <span ng-show="productForm.description.$error.pattern">Product description is incorrect</span>
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="margin-top:8px;">
+              Product Taxation
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <div class="nk-int-st">
+                  <input type="text" class="form-control" placeholder="Enter Product Taxation" name="taxation" ng-model="taxation" ng-required="true" ng-pattern="/^([0-9]+)(\.[0-9]*)?$/" />
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-mg-3 col-sm-3 col-xs-12">
+              <span style="color:red;">
+                <span ng-show="productForm.taxation.$dirty && productForm.taxation.$invalid">
+                  <span ng-show="productForm.taxation.$error.required">Product taxation is required</span>
+                  <span ng-show="productForm.taxation.$error.pattern">Product taxation is incorrect</span>
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="margin-top:8px;">
+              Product Hashcode
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <div class="nk-int-st">
+                  <input type="text" class="form-control" placeholder="Enter Product Hashcode" name="hsncode" ng-model="hsncode" ng-required="true" />
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-mg-3 col-sm-3 col-xs-12">
+              <span style="color:red;">
+                <span ng-show="productForm.hsncode.$dirty && productForm.hsncode.$invalid">
+                  <span ng-show="productForm.hsncode.$error.required">Product hashcode is required</span>
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="margin-top:8px;">
+              Product Quantity Name
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <div class="nk-int-st">
+                  <input type="text" class="form-control" placeholder="Enter Product Quantity Name" name="qty_name" ng-model="qty_name" ng-required="true" ng-pattern="/^([a-zA-Z0-9])+$/" />
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-mg-3 col-sm-3 col-xs-12">
+              <span style="color:red;">
+                <span ng-show="productForm.qty_name.$dirty && productForm.qty_name.$invalid">
+                  <span ng-show="productForm.qty_name.$error.required">Product qty name is required</span>
+                  <span ng-show="productForm.qty_name.$error.pattern">Product qty name is incorrect</span>
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="row product-submit">
+            <hr />
+            <button class="btn btn-primary" type="submit" ng-disabled="productForm.name.$invalid || productForm.s_rate.$invalid || productForm.p_rate.$invalid || productForm.description.$invalid || productForm.taxation.$invalid || productForm.hsncode.$invalid || productForm.qty_name.$invalid"
+              ng-click="addProduct()">Create
+              product</button>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3"></div>
+    </form>
+  </div>
+</div>
