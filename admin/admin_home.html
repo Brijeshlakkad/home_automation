@@ -52,6 +52,90 @@
 <!-- Main Menu area End-->
 <div class="container">
   <div class="row">
-    <a class="btn btn-primary" href="#!admin/create_product"><span class="glyphicon glyphicon-plus"></span> Add Product</a>
+    <div ng-if="productArray.length==0" ng-bind-html="showNothing">
+    </div>
+    <div ng-if="productArray.length>0">
+      <div class="data-table-area">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="data-table-list">
+                <div class="basic-tb-hd">
+                  <h2>Products</h2>
+                </div>
+                <div class="table-responsive">
+                  <table id="data-table-basic" class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>index</th>
+                        <th>Product Name</th>
+                        <th>Selling Rate</th>
+                        <th>Purchase Rate</th>
+                        <th>Product code</th>
+                        <th>Taxation</th>
+                        <th>Hashcode</th>
+                        <th>Qty Name</th>
+                        <th>Actions</th>
+                        <th>Add</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="product in productArray track by $id(product)">
+                        <td>
+                          {{$index+1}}
+                        </td>
+                        <td>
+                          {{product.name}}
+                        </td>
+                        <td>
+                          {{product.s_rate}}
+                        </td>
+                        <td>
+                          {{product.p_rate}}
+                        </td>
+                        <td>
+                          {{product.product_code}}
+                        </td>
+                        <td>
+                          {{product.taxation}}
+                        </td>
+                        <td>
+                          {{product.hsncode}}
+                        </td>
+                        <td>
+                          {{product.qty_name}}
+                        </td>
+                        <td>
+                          <a class="btn btn-primary" href="#!admin/product/{{product.name}}"><span class="glyphicon glyphicon-pencil"></span></a>
+                          <a class="btn btn-danger" ng-click="deleteProduct(product.name)"><span class="glyphicon glyphicon-trash"></span></a>
+                        </td>
+                        <td>
+                          <button class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <th>index</th>
+                        <th>Product Name</th>
+                        <th>Selling Rate</th>
+                        <th>Purchase Rate</th>
+                        <th>Product code</th>
+                        <th>Taxation</th>
+                        <th>Hashcode</th>
+                        <th>Qty Name</th>
+                        <th>Actions</th>
+                        <th>Add</th>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
 </div>

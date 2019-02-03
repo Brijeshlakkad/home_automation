@@ -22,12 +22,12 @@ myApp.controller("RoomController", function($rootScope, $scope, $http, $window, 
       $scope.roomNameForm.$setPristine();
       $scope.roomName = "";
       if (!data.error) {
-        $scope.showSuccessDialog("Room Created");
+        $rootScope.showSuccessDialog("Room Created");
         $scope.getAllRoom();
         $rootScope.body.removeClass("loading");
       } else {
         $rootScope.body.removeClass("loading");
-        $scope.showErrorDialog(data.errorMessage);
+        $rootScope.showErrorDialog(data.errorMessage);
       }
     }, function myError(response) {
       $rootScope.body.removeClass("loading");
@@ -54,16 +54,7 @@ myApp.controller("RoomController", function($rootScope, $scope, $http, $window, 
 
     });
   };
-  $scope.showErrorDialog = function(error) {
-    swal({
-      title: "Try Again!",
-      text: "" + error,
-      timer: 2000
-    });
-  };
-  $scope.showSuccessDialog = function(val) {
-    swal("" + val, "", "success");
-  };
+  
   $scope.getAllRoom = function() {
     $rootScope.body.addClass("loading");
     $http({
@@ -84,7 +75,7 @@ myApp.controller("RoomController", function($rootScope, $scope, $http, $window, 
       } else {
         $scope.showAddRoom = false;
         $rootScope.body.removeClass("loading");
-        $scope.showErrorDialog(data.errorMessage);
+        $rootScope.showErrorDialog(data.errorMessage);
       }
     }, function myError(response) {
       $scope.showAddRoom = false;
@@ -115,7 +106,7 @@ myApp.controller("RoomController", function($rootScope, $scope, $http, $window, 
           swal("Deleted!", "Your room has been deleted.", "success");
           $scope.getAllRoom();
         } else {
-          $scope.showErrorDialog(data.errorMessage);
+          $rootScope.showErrorDialog(data.errorMessage);
         }
       });
     });
@@ -148,12 +139,12 @@ myApp.controller("RoomController", function($rootScope, $scope, $http, $window, 
         $scope.beforeRoomName = "";
         $scope.roomReName = "";
         if (!data.error && (typeof data.error != 'undefined')) {
-          $scope.showSuccessDialog("Room Name Modified");
+          $rootScope.showSuccessDialog("Room Name Modified");
           $scope.getAllRoom();
           $rootScope.body.removeClass("loading");
         } else {
           $rootScope.body.removeClass("loading");
-          $scope.showErrorDialog(data.errorMessage);
+          $rootScope.showErrorDialog(data.errorMessage);
         }
       }, function myError(response) {
         $rootScope.body.removeClass("loading");

@@ -19,7 +19,7 @@ myApp.controller("CreateProductController", function($rootScope, $scope, $http, 
     $http({
       method: "POST",
       url: "admin/product_actions.php",
-      data: "action=0&name=" + $scope.name + "&s_rate=" + $scope.s_rate + "&p_rate=" + $scope.p_rate + "&description=" + $scope.description + "&taxation=" + $scope.taxation + "&hsncode=" + $scope.hsncode + "&qty_name=" + $scope.qty_name,
+      data: "action=1&name=" + $scope.name + "&s_rate=" + $scope.s_rate + "&p_rate=" + $scope.p_rate + "&description=" + $scope.description + "&taxation=" + $scope.taxation + "&hsncode=" + $scope.hsncode + "&qty_name=" + $scope.qty_name,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }

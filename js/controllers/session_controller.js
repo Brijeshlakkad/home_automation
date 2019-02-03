@@ -28,4 +28,14 @@ myApp.controller("userController", function($rootScope, $scope, $localStorage, $
   };
   var body = document.getElementsByTagName("BODY");
   $rootScope.body = angular.element(body);
+  $rootScope.showErrorDialog = function(error) {
+    swal({
+      title: "Try Again!",
+      text: "" + error,
+      timer: 2000
+    });
+  };
+  $rootScope.showSuccessDialog = function(val) {
+    swal("" + val, "", "success");
+  };
 });
