@@ -3,16 +3,16 @@ myApp.controller("CreateProductController", function($rootScope, $scope, $http, 
   $ocLazyLoad.load('js/notification/bootstrap-growl.min.js');
   $scope.user = $rootScope.$storage.user;
   $scope.userID = $rootScope.$storage.userID;
-  $scope.dataFrom = undefined;
-  $scope.dataAlign = undefined;
-  $scope.dataIcon = undefined;
-  $scope.dataType = {
+  $rootScope.dataFrom = undefined;
+  $rootScope.dataAlign = undefined;
+  $rootScope.dataIcon = undefined;
+  $rootScope.dataType = {
     0: "success",
     1: "danger"
   };
-  $scope.dataAnimIn = "animated bounceInRight";
-  $scope.dataAnimOut = "animated bounceOutRight";
-  $scope.openNotification = function(dataFrom, dataAlign, dataIcon, dataType, dataAnimIn, dataAnimOut, title, message) {
+  $rootScope.dataAnimIn = "animated bounceInRight";
+  $rootScope.dataAnimOut = "animated bounceOutRight";
+  $rootScope.openNotification = function(dataFrom, dataAlign, dataIcon, dataType, dataAnimIn, dataAnimOut, title, message) {
     notify(dataFrom, dataAlign, dataIcon, dataType, dataAnimIn, dataAnimOut, title, message);
   };
   $scope.addProduct = function() {
@@ -26,25 +26,35 @@ myApp.controller("CreateProductController", function($rootScope, $scope, $http, 
     }).then(function mySuccess(response) {
       var data = response.data;
       if (!data.error) {
-        $scope.openNotification($scope.dataFrom, $scope.dataAlign, $scope.dataIcon, $scope.dataType[0], $scope.dataAnimIn, $scope.dataAnimOut, "Added  ", "Product named " + data.product.name + " is created");
+        $rootScope.openNotification($rootScope.dataFrom, $rootScope.dataAlign, $rootScope.dataIcon, $rootScope.dataType[0], $rootScope.dataAnimIn, $rootScope.dataAnimOut, "Added  ", "Product named " + data.product.name + " is created");
       } else {
-        $scope.openNotification($scope.dataFrom, $scope.dataAlign, $scope.dataIcon, $scope.dataType[1], $scope.dataAnimIn, $scope.dataAnimOut, "Error  ", "Please, check entered product deatils or try again later");
+        $rootScope.openNotification($rootScope.dataFrom, $rootScope.dataAlign, $rootScope.dataIcon, $rootScope.dataType[1], $rootScope.dataAnimIn, $rootScope.dataAnimOut, "Error  ", "Please, check entered product deatils or try again later");
       }
     }, function myError(response) {
-      $scope.openNotification($scope.dataFrom, $scope.dataAlign, $scope.dataIcon, $scope.dataType[1], $scope.dataAnimIn, $scope.dataAnimOut, "Error  ", "Please, check entered product deatils or try again later");
+      $rootScope.openNotification($rootScope.dataFrom, $rootScope.dataAlign, $rootScope.dataIcon, $rootScope.dataType[1], $rootScope.dataAnimIn, $rootScope.dataAnimOut, "Error  ", "Please, check entered product deatils or try again later");
     });
   };
 });
 
-myApp.directive('productExistsDir', function($http) {
+myApp.directive('productExistsDir', function($rootScope,$http) {
   return {
     require: 'ngModel',
     link: function(scope, element, attr, mCtrl) {
       function myValidation(value) {
+        var form = document.getElementsByTagName('form');
+        var formAng = angular.element(form);
+        var id = formAng.attr("name");
         mCtrl.$setValidity('productNameExists', true);
         var productNamePattern = /^([a-zA-Z0-9])+(([\s]{1})([a-zA-Z0-9])+)?$/;
         if (productNamePattern.test(value)) {
           mCtrl.$setValidity('productNameValid', true);
+          var beforeName=$rootScope.copyProduct.name;
+          if(id=="editProductForm"){
+            if(beforeName==value){
+              mCtrl.$setValidity('productNameExists', true);
+              return value;
+            }
+          }
           $http({
             method: "POST",
             url: "admin/product_actions.php",

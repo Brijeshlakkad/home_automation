@@ -1,1 +1,213 @@
-<h1>{{productName}}</h1>
+<!-- Mobile Menu start -->
+<div class="mobile-menu-area">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="mobile-menu">
+          <nav id="dropdown">
+            <ul class="mobile-menu-nav">
+              <li><a data-toggle="collapse" data-target="#Charts" href="#!admin/home">Home</a>
+                  <ul class="collapse dropdown-header-top">
+                    <li><a href="#!admin/home">View Products</a>
+                    </li>
+                    <li><a href="#!admin/create_product">Add Product</a>
+                    </li>
+                  </ul>
+              </li>
+              <li><a href="#!admin/settings">Settings</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Mobile Menu end -->
+<!-- Main Menu area start-->
+<div class="main-menu-area mg-tb-40">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
+          <li class="active"><a href="#!admin/home" data-toggle="tab"><i class="notika-icon notika-house"></i> Home</a>
+          </li>
+          <li><a href="#!admin/settings"><i class="notika-icon notika-settings"></i> Settings</a>
+          </li>
+        </ul>
+        <div class="tab-content custom-menu-content">
+          <div id="Home" class="tab-pane active in notika-tab-menu-bg animated flipInX">
+            <ul class="notika-main-menu-dropdown">
+              <li><a href="#!admin/home">View Products</a>
+              </li>
+              <li><a href="#!admin/create_product">Add Product</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Main Menu area End-->
+<div class="container">
+  <div class="form-element-list">
+    <form name="editProductForm" novalidate>
+      <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-3"></div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 product-block">
+          <div class="row product-form-title">
+            Product Details
+            <hr />
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="margin-top:8px;">
+              Product Name
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <div class="nk-int-st">
+                  <input type="text" class="form-control" placeholder="Enter Name" name="name" ng-model="product.name" ng-required="true" product-exists-dir/>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-mg-3 col-sm-3 col-xs-12">
+              <span style="color:red;">
+                <span ng-show="editProductForm.name.$dirty && editProductForm.name.$invalid">
+                  <span ng-show="editProductForm.name.$error.required">Product name is required</span>
+                  <span ng-show="!editProductForm.name.$error.required && editProductForm.name.$error.productNameValid">Product name is incorrect</span>
+                  <span ng-show="editProductForm.name.$error.productNameExists">Product name is already exists</span>
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="margin-top:8px;">
+              Product Selling Rate
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <div class="nk-int-st">
+                  <input type="text" class="form-control" placeholder="Enter Selling Rate" name="s_rate" ng-model="product.s_rate" ng-required="true" ng-pattern="/^[0-9]+$/" />
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-mg-3 col-sm-3 col-xs-12">
+              <span style="color:red;">
+                <span ng-show="editProductForm.s_rate.$dirty && editProductForm.s_rate.$invalid">
+                  <span ng-show="editProductForm.s_rate.$error.required">Product selling rate is required</span>
+                  <span ng-show="editProductForm.s_rate.$error.pattern">Product selling rate is incorrect</span>
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="margin-top:8px;">
+              Product Purchase Rate
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <div class="nk-int-st">
+                  <input type="text" class="form-control" placeholder="Enter Purchase Rate" name="p_rate" ng-model="product.p_rate" ng-required="true" ng-pattern="/^[0-9]+$/" />
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-mg-3 col-sm-3 col-xs-12">
+              <span style="color:red;">
+                <span ng-show="editProductForm.p_rate.$dirty && editProductForm.p_rate.$invalid">
+                  <span ng-show="editProductForm.p_rate.$error.required">Product purchase rate is required</span>
+                  <span ng-show="editProductForm.p_rate.$error.pattern">Product selling rate is incorrect</span>
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="margin-top:8px;">
+              Product Description
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <div class="nk-int-st">
+                  <textarea class="form-control" placeholder="Enter product description here" name="description" ng-model="product.description" ng-required="true" ng-pattern="/^[a-zA-Z0-9.\s-_!%]+$/"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-mg-3 col-sm-3 col-xs-12">
+              <span style="color:red;">
+                <span ng-show="editProductForm.description.$dirty && editProductForm.description.$invalid">
+                  <span ng-show="editProductForm.description.$error.required">Product description is required</span>
+                  <span ng-show="editProductForm.description.$error.pattern">Product description is incorrect</span>
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="margin-top:8px;">
+              Product Taxation
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <div class="nk-int-st">
+                  <input type="text" class="form-control" placeholder="Enter Product Taxation" name="taxation" ng-model="product.taxation" ng-required="true" ng-pattern="/^([0-9]+)(\.[0-9]*)?$/" />
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-mg-3 col-sm-3 col-xs-12">
+              <span style="color:red;">
+                <span ng-show="editProductForm.taxation.$dirty && editProductForm.taxation.$invalid">
+                  <span ng-show="editProductForm.taxation.$error.required">Product taxation is required</span>
+                  <span ng-show="editProductForm.taxation.$error.pattern">Product taxation is incorrect</span>
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="margin-top:8px;">
+              Product Hashcode
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <div class="nk-int-st">
+                  <input type="text" class="form-control" placeholder="Enter Product Hashcode" name="hsncode" ng-model="product.hsncode" ng-required="true" />
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-mg-3 col-sm-3 col-xs-12">
+              <span style="color:red;">
+                <span ng-show="editProductForm.hsncode.$dirty && editProductForm.hsncode.$invalid">
+                  <span ng-show="editProductForm.hsncode.$error.required">Product hashcode is required</span>
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="margin-top:8px;">
+              Product Quantity Name
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <div class="nk-int-st">
+                  <input type="text" class="form-control" placeholder="Enter Product Quantity Name" name="qty_name" ng-model="product.qty_name" ng-required="true" ng-pattern="/^([a-zA-Z0-9])+$/" />
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-mg-3 col-sm-3 col-xs-12">
+              <span style="color:red;">
+                <span ng-show="editProductForm.qty_name.$dirty && editProductForm.qty_name.$invalid">
+                  <span ng-show="editProductForm.qty_name.$error.required">Product qty name is required</span>
+                  <span ng-show="editProductForm.qty_name.$error.pattern">Product qty name is incorrect</span>
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="row product-submit">
+            <hr />
+            <button class="btn btn-primary" type="submit" ng-disabled="editProductForm.name.$invalid || editProductForm.s_rate.$invalid || editProductForm.p_rate.$invalid || editProductForm.description.$invalid || editProductForm.taxation.$invalid || editProductForm.hsncode.$invalid || editProductForm.qty_name.$invalid"
+              ng-click="editProduct()">Edit
+              product</button>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3"></div>
+    </form>
+  </div>
+</div>
