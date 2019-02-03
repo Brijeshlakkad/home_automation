@@ -1,31 +1,32 @@
-myApp.controller("DealerLoginController", function($rootScope,$scope,$http,$window,$localStorage,$sessionStorage) {
-  if($localStorage.userID!=null && $localStorage.user!=null && $localStorage.userType!=null){
-    $window.location.href="#!dealer/home";
+myApp.controller("DealerLoginController", function($rootScope, $scope, $http, $window, $localStorage, $sessionStorage, $ocLazyLoad) {
+  $ocLazyLoad.load('js/meanmenu/jquery.meanmenu.js');
+  if ($localStorage.userID != null && $localStorage.user != null && $localStorage.userType != null) {
+    $window.location.href = "#!dealer/home";
   }
   $scope.passwordStyle = {
-    "border-bottom-width":"1.45px"
+    "border-bottom-width": "1.45px"
   };
   $scope.analyzePassword = function(value) {
-    if(value=="" || value==null) {
+    if (value == "" || value == null) {
       $scope.passwordStyle["border-bottom-color"] = "red";
-    }
-    else {
+    } else {
       $scope.passwordStyle["border-bottom-color"] = "green";
     }
   };
-  $scope.login_status=function(){
+  $scope.login_status = function() {
     $http({
-			method : "POST",
-			url : "dealer/login_data.php",
-			data: "email="+$scope.l_email+"&password="+$scope.l_password,
-			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-		}).then(function mySuccess(response) {
-			flag = response.data;
-			// we should be using flag in only this block so logic in following
-			if(!flag.error)
-			{
-				$scope.l_status_0=false;
-				$scope.l_status_1=true;
+      method: "POST",
+      url: "dealer/login_data.php",
+      data: "email=" + $scope.l_email + "&password=" + $scope.l_password,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }).then(function mySuccess(response) {
+      flag = response.data;
+      // we should be using flag in only this block so logic in following
+      if (!flag.error) {
+        $scope.l_status_0 = false;
+        $scope.l_status_1 = true;
         $localStorage.userID = flag.user.userID;
         $localStorage.user = flag.user.email;
         $localStorage.userType = flag.user.userType;
@@ -42,16 +43,14 @@ myApp.controller("DealerLoginController", function($rootScope,$scope,$http,$wind
             $scope.user = $localStorage.user;
         });*/
         $window.location.href = flag.user.location;
-        $rootScope.isLoggedIn=true;
-			}
-			else
-			{
-				$scope.l_status_1=false;
-				$scope.l_status_0=true;
-			}
-		}, function myError(response) {
+        $rootScope.isLoggedIn = true;
+      } else {
+        $scope.l_status_1 = false;
+        $scope.l_status_0 = true;
+      }
+    }, function myError(response) {
 
-		});
+    });
   };
 
 });

@@ -1,30 +1,31 @@
-myApp.controller("userController",function($rootScope,$scope,$localStorage,$sessionStorage,$window,$location,$interval){
-  $scope.index=['/customer','/customer/login','/customer/register','/dealer/login','/dealer/signup','/customer/forget_password','/dealer/forget_password','/admin/login'];
-  $scope.path=0;
+myApp.controller("userController", function($rootScope, $scope, $localStorage, $sessionStorage, $window, $location, $interval, $ocLazyLoad) {
+  $ocLazyLoad.load('js/meanmenu/jquery.meanmenu.js');
+  $scope.index = ['/customer', '/customer/login', '/customer/register', '/dealer/login', '/dealer/signup', '/customer/forget_password', '/dealer/forget_password', '/admin/login'];
+  $scope.path = 0;
   var i;
-  for(i=0;i<$scope.index.length;i++){
-    if($location.path()==$scope.index[i]){
-      $scope.path=1;
+  for (i = 0; i < $scope.index.length; i++) {
+    if ($location.path() == $scope.index[i]) {
+      $scope.path = 1;
     }
   }
-  if($localStorage.userID==null || $localStorage.user==null || $localStorage.userType==null){
-    $rootScope.isLoggedIn=false;
-    if($scope.path!=1){
-      $window.location.href="#!/";
+  if ($localStorage.userID == null || $localStorage.user == null || $localStorage.userType == null) {
+    $rootScope.isLoggedIn = false;
+    if ($scope.path != 1) {
+      $window.location.href = "#!/";
     }
-  }else{
-    $rootScope.isLoggedIn=true;
+  } else {
+    $rootScope.isLoggedIn = true;
   }
   $rootScope.$storage = $localStorage;
-  $rootScope.logout=function(){
+  $rootScope.logout = function() {
     $localStorage.$reset({
-        userID: null,
-        user: null,
-        userType: null
+      userID: null,
+      user: null,
+      userType: null
     });
-    $window.location.href="#!/";
-    $rootScope.isLoggedIn=false;
+    $window.location.href = "#!/";
+    $rootScope.isLoggedIn = false;
   };
-  var body=document.getElementsByTagName("BODY");
-  $rootScope.body=angular.element(body);
+  var body = document.getElementsByTagName("BODY");
+  $rootScope.body = angular.element(body);
 });
