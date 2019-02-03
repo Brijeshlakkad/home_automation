@@ -271,7 +271,7 @@
   <script src="js/chat/moment.min.js"></script>
   <script src="js/chat/jquery.chat.js"></script>
   <!--  notification JS
-  ============================================ 
+  ============================================
   <script src="js/notification/bootstrap-growl.min.js"></script>
   <script src="js/notification/notification-active.js"></script> -->
   <!-- main JS
@@ -344,6 +344,9 @@
       }).when('/admin/home', {
         templateUrl: 'admin/admin_home.html',
         controller: 'AdminController'
+      }).when('/admin/create_product', {
+        templateUrl: 'admin/create_product.html',
+        controller: 'CreateProductController'
       }).when('/404-not-found', {
         templateUrl: '404.html',
       }).otherwise({
@@ -366,7 +369,7 @@
   <script src="js/controllers/dealer/dealer_signup_controller.js"></script>
   <script src="js/controllers/admin/admin_login_controller.js"></script>
   <script src="js/controllers/admin/admin_controller.js"></script>
-
+  <script src="js/controllers/admin/create_product_controller.js"></script>
 </body>
 
 </html>
