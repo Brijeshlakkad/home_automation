@@ -1,5 +1,14 @@
-myApp.controller("SignupController", function($scope, $http, $window, $ocLazyLoad) {
+myApp.controller("SignupController", function($scope, $http, $window, $localStorage, $sessionStorage, $ocLazyLoad) {
   //$ocLazyLoad.load('js/meanmenu/jquery.meanmenu.js');
+  if ($localStorage.userID != null && $localStorage.user != null && $localStorage.userType != null) {
+    if($localStorage.userType=="customer"){
+      $window.location.href = "#!customer/home";
+    }else if($localStorage.userType=="dealer"){
+      $window.location.href = "#!dealer/home";
+    }else if($localStorage.userType=="admin"){
+      $window.location.href = "#!admin/home";
+    }
+  }
   $scope.signupStatus = "";
   $scope.signup_status = function() {
     $http({
