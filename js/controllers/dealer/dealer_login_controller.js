@@ -1,8 +1,5 @@
 myApp.controller("DealerLoginController", function($rootScope, $scope, $http, $window, $localStorage, $sessionStorage, $ocLazyLoad) {
   $ocLazyLoad.load('js/meanmenu/jquery.meanmenu.js');
-  if ($localStorage.userID != null && $localStorage.user != null && $localStorage.userType != null) {
-    $window.location.href = "#!dealer/home";
-  }
   $scope.passwordStyle = {
     "border-bottom-width": "1.45px"
   };

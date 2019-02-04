@@ -8,6 +8,15 @@ myApp.controller("userController", function($rootScope, $scope, $localStorage, $
       $scope.path = 1;
     }
   }
+  if ($localStorage.userID != null && $localStorage.user != null && $localStorage.userType != null) {
+    if($localStorage.userType=="customer"){
+      $window.location.href = "#!customer/home";
+    }else if($localStorage.userType=="dealer"){
+      $window.location.href = "#!dealer/home";
+    }else if($localStorage.userType=="admin"){
+      $window.location.href = "#!admin/home";
+    }
+  }
   if ($localStorage.userID == null || $localStorage.user == null || $localStorage.userType == null) {
     $rootScope.isLoggedIn = false;
     if ($scope.path != 1) {
