@@ -26,6 +26,7 @@ myApp.controller("CreateProductController", function($rootScope, $scope, $http, 
     }).then(function mySuccess(response) {
       var data = response.data;
       if (!data.error) {
+        $window.location.href=data.product.location;
         $rootScope.openNotification($rootScope.dataFrom, $rootScope.dataAlign, $rootScope.dataIcon, $rootScope.dataType[0], $rootScope.dataAnimIn, $rootScope.dataAnimOut, "Added  ", "Product named " + data.product.name + " is created");
       } else {
         $rootScope.openNotification($rootScope.dataFrom, $rootScope.dataAlign, $rootScope.dataIcon, $rootScope.dataType[1], $rootScope.dataAnimIn, $rootScope.dataAnimOut, "Error  ", "Please, check entered product deatils or try again later");
@@ -48,8 +49,8 @@ myApp.directive('productExistsDir', function($rootScope,$http) {
         var productNamePattern = /^([a-zA-Z0-9])+(([\s]{1})([a-zA-Z0-9])+)?$/;
         if (productNamePattern.test(value)) {
           mCtrl.$setValidity('productNameValid', true);
-          var beforeName=$rootScope.copyProduct.name;
           if(id=="editProductForm"){
+            var beforeName=$rootScope.copyProduct.name;
             if(beforeName==value){
               mCtrl.$setValidity('productNameExists', true);
               return value;

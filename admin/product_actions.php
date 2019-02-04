@@ -46,6 +46,7 @@ function createProduct($gotData){
   $check=mysqli_query($gotData->con,$sql);
   if($check){
     $gotData->product->id=mysqli_insert_id($gotData->con);
+    $gotData->product->location="#!admin/create_product";
     return $gotData;
   }
   $gotData->error=true;
@@ -119,6 +120,17 @@ function getProduct($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
+function deleteProduct($gotData){
+  $productName=$gotData->product->productName;
+  $sql="DELETE FROM product WHERE name='$productName'";
+  $check=mysqli_query($gotData->con,$sql);
+  if($check){
+    return $gotData;
+  }
+  $gotData->error=true;
+  $gotData->errorMessage="Try again!";
+  return $gotData;
+}
 if(isset($_REQUEST['action'])){
   $action=$_REQUEST['action'];
   $gotData=(object) null;
@@ -156,6 +168,14 @@ if(isset($_REQUEST['action'])){
     $gotData->product->hsn_code=$_REQUEST['hsncode'];
     $gotData->product->qty_name=$_REQUEST['qty_name'];
     $gotData=editProduct($gotData);
+    $gotData->con=(object) null;
+    echo json_encode($gotData);
+    exit();
+  }else if($action==3 && isset($_REQUEST['productName'])){
+    $gotData->con=$con;
+    $gotData->product=(object) null;
+    $gotData->product->productName=$_REQUEST['productName'];
+    $gotData=deleteProduct($gotData);
     $gotData->con=(object) null;
     echo json_encode($gotData);
     exit();
