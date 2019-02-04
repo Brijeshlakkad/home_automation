@@ -51,8 +51,8 @@ myApp.controller("EditProductController", function($rootScope, $scope, $http, $w
         }
       }).then(function mySuccess(response) {
         var data = response.data;
-        alert(JSON.stringify(data));
         if (!data.error) {
+          $window.location.href=data.product.location;
           $rootScope.openNotification($rootScope.dataFrom, $rootScope.dataAlign, $rootScope.dataIcon, $rootScope.dataType[0], $rootScope.dataAnimIn, $rootScope.dataAnimOut, "Added  ", "Product named " + data.product.name + " is created");
         } else {
           $rootScope.openNotification($rootScope.dataFrom, $rootScope.dataAlign, $rootScope.dataIcon, $rootScope.dataType[1], $rootScope.dataAnimIn, $rootScope.dataAnimOut, "Error  ", "Please, check entered product deatils or try again later");

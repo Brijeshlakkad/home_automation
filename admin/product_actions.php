@@ -64,6 +64,7 @@ function editProduct($gotData){
   $sql="UPDATE product SET name='$name',s_rate='$s_rate',p_rate='$p_rate',description='$description',taxation='$taxation',hsncode='$hsn_code',qty_name='$qty_name' WHERE id='$id'";
   $check=mysqli_query($gotData->con,$sql);
   if($check && (mysqli_affected_rows($gotData->con)==1)){
+    $gotData->product->location="#!admin/product/".$name."";
     return $gotData;
   }
   $gotData->error=true;
