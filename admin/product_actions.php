@@ -165,6 +165,7 @@ function checkProductSerial($gotData){
   $sql="SELECT * FROM product_serial WHERE serial_no='$productSerial'";
   $check=mysqli_query($gotData->con,$sql);
   if($check){
+    $gotData->error=false;
     if(mysqli_num_rows($check)==0){
       $gotData->product->productSerialExists=false;
       return $gotData;
@@ -181,17 +182,36 @@ function addProductSerials($gotData){
   $productID=$gotData->product->productID;
   $len = count($productSerialArray);
   $j=0;
+  $k=0;
   $gotData->product->failed=(object) null;
   $gotData->product->failed->error = false;
+  $gotData->product->exists=(object) null;
+  $gotData->product->exists->error = false;
+  $got=(object) null;
+  $got->con=$gotData->con;
+  $got->product=(object) null;
   for($i=0;$i<$len;$i++){
     $productSerial=$productSerialArray[$i];
-    $sql="INSERT INTO product_serial(product_id,serial_no,dealer_id) VALUES('$productID','$productSerial','0')";
-    $check=mysqli_query($gotData->con,$sql);
-    if(!$check){
-      $gotData->product->failed->error=true;
-      $gotData->product->failed->productFailed[$j] = (object) null;
-      $gotData->product->failed->productFailed[$j] = $productSerial;
-      $j++;
+    $got->product->productSerial=$productSerial;
+    $got=checkProductSerial($got);
+    if($got->error) return $got;
+    if(!$got->product->productSerialExists){
+      $sql="INSERT INTO product_serial(product_id,serial_no,dealer_id) VALUES('$productID','$productSerial','0')";
+      $check=mysqli_query($gotData->con,$sql);
+      if(!$check){
+        $gotData->product->failed->error=true;
+        $gotData->product->failed->productFailed[$j] = (object) null;
+        $gotData->product->failed->productFailed[$j] = $productSerial;
+        $gotData->product->failed->totalRows=$j;
+        $j++;
+      }
+    }
+    else{
+      $gotData->product->exists->error=true;
+      $gotData->product->exists->productFailed[$k] = (object) null;
+      $gotData->product->exists->productFailed[$k] = $productSerial;
+      $gotData->product->exists->totalRows=$k;
+      $k++;
     }
   }
   if($gotData->product->failed->error){
