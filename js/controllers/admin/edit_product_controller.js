@@ -1,6 +1,5 @@
 myApp.controller("EditProductController", function($rootScope, $scope, $http, $window, $sce, $timeout, $routeParams, $cookies, $ocLazyLoad) {
-  $ocLazyLoad.load('js/meanmenu/jquery.meanmenu.js');
-  $ocLazyLoad.load('js/notification/bootstrap-growl.min.js');
+  $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js','js/notification/bootstrap-growl.min.js'],{cache:false});
   $scope.productName = $routeParams.productName;
   $scope.product="";
   $rootScope.copyProduct="";
