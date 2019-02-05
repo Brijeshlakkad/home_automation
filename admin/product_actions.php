@@ -1,5 +1,6 @@
 <?php
 include_once('../config.php');
+include_once('../dealer/dealer_data.php');
 function getAllProducts($gotData){
   $sql="SELECT * FROM product";
   $check=mysqli_query($gotData->con,$sql);
@@ -152,6 +153,11 @@ function getAllProductSerials($gotData){
       $gotData->user->productSerial[$i]->product_id=$row['product_id'];
       $gotData->user->productSerial[$i]->serial_no=$row['serial_no'];
       $gotData->user->productSerial[$i]->dealer_id=$row['dealer_id'];
+      $dealer_name="Not Assigned Yet!";
+      if($row['dealer_id']!=-99){
+        $dealer_name=getDealerDataUsingID($gotData->con,$row['dealer_id']);
+      }
+      $gotData->user->productSerial[$i]->dealer_name=$dealer_name;
       $i++;
     }
     return $gotData;
@@ -196,7 +202,7 @@ function addProductSerials($gotData){
     $got=checkProductSerial($got);
     if($got->error) return $got;
     if(!$got->product->productSerialExists){
-      $sql="INSERT INTO product_serial(product_id,serial_no,dealer_id) VALUES('$productID','$productSerial','0')";
+      $sql="INSERT INTO product_serial(product_id,serial_no,dealer_id) VALUES('$productID','$productSerial','-99')";
       $check=mysqli_query($gotData->con,$sql);
       if(!$check){
         $gotData->product->failed->error=true;

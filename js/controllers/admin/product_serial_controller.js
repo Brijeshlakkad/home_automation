@@ -59,7 +59,7 @@ myApp.controller("ProductSerialController", function($rootScope, $scope, $http, 
       var data = response.data;
       if (!data.error) {
         if (data.user.totalRows > 0) {
-          $scope.productSerialArray = data.user.product;
+          $scope.productSerialArray = data.user.productSerial;
         } else {
           $scope.showNothing = $sce.trustAsHtml(data.user.showNothing);
         }

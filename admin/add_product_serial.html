@@ -92,28 +92,25 @@
                         <tr>
                           <th>index</th>
                           <th>Product Serial number</th>
-                          <th>Actions</th>
+                          <th>Dealer</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr ng-repeat="productSerial in productSerialArray track by $id(product)">
+                        <tr ng-repeat="productSerial in productSerialArray track by $id(productSerial)">
                           <td>
                             {{$index+1}}
                           </td>
                           <td>
                             {{productSerial.serial_no}}
                           </td>
-                          <td>
-                            <a class="btn btn-primary" href="#"><span class="glyphicon glyphicon-pencil"></span></a>
-                            <a class="btn btn-danger" ng-click="deleteProductSerial(productSerial.serial_no)"><span class="glyphicon glyphicon-trash"></span></a>
-                          </td>
+                          <td>{{productSerial.dealer_name}}</td>
                         </tr>
                       </tbody>
                       <tfoot>
                         <tr>
                           <th>index</th>
                           <th>Product Serial number</th>
-                          <th>Actions</th>
+                          <th>Dealer</th>
                         </tr>
                       </tfoot>
                     </table>
