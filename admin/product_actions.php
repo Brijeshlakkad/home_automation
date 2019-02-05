@@ -147,6 +147,8 @@ function getAllProductSerials($gotData){
               	</div>';
       return $gotData;
     }
+    $assigned=0;
+    $notAssigned=0;
     while($row=mysqli_fetch_array($check)){
       $gotData->user->productSerial[$i]=(object) null;
       $gotData->user->productSerial[$i]->id=$row['id'];
@@ -155,9 +157,14 @@ function getAllProductSerials($gotData){
       $gotData->user->productSerial[$i]->dealer_id=$row['dealer_id'];
       $dealer_name="Not Assigned Yet!";
       if($row['dealer_id']!=-99){
+        $assigned++;
         $dealer_name=getDealerDataUsingID($gotData->con,$row['dealer_id']);
+      }else{
+        $notAssigned++;
       }
       $gotData->user->productSerial[$i]->dealer_name=$dealer_name;
+      $gotData->user->assigned=$assigned;
+      $gotData->user->notAssigned=$notAssigned;
       $i++;
     }
     return $gotData;
@@ -228,6 +235,55 @@ function addProductSerials($gotData){
   else{
     return $gotData;
   }
+}
+function searchProductSerial($gotData){
+  $sProductSerial=$gotData->user->sProductSerial;
+  $sql="SELECT * FROM product_serial WHERE serial_no='$sProductSerial'";
+  $check = mysqli_query($gotData->con,$sql);
+  if($check){
+    $i=0;
+    $gotData->user->totalRows=mysqli_num_rows($check);
+    if($gotData->user->totalRows==1){
+      $row=mysqli_fetch_array($check);
+      $serial_no=$row['serial_no'];
+      $dealer_name="Not Assigned Yet!";
+      if($row['dealer_id']!=-99){
+        $dealer_name=getDealerDataUsingID($gotData->con,$row['dealer_id']);
+      }
+      $dealer_name=$dealer_name;
+      $gotData->user->searchProductSerial="<div class='data-table-list' style='margin:20px;'>
+        <div class='basic-tb-hd'>
+          <h2>Matched Product Serials</h2>
+        </div>
+      <table id='data-table-basic' class='table table-striped'>
+        <thead>
+          <tr>
+            <th>Product Serial number</th>
+            <th>Dealer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              ".$serial_no."
+            </td>
+            <td>".$dealer_name."</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>";
+      return $gotData;
+    }
+    $gotData->user->searchProductSerial='<div class="row" align="center" style="margin-top: 80px;">
+              <div id="no_found"><img src="images/not-found.png" width="100px" alt="no found" /></div>
+              <br/>
+              <div style="color:gray;"><h4>Not Found!</h4></div>
+              </div>';
+    return $gotData;
+  }
+  $gotData->error=true;
+  $gotData->errorMessage="Try again!";
+  return $gotData;
 }
 if(isset($_REQUEST['action'])){
   $action=$_REQUEST['action'];
@@ -314,10 +370,16 @@ if(isset($_REQUEST['action'])){
     $gotData->product=(object) null;
     $gotData->product->productID=$_REQUEST['productID'];
     $productSerialArray=json_decode($_REQUEST['productSerialArray']);
-    // echo $_REQUEST['productSerialArray']."Ss";
-    // echo $productSerialArray->array."a";
     $gotData->product->productSerialArray=$productSerialArray;
     $gotData=addProductSerials($gotData);
+    $gotData->con=(object) null;
+    echo json_encode($gotData);
+    exit();
+  }else if($action==9 && isset($_REQUEST['sProductSerial'])){
+    $gotData->con=$con;
+    $gotData->user=(object) null;
+    $gotData->user->sProductSerial=$_REQUEST['sProductSerial'];
+    $gotData=searchProductSerial($gotData);
     $gotData->con=(object) null;
     echo json_encode($gotData);
     exit();

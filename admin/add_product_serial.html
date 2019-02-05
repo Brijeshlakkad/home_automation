@@ -1,3 +1,7 @@
+<style>
+  #suggest_container { position:relative; overflow:visible;}
+#autosuggest { position:absolute; top:<height-of-search-form>; left:0px; }
+</style>
 <!-- Mobile Menu start -->
 <div class="mobile-menu-area">
   <div class="container">
@@ -74,47 +78,84 @@
         </form>
       </div>
     </div>
-    <div class="row">
-      <div ng-if="productSerialArray.length==0" ng-bind-html="showNothing">
+  </div>
+  <div class="row" style="padding:0px 0px 20px 20px;">
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+      <div class="row">
+        Assigned Serials: <b>{{assignedSerials}}</b>
       </div>
-      <div ng-if="productSerialArray.length>0">
-        <div class="data-table-area">
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="data-table-list">
-                  <div class="basic-tb-hd">
-                    <h2>Products</h2>
-                  </div>
-                  <div class="table-responsive">
-                    <table id="data-table-basic" class="table table-striped">
-                      <thead>
-                        <tr>
-                          <th>index</th>
-                          <th>Product Serial number</th>
-                          <th>Dealer</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr ng-repeat="productSerial in productSerialArray track by $id(productSerial)">
-                          <td>
-                            {{$index+1}}
-                          </td>
-                          <td>
-                            {{productSerial.serial_no}}
-                          </td>
-                          <td>{{productSerial.dealer_name}}</td>
-                        </tr>
-                      </tbody>
-                      <tfoot>
-                        <tr>
-                          <th>index</th>
-                          <th>Product Serial number</th>
-                          <th>Dealer</th>
-                        </tr>
-                      </tfoot>
-                    </table>
-                  </div>
+      <div class="row">
+        Not Assigned Serials: <b>{{notAssignedSerials}}</b>
+      </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+      <div class="row">
+        <div id="suggest_container">
+          <div class="input-group">
+            <span class="input-group-addon">
+              <i class="glyphicon glyphicon-search"></i>
+            </span>
+            <div>
+              <input class="form-control" type="text" name="sProductSerial" ng-model="sProductSerial" my-enter="searchProductSerialFunc(sProductSerial)" />
+              <!-- <input class="form-control" type="text" name="sProductSerial" ng-model="sProductSerial" ng-change="searchProductSerial(sProductSerial)" /> -->
+            </div>
+          </div>
+          <!-- <div id="autosuggest">
+            <ul ng-bind-html="autoSuggest">
+            </ul>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-show="isSearchBoxOn">
+    <div class="row pull-right" style="margin:10px;">
+      <button class="btn btn-danger" ng-click="closeSearchBox()">&times;</button>
+    </div>
+    <div ng-bind-html="searchProductSerial">
+
+    </div>
+  </div>
+  <div class="row">
+    <div ng-if="productSerialArray.length==0" ng-bind-html="showNothing">
+    </div>
+    <div ng-if="productSerialArray.length>0">
+      <div class="data-table-area">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="data-table-list">
+                <div class="basic-tb-hd">
+                  <h2>Product Serials</h2>
+                </div>
+                <div class="table-responsive">
+                  <table id="data-table-basic" class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>index</th>
+                        <th>Product Serial number</th>
+                        <th>Dealer</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="productSerial in productSerialArray track by $id(productSerial)">
+                        <td>
+                          {{$index+1}}
+                        </td>
+                        <td>
+                          {{productSerial.serial_no}}
+                        </td>
+                        <td>{{productSerial.dealer_name}}</td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <th>index</th>
+                        <th>Product Serial number</th>
+                        <th>Dealer</th>
+                      </tr>
+                    </tfoot>
+                  </table>
                 </div>
               </div>
             </div>

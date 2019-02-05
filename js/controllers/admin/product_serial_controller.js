@@ -2,8 +2,10 @@ myApp.controller("ProductSerialController", function($rootScope, $scope, $http, 
   $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js', 'js/data-table/jquery.dataTables.min.js', 'js/data-table/data-table-act.js', 'js/notification/bootstrap-growl.min.js'], {
     cache: false
   });
+  $scope.isSearchBoxOn = false;
   $scope.productName = $routeParams.productName;
   $scope.productSerialArray = [];
+  $scope.searchProductSerial = {};
   $scope.modelInp = {};
   $scope.inputArray = [];
   $scope.product = "";
@@ -56,9 +58,12 @@ myApp.controller("ProductSerialController", function($rootScope, $scope, $http, 
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     }).then(function mySuccess(response) {
+      $scope.isSearchBoxOn = false;
       var data = response.data;
       if (!data.error) {
         if (data.user.totalRows > 0) {
+          $scope.assignedSerials = data.user.assigned;
+          $scope.notAssignedSerials = data.user.notAssigned;
           $scope.productSerialArray = data.user.productSerial;
         } else {
           $scope.showNothing = $sce.trustAsHtml(data.user.showNothing);
@@ -69,7 +74,6 @@ myApp.controller("ProductSerialController", function($rootScope, $scope, $http, 
         $rootScope.showErrorDialog(data.errorMessage);
       }
     }, function myError(response) {
-      $scope.showAddRoom = false;
       $rootScope.body.removeClass("loading");
     });
   };
@@ -106,7 +110,6 @@ myApp.controller("ProductSerialController", function($rootScope, $scope, $http, 
       }
     }).then(function mySuccess(response) {
       var data = response.data;
-      alert(JSON.stringify(data));
       if (!data.error) {
         if (data.product.failed.error) {
           var len = data.product.failed.totalRows;
@@ -131,7 +134,7 @@ myApp.controller("ProductSerialController", function($rootScope, $scope, $http, 
             }
             failedStr += failedArray[i] + ", ";
           }
-          $rootScope.openNotification($rootScope.dataFrom, $rootScope.dataAlign, $rootScope.dataIcon, $rootScope.dataType[0], $rootScope.dataAnimIn, $rootScope.dataAnimOut, "Duplicate Serial Numbers ", ""+failedStr);
+          $rootScope.openNotification($rootScope.dataFrom, $rootScope.dataAlign, $rootScope.dataIcon, $rootScope.dataType[0], $rootScope.dataAnimIn, $rootScope.dataAnimOut, "Duplicate Serial Numbers ", "" + failedStr);
         } else {
           $rootScope.openNotification($rootScope.dataFrom, $rootScope.dataAlign, $rootScope.dataIcon, $rootScope.dataType[0], $rootScope.dataAnimIn, $rootScope.dataAnimOut, "Added  ", modelArray.length + " Product Serial numbers");
         }
@@ -141,6 +144,53 @@ myApp.controller("ProductSerialController", function($rootScope, $scope, $http, 
     }, function myError(response) {
       $rootScope.openNotification($rootScope.dataFrom, $rootScope.dataAlign, $rootScope.dataIcon, $rootScope.dataType[1], $rootScope.dataAnimIn, $rootScope.dataAnimOut, "Error  ", "Please, check entered product deatils or try again later");
     });
+  };
+  // $scope.searchProductSerial = function(val) {
+  //   $http({
+  //     method: "POST",
+  //     url: "admin/product_actions.php",
+  //     data: "action=9&sProductSerial=" + val,
+  //     headers: {
+  //       'Content-Type': 'application/x-www-form-urlencoded'
+  //     }
+  //   }).then(function mySuccess(response) {
+  //     var data = response.data;
+  //     if (!data.error) {
+  //       var list = data.product.list;
+  //       $scope.autoSuggest = $sce.trustAsHtml(list);
+  //     } else {
+  //       $rootScope.showErrorDialog(data.errorMessage);
+  //     }
+  //   }, function myError(response) {});
+  // };
+  $scope.searchProductSerialFunc = function(val) {
+    if(val==undefined || val==""){
+      $scope.isSearchBoxOn = false;
+      return;
+    };
+    $rootScope.body.addClass("loading");
+    $http({
+      method: "POST",
+      url: "admin/product_actions.php",
+      data: "action=9&sProductSerial=" + val,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }).then(function mySuccess(response) {
+      var data = response.data;
+      if (!data.error) {
+        $scope.isSearchBoxOn = true;
+        $scope.searchProductSerial = $sce.trustAsHtml(data.user.searchProductSerial);
+        $rootScope.body.removeClass("loading");
+      } else {
+        $scope.isSearchBoxOn = false;
+        $rootScope.body.removeClass("loading");
+        $rootScope.showErrorDialog(data.errorMessage);
+      }
+    }, function myError(response) {});
+  };
+  $scope.closeSearchBox=function(){
+    $scope.isSearchBoxOn=false;
   };
 });
 myApp.directive("productSerialDir", function($rootScope, $http) {
@@ -192,6 +242,18 @@ myApp.directive("productSerialDir", function($rootScope, $http) {
       }
       mCtrl.$parsers.push(myValidation);
     }
+  };
+});
+myApp.directive('myEnter', function() {
+  return function(scope, element, attrs) {
+    element.bind("keydown keypress", function(event) {
+      if (event.which === 13) {
+        scope.$apply(function() {
+          scope.$eval(attrs.myEnter);
+        });
+        event.preventDefault();
+      }
+    });
   };
 });
 
