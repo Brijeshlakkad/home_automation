@@ -357,6 +357,9 @@
       }).when('/admin/product/:productName', {
         templateUrl: 'admin/edit_product.html',
         controller: 'EditProductController'
+      }).when('/admin/home/:productName', {
+        templateUrl: 'admin/add_product_serial.html',
+        controller: 'ProductSerialController'
       }).when('/404-not-found', {
         templateUrl: '404.html',
       }).otherwise({
@@ -382,6 +385,7 @@
   <script src="js/controllers/admin/admin_home_controller.js"></script>
   <script src="js/controllers/admin/create_product_controller.js"></script>
   <script src="js/controllers/admin/edit_product_controller.js"></script>
+  <script src="js/controllers/admin/product_serial_controller.js"></script>
 </body>
 
 </html>

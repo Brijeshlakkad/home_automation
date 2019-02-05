@@ -1,0 +1,158 @@
+<!-- Mobile Menu start -->
+<div class="mobile-menu-area">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="mobile-menu">
+          <nav id="dropdown">
+            <ul class="mobile-menu-nav">
+              <li><a data-toggle="collapse" data-target="#Charts" href="#!admin/home">Home</a>
+                <ul class="collapse dropdown-header-top">
+                  <li><a href="#!admin/home">View Products</a>
+                  </li>
+                  <li><a href="#!admin/create_product">Add Product</a>
+                  </li>
+                </ul>
+              </li>
+              <li><a href="#!admin/settings">Settings</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Mobile Menu end -->
+<!-- Main Menu area start-->
+<div class="main-menu-area mg-tb-40">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
+          <li class="active"><a href="#!admin/home" data-toggle="tab"><i class="notika-icon notika-house"></i> Home</a>
+          </li>
+          <li><a href="#!admin/settings"><i class="notika-icon notika-settings"></i> Settings</a>
+          </li>
+        </ul>
+        <div class="tab-content custom-menu-content">
+          <div id="Home" class="tab-pane active in notika-tab-menu-bg animated flipInX">
+            <ul class="notika-main-menu-dropdown">
+              <li><a href="#!admin/home">View Products</a>
+              </li>
+              <li><a href="#!admin/create_product">Add Product</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Main Menu area End-->
+<div class="container">
+  <div class="row" style="margin:10px;">
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12  product-form-title">
+      Product: {{product.name}}
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+      <div class="row">
+        <form name="numForm" novalidate>
+          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+            <span class="nk-label">No of serial number</span>
+            <input type="checkbox" class="form-control" name="isNumAllowed" ng-model="isNumAllowed" />
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" ng-show="isNumAllowed">
+            <input type="text" class="form-control" name="numSerials" ng-model="numSerials" ng-pattern="/^[0-9]*$/" />
+            <span style="color:red;" ng-show="numForm.numSerials.$dirty && numForm.numSerials.$invalid">
+              <span ng-show="numForm.numSerials.$error.pattern">Please enter only digits</span>
+            </span>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <button class="btn btn-primary" ng-click="openInputModal()" ng-disabled="numForm.numSerials.$invalid">Add Serial Number</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      <div ng-if="productSerialArray.length==0" ng-bind-html="showNothing">
+      </div>
+      <div ng-if="productSerialArray.length>0">
+        <div class="data-table-area">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="data-table-list">
+                  <div class="basic-tb-hd">
+                    <h2>Products</h2>
+                  </div>
+                  <div class="table-responsive">
+                    <table id="data-table-basic" class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>index</th>
+                          <th>Product Serial number</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr ng-repeat="productSerial in productSerialArray track by $id(product)">
+                          <td>
+                            {{$index+1}}
+                          </td>
+                          <td>
+                            {{productSerial.serial_no}}
+                          </td>
+                          <td>
+                            <a class="btn btn-primary" href="#"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a class="btn btn-danger" ng-click="deleteProductSerial(productSerial.serial_no)"><span class="glyphicon glyphicon-trash"></span></a>
+                          </td>
+                        </tr>
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <th>index</th>
+                          <th>Product Serial number</th>
+                          <th>Actions</th>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="openInputModal" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <h2>Add Serial numbers</h2>
+        <form name="productSerialForm" novalidate>
+          <div class="row" ng-repeat="inp in inputArray track by $id(inp)">
+            <div class="nk-int-st">
+              <input class="form-control" name="{{inp}}" ng-model="modelInp[$index]" type="text" placeholder="Product Serial Number {{$index+1}}" product-serial-dir ng-required="true" />
+            </div>
+            <span style="color:red;" id="productSerial" ng-show="productSerialForm.{{inp}}.$dirty && productSerialForm.{{inp}}.$invalid">
+              <span ng-show="!productSerialForm.{{inp}}.$error.required">This field is required</span>
+              <span ng-show="!productSerialForm.{{inp}}.$error.required && productSerialForm.{{inp}}.$error.productSerialValid">Please enter only alphabetics and digits</span>
+              <span ng-show="!productSerialForm.{{inp}}.$error.required && productSerialForm.{{inp}}.$error.productSerialExists">Product serial number already exists</span>
+            </span>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer" style="margin:10px;">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="productSerialForm.$invalid" ng-click="submitProductSerials()">add</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

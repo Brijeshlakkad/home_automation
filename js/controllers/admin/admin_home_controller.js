@@ -1,8 +1,5 @@
 myApp.controller("AdminHomeController", function($rootScope, $scope, $http, $window, $sce, $timeout, $cookies, $ocLazyLoad) {
-  $ocLazyLoad.load('js/meanmenu/jquery.meanmenu.js');
-  $ocLazyLoad.load('js/data-table/jquery.dataTables.min.js');
-  $ocLazyLoad.load('js/data-table/data-table-act.js');
-  $ocLazyLoad.load('js/notify.js');
+  $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js','js/data-table/jquery.dataTables.min.js','js/data-table/data-table-act.js','js/notify.js'],{cache: false});
   $scope.productArray=[];
   $scope.showNothing="";
   $rootScope.copyProduct="";

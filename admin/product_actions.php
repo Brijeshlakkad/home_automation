@@ -131,6 +131,78 @@ function deleteProduct($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
+function getAllProductSerials($gotData){
+  $productID=$gotData->user->productID;
+  $sql="SELECT * FROM product_serial WHERE product_id='$productID'";
+  $check=mysqli_query($gotData->con,$sql);
+  if($check){
+    $i=0;
+    $gotData->user->totalRows=mysqli_num_rows($check);
+    if($gotData->user->totalRows==0){
+      $gotData->user->showNothing='<div class="row" align="center" style="margin-top: 80px;">
+              	<div id="no_found"><img src="images/not-found.png" width="100px" alt="no found" /></div>
+              	<br/>
+              	<div style="color:gray;"><h4>Not Found!</h4></div>
+              	</div>';
+      return $gotData;
+    }
+    while($row=mysqli_fetch_array($check)){
+      $gotData->user->productSerial[$i]=(object) null;
+      $gotData->user->productSerial[$i]->id=$row['id'];
+      $gotData->user->productSerial[$i]->product_id=$row['product_id'];
+      $gotData->user->productSerial[$i]->serial_no=$row['serial_no'];
+      $gotData->user->productSerial[$i]->dealer_id=$row['dealer_id'];
+      $i++;
+    }
+    return $gotData;
+  }
+  $gotData->error=true;
+  $gotData->errorMessage="Try again!";
+  return $gotData;
+}
+function checkProductSerial($gotData){
+  $productSerial=$gotData->product->productSerial;
+  $sql="SELECT * FROM product_serial WHERE serial_no='$productSerial'";
+  $check=mysqli_query($gotData->con,$sql);
+  if($check){
+    if(mysqli_num_rows($check)==0){
+      $gotData->product->productSerialExists=false;
+      return $gotData;
+    }
+    $gotData->product->productSerialExists=true;
+    return $gotData;
+  }
+  $gotData->error=true;
+  $gotData->errorMessage="Try again!";
+  return $gotData;
+}
+function addProductSerials($gotData){
+  $productSerialArray=$gotData->product->productSerialArray;
+  $productID=$gotData->product->productID;
+  $len = count($productSerialArray);
+  $j=0;
+  $gotData->product->failed=(object) null;
+  $gotData->product->failed->error = false;
+  for($i=0;$i<$len;$i++){
+    $productSerial=$productSerialArray[$i];
+    $sql="INSERT INTO product_serial(product_id,serial_no,dealer_id) VALUES('$productID','$productSerial','0')";
+    $check=mysqli_query($gotData->con,$sql);
+    if(!$check){
+      $gotData->product->failed->error=true;
+      $gotData->product->failed->productFailed[$j] = (object) null;
+      $gotData->product->failed->productFailed[$j] = $productSerial;
+      $j++;
+    }
+  }
+  if($gotData->product->failed->error){
+    $gotData->error=true;
+    $gotData->errorMessage="Try again!";
+    return $gotData;
+  }
+  else{
+    return $gotData;
+  }
+}
 if(isset($_REQUEST['action'])){
   $action=$_REQUEST['action'];
   $gotData=(object) null;
@@ -192,6 +264,34 @@ if(isset($_REQUEST['action'])){
     $gotData->product=(object) null;
     $gotData->product->productName=$_REQUEST['productName'];
     $gotData=getProduct($gotData);
+    $gotData->con=(object) null;
+    echo json_encode($gotData);
+    exit();
+  }else if($action==6 && isset($_REQUEST['productID'])){
+    $gotData->con=$con;
+    $gotData->user=(object) null;
+    $gotData->user->productID=$_REQUEST['productID'];
+    $gotData=getAllProductSerials($gotData);
+    $gotData->con=(object) null;
+    echo json_encode($gotData);
+    exit();
+  }else if($action==7 && isset($_REQUEST['productSerial'])){
+    $gotData->con=$con;
+    $gotData->product=(object) null;
+    $gotData->product->productSerial=$_REQUEST['productSerial'];
+    $gotData=checkProductSerial($gotData);
+    $gotData->con=(object) null;
+    echo json_encode($gotData);
+    exit();
+  }else if($action==8 && isset($_REQUEST['productID']) && isset($_REQUEST['productSerialArray'])){
+    $gotData->con=$con;
+    $gotData->product=(object) null;
+    $gotData->product->productID=$_REQUEST['productID'];
+    $productSerialArray=json_decode($_REQUEST['productSerialArray']);
+    // echo $_REQUEST['productSerialArray']."Ss";
+    // echo $productSerialArray->array."a";
+    $gotData->product->productSerialArray=$productSerialArray;
+    $gotData=addProductSerials($gotData);
     $gotData->con=(object) null;
     echo json_encode($gotData);
     exit();
