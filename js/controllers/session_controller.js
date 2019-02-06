@@ -1,4 +1,4 @@
-myApp.controller("userController", function($rootScope, $scope, $localStorage, $sessionStorage, $window, $location, $interval, $ocLazyLoad) {
+myApp.controller("userController", function($rootScope, $scope, $localStorage, $sessionStorage, $window, $location, $sce, $interval, $ocLazyLoad) {
   $ocLazyLoad.load('js/meanmenu/jquery.meanmenu.js');
   $scope.index = ['/customer', '/customer/login', '/customer/register', '/dealer/login', '/dealer/signup', '/customer/forget_password', '/dealer/forget_password', '/admin/login'];
   $scope.path = 0;
@@ -38,4 +38,6 @@ myApp.controller("userController", function($rootScope, $scope, $localStorage, $
   $rootScope.showSuccessDialog = function(val) {
     swal("" + val, "", "success");
   };
+  $rootScope.inputNotValid=$sce.trustAsHtml("<span style='color:red;'><i class='glyphicon glyphicon-remove'></i></span>");
+  $rootScope.inputValid=$sce.trustAsHtml("<span style='color:green;'><i class='glyphicon glyphicon-ok'></i></span>");
 });

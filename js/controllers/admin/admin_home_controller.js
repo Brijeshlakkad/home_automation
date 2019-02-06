@@ -1,8 +1,11 @@
 myApp.controller("AdminHomeController", function($rootScope, $scope, $http, $window, $sce, $timeout, $cookies, $ocLazyLoad) {
-  $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js','js/data-table/jquery.dataTables.min.js','js/data-table/data-table-act.js','js/notify.js', 'js/notification/bootstrap-growl.min.js'],{cache: false});
-  $scope.productArray=[];
-  $scope.showNothing="";
-  $rootScope.copyProduct="";
+  $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js', 'js/data-table/jquery.dataTables.min.js', 'js/data-table/data-table-act.js', 'js/notification/bootstrap-growl.min.js'], {
+    rerun: true,
+    cache: false
+  });
+  $scope.productArray = [];
+  $scope.showNothing = "";
+  $rootScope.copyProduct = "";
   $rootScope.dataFrom = undefined;
   $rootScope.dataAlign = undefined;
   $rootScope.dataIcon = undefined;
@@ -12,7 +15,7 @@ myApp.controller("AdminHomeController", function($rootScope, $scope, $http, $win
   };
   $rootScope.dataAnimIn = "animated bounceInRight";
   $rootScope.dataAnimOut = "animated bounceOutRight";
-  $scope.getAllProducts=function(){
+  $scope.getAllProducts = function() {
     $rootScope.body.addClass("loading");
     $http({
       method: "POST",
@@ -24,10 +27,10 @@ myApp.controller("AdminHomeController", function($rootScope, $scope, $http, $win
     }).then(function mySuccess(response) {
       var data = response.data;
       if (!data.error) {
-        if(data.user.totalRows>0){
-          $scope.productArray=data.user.product;
-        }else{
-          $scope.showNothing=$sce.trustAsHtml(data.user.showNothing);
+        if (data.user.totalRows > 0) {
+          $scope.productArray = data.user.product;
+        } else {
+          $scope.showNothing = $sce.trustAsHtml(data.user.showNothing);
         }
         $rootScope.body.removeClass("loading");
       } else {
@@ -43,7 +46,7 @@ myApp.controller("AdminHomeController", function($rootScope, $scope, $http, $win
   $rootScope.openNotification = function(dataFrom, dataAlign, dataIcon, dataType, dataAnimIn, dataAnimOut, title, message) {
     notify(dataFrom, dataAlign, dataIcon, dataType, dataAnimIn, dataAnimOut, title, message);
   };
-  $scope.deleteProduct=function(productName){
+  $scope.deleteProduct = function(productName) {
     $http({
       method: "POST",
       url: "admin/product_actions.php",
@@ -65,6 +68,7 @@ myApp.controller("AdminHomeController", function($rootScope, $scope, $http, $win
     });
   };
 });
+
 function notify(from, align, icon, type, animIn, animOut, title, message) {
   $.growl({
     icon: icon,

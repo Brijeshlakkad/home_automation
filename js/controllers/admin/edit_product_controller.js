@@ -31,7 +31,6 @@ myApp.controller("EditProductController", function($rootScope, $scope, $http, $w
         $rootScope.showErrorDialog(data.errorMessage);
       }
     }, function myError(response) {
-      $scope.showAddRoom = false;
       $rootScope.body.removeClass("loading");
     });
   };

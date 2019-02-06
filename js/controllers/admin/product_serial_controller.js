@@ -138,6 +138,7 @@ myApp.controller("ProductSerialController", function($rootScope, $scope, $http, 
         } else {
           $rootScope.openNotification($rootScope.dataFrom, $rootScope.dataAlign, $rootScope.dataIcon, $rootScope.dataType[0], $rootScope.dataAnimIn, $rootScope.dataAnimOut, "Added  ", modelArray.length + " Product Serial numbers");
         }
+        $scope.getAllProductSerials($scope.product.id);
       } else {
         $rootScope.openNotification($rootScope.dataFrom, $rootScope.dataAlign, $rootScope.dataIcon, $rootScope.dataType[1], $rootScope.dataAnimIn, $rootScope.dataAnimOut, "Error  ", "Please, check entered product deatils or try again later");
       }

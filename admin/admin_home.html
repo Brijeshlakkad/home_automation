@@ -14,6 +14,7 @@
                   </li>
                 </ul>
               </li>
+              <li><a href="#!admin/dealer">Assign Dealer</a>
               <li><a href="#!admin/settings">Settings</a>
               </li>
             </ul>
@@ -31,6 +32,8 @@
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
           <li class="active"><a href="#!admin/home" data-toggle="tab"><i class="notika-icon notika-house"></i> Home</a>
+          </li>
+          <li><a href="#!admin/dealer" data-toggle="tab"><i class="glyphicon glyphicon-user"></i> Assign Dealer</a>
           </li>
           <li><a href="#!admin/settings"><i class="notika-icon notika-settings"></i> Settings</a>
           </li>
@@ -75,7 +78,7 @@
                         <th>Taxation</th>
                         <th>Hashcode</th>
                         <th>Qty Name</th>
-                        <th>Actions</th>
+                        <th>Edit</th>
                         <th>Add</th>
                       </tr>
                     </thead>
@@ -107,7 +110,7 @@
                         </td>
                         <td>
                           <a class="btn btn-primary" href="#!admin/product/{{product.name}}"><span class="glyphicon glyphicon-pencil"></span></a>
-                          <a class="btn btn-danger" ng-click="deleteProduct(product.name)"><span class="glyphicon glyphicon-trash"></span></a>
+                          <!-- <a class="btn btn-danger" ng-click="deleteProduct(product.name)"><span class="glyphicon glyphicon-trash"></span></a> -->
                         </td>
                         <td>
                           <a class="btn btn-default" href="#!admin/home/{{product.name}}"><span class="glyphicon glyphicon-plus"></span></a>
@@ -124,7 +127,7 @@
                         <th>Taxation</th>
                         <th>Hashcode</th>
                         <th>Qty Name</th>
-                        <th>Actions</th>
+                        <th>Edit</th>
                         <th>Add</th>
                       </tr>
                     </tfoot>
