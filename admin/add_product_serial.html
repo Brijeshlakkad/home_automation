@@ -1,5 +1,5 @@
 <style>
-  #suggest_container { position:relative; overflow:visible;}
+#suggest_container { position:relative; overflow:visible;}
 #autosuggest { position:absolute; top:<height-of-search-form>; left:0px; }
 </style>
 <!-- Mobile Menu start -->
@@ -184,13 +184,14 @@
             <span style="color:red;" id="productSerial" ng-show="productSerialForm.{{inp}}.$dirty && productSerialForm.{{inp}}.$invalid">
               <span ng-show="!productSerialForm.{{inp}}.$error.required">This field is required</span>
               <span ng-show="!productSerialForm.{{inp}}.$error.required && productSerialForm.{{inp}}.$error.productSerialValid">Please enter only alphabetics and digits</span>
+              <span ng-show="!productSerialForm.{{inp}}.$error.required && productSerialForm.{{inp}}.$error.duplicateExists">Duplicate product serial</span>
               <span ng-show="!productSerialForm.{{inp}}.$error.required && productSerialForm.{{inp}}.$error.productSerialExists">Product serial number already exists</span>
             </span>
           </div>
         </form>
       </div>
       <div class="modal-footer" style="margin:10px;">
-        <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="productSerialForm.$invalid" ng-click="submitProductSerials()">add</button>
+        <button type="button" class="btn btn-default" ng-disabled="productSerialForm.$invalid" ng-click="submitProductSerials()">add</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>

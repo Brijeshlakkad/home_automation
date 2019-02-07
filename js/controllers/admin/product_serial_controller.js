@@ -6,7 +6,7 @@ myApp.controller("ProductSerialController", function($rootScope, $scope, $http, 
   $scope.productName = $routeParams.productName;
   $scope.productSerialArray = [];
   $scope.searchProductSerial = {};
-  $scope.modelInp = {};
+  $rootScope.modelInp = {};
   $scope.inputArray = [];
   $scope.product = "";
   $rootScope.copyProduct = "";
@@ -92,6 +92,70 @@ myApp.controller("ProductSerialController", function($rootScope, $scope, $http, 
     }
     $("#openInputModal").modal("show");
   };
+  // $scope.checkAlreadyHas=function(duplicateSeries,modelArray){
+  //   var i=0;
+  //   for(i=0;i<duplicateSeries.length;i++){
+  //     if(duplicateSeries[i].productSeries)
+  //   }
+  // }
+  $scope.applyDuplicateValidation=function(duplicateSeries){
+    //var input = angular.element($("input[name='"+$scope.inputArray[duplicateSeries[0].location[0]]+"']"));
+    var name,i,j;
+    for(i=0;i<duplicateSeries.length;i++){
+      for(j=0;j<duplicateSeries[i].location.length;j++){
+        name=$scope.inputArray[duplicateSeries[i].location[j]];
+        $scope.productSerialForm[name+""].$setValidity('duplicateExists', false);
+        var element=angular.element($("input[name='"+name+"']"));
+        element.css({
+          "border-bottom-width": "1.45px",
+          "border-bottom-color": 'red'
+        });
+      }
+    }
+    return true;
+  };
+  $scope.checkDuplicate=function(modelArray){
+    var i=0,j=0,k=0,m,len,key,flag=0,flag1=0;
+    var duplicateSeries=[];
+    for(i=0;i<modelArray.length;i++){
+      for(j=0;j<modelArray.length;j++){
+        if(i!=j && modelArray[i]==modelArray[j]){
+          duplicateSeries[k]={};
+          flag1=-99;
+          len=duplicateSeries.length;
+          for(n=0;n<len;n++){
+            if(duplicateSeries[n]['name']==modelArray[j]){
+              flag1=n;
+            }
+          }
+          //$scope.checkAlreadyHas(duplicateSeries,modelArray[i]);
+          //duplicateSeries[k]={"productSeries":modelArray[j],"location1":i,"location2":j};
+          if(flag1==-99){
+            duplicateSeries[k].name=modelArray[j];
+            duplicateSeries[k].location=[i,j];
+            k++;
+          }else{
+            flag=0;
+            len = duplicateSeries[flag1]['location'].length;
+            for(m=0;m<len;m++){
+              if(duplicateSeries[flag1]['location'][m]==j){
+                flag=1;
+              }
+            }
+            if(flag==0){
+              duplicateSeries[flag1]['location'][len]=j;
+            }
+          }
+        }
+      }
+    }
+    if(duplicateSeries.length==0){
+      return false;
+    }
+    $scope.applyDuplicateValidation(duplicateSeries);
+  };
+  // var aa=['1212','121212','1212'];
+  // $scope.checkDuplicate(aa);
   $scope.submitProductSerials = function() {
     var i = 0;
     var modelArray = [];
@@ -101,6 +165,10 @@ myApp.controller("ProductSerialController", function($rootScope, $scope, $http, 
         i++;
       }
     }
+    if($scope.checkDuplicate(modelArray)){
+      return;
+    }
+    $("#openInputModal").modal("hide");
     $http({
       method: "POST",
       url: "admin/product_actions.php",
@@ -199,6 +267,7 @@ myApp.directive("productSerialDir", function($rootScope, $http) {
     require: 'ngModel',
     link: function(scope, element, attr, mCtrl) {
       function myValidation(value) {
+        mCtrl.$setValidity('duplicateExists', true);
         mCtrl.$setValidity('productSerialExists', true);
         var pattSeries = /^([0-9]{4})([A-Z0-9]{4})([0-9]{4})$/;
         if (pattSeries.test(value)) {
