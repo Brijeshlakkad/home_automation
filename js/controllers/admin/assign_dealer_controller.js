@@ -62,7 +62,7 @@ myApp.controller("AssignDealerController", function($rootScope, $scope, $http, $
     }).then(function mySuccess(response) {
       var data = response.data;
       if (!data.error) {
-        $rootScope.maxNumProductSerials = data.user.totalRows;
+        $rootScope.maxNumProductSerials = data.user.notAssigned;
         $rootScope.body.removeClass("loading");
       } else {
         $rootScope.maxNumProductSerials = 0;
@@ -89,6 +89,7 @@ myApp.controller("AssignDealerController", function($rootScope, $scope, $http, $
         var dealerName=data.user.dealerName;
         var numProductSerials=data.user.numProductSerials;
         $rootScope.body.removeClass("loading");
+        $window.location.href=data.user.location;
         $rootScope.openNotification($rootScope.dataFrom, $rootScope.dataAlign, $rootScope.dataIcon, $rootScope.dataType[0], $rootScope.dataAnimIn, $rootScope.dataAnimOut, "Assigned  ", dealerName+" has been assigned "+numProductSerials+" product serials.");
       } else {
         $rootScope.body.removeClass("loading");
@@ -120,6 +121,7 @@ myApp.directive("dealerEmailExistsDir", function($rootScope, $http) {
             if (!data.error) {
               if (data.user.dealerEmailExists) {
                 $rootScope.getProductList();
+                $rootScope.dealerName=data.user.dealerName;
                 $rootScope.showBlock2 = true;
                 mCtrl.$setValidity('dealerEmailExists', true);
                 element.css({
@@ -165,7 +167,7 @@ myApp.directive("rangeNumberDir", function($rootScope, $http) {
     require: "ngModel",
     link: function(scope, element, attr, mCtrl) {
       function myValidation(value) {
-        if (value >= $rootScope.minNumProductSerials && value < $rootScope.maxNumProductSerials) {
+        if (value >= $rootScope.minNumProductSerials && value <= $rootScope.maxNumProductSerials) {
           mCtrl.$setValidity('rangeNumberValid', true);
           element.css({
             "border-width": "1.45px",

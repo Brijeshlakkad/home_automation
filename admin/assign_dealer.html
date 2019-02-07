@@ -60,14 +60,21 @@
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
       <form name="assignDealerForm" novalidate>
         <div class="row">
-          <div class="input-group">
-            <div class="input-group-addon">
-              <span>Add Dealer Email: </span>
+          <div class="row">
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+              <div class="input-group">
+                <div class="input-group-addon">
+                  <span>Add Dealer Email: </span>
+                </div>
+                <input class="form-control" type="email" name="dealerEmail" ng-model="dealerEmail" ng-required="true" dealer-email-exists-dir />
+                <div class="input-group-addon" ng-show="assignDealerForm.dealerEmail.$dirty && assignDealerForm.dealerEmail.$invalid" ng-bind-html="inputNotValid">
+                </div>
+                <div class="input-group-addon" ng-show="assignDealerForm.dealerEmail.$dirty && !assignDealerForm.dealerEmail.$invalid" ng-bind-html="inputValid">
+                </div>
+              </div>
             </div>
-            <input class="form-control" type="email" name="dealerEmail" ng-model="dealerEmail" ng-required="true" dealer-email-exists-dir/>
-            <div class="input-group-addon" ng-show="assignDealerForm.dealerEmail.$dirty && assignDealerForm.dealerEmail.$invalid" ng-bind-html="inputNotValid">
-            </div>
-            <div class="input-group-addon" ng-show="assignDealerForm.dealerEmail.$dirty && !assignDealerForm.dealerEmail.$invalid" ng-bind-html="inputValid">
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+              <span style="margin-top:10px;font-size:20px;" ng-show="assignDealerForm.dealerEmail.$dirty && !assignDealerForm.dealerEmail.$invalid">{{dealerName}}</span>
             </div>
           </div>
           <span style="color:red;" ng-show="assignDealerForm.dealerEmail.$dirty && assignDealerForm.dealerEmail.$invalid">
@@ -82,7 +89,8 @@
             <div class="input-group-addon">
               <span>Select Prodcut: </span>
             </div>
-            <select class="form-control" ng-model="selectedProduct" name="selectedProduct" ng-options="option.name for option in productList track by option.name" ng-change="changedProductSelected(selectedProduct)" ng-style="selectProductStyle" ng-required="true"></select>
+            <select class="form-control" ng-model="selectedProduct" name="selectedProduct" ng-options="option.name for option in productList track by option.name" ng-change="changedProductSelected(selectedProduct)" ng-style="selectProductStyle"
+              ng-required="true"></select>
             <div class="input-group-addon" ng-show="assignDealerForm.selectedProduct.$invalid" ng-bind-html="inputNotValid">
             </div>
             <div class="input-group-addon" ng-show="!assignDealerForm.selectedProduct.$invalid" ng-bind-html="inputValid">
@@ -93,12 +101,15 @@
           </span>
         </div>
         <br />
-        <div class="row" ng-if="showBlock3">
+        <div class="row" ng-if="showBlock3 && maxNumProductSerials==0" style="color:rgba(236,95,26,1)">
+          All product serials for {{product.name}} has been used.
+        </div>
+        <div class="row" ng-if="showBlock3 && maxNumProductSerials!=0">
           <div class="input-group">
             <div class="input-group-addon">
               <span>Number to sell: </span>
             </div>
-            <input class="form-control" type="number" name="numProductSerials" min="{{minNumProductSerials}}" max="{{maxNumProductSerials}}" step="1" ng-model="numProductSerials" ng-required="true" range-number-dir/>
+            <input class="form-control" type="number" name="numProductSerials" min="{{minNumProductSerials}}" max="{{maxNumProductSerials}}" step="1" ng-model="numProductSerials" ng-required="true" range-number-dir />
             <div class="input-group-addon" ng-show="assignDealerForm.numProductSerials.$dirty && assignDealerForm.numProductSerials.$invalid" ng-bind-html="inputNotValid">
             </div>
             <div class="input-group-addon" ng-show="assignDealerForm.numProductSerials.$dirty && !assignDealerForm.numProductSerials.$invalid" ng-bind-html="inputValid">
@@ -106,7 +117,7 @@
           </div>
           <span style="color:red;" ng-show="assignDealerForm.numProductSerials.$dirty && assignDealerForm.numProductSerials.$invalid">
             <span ng-show="assignDealerForm.numProductSerials.$error.required">Please specify number of serial for product</span>
-            <span ng-show="!assignDealerForm.numProductSerials.$error.required && assignDealerForm.numProductSerials.$error.rangeNumberValid">Please specify number between {{minNumProductSerials}} to {{maxNumProductSerials}}</span>
+            <span ng-show="!assignDealerForm.numProductSerials.$error.required && assignDealerForm.numProductSerials.$error.rangeNumberValid">Please specify number between from {{minNumProductSerials-1}} to {{maxNumProductSerials}}</span>
           </span>
           <div style="margin:20px;">
             <button class="btn btn-primary" type="submit" ng-click="assignProductSerial(dealerEmail,selectedProduct.id,numProductSerials)" ng-disabled="assignDealerForm.dealerEmail.$invalid || assignDealerForm.selectedProduct.$invalid || assignDealerForm.numProductSerials.$invalid">Assign</button>

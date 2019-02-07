@@ -158,7 +158,8 @@ function getAllProductSerials($gotData){
       $dealer_name="Not Assigned Yet!";
       if($row['dealer_id']!=-99){
         $assigned++;
-        $dealer_name=getDealerDataUsingID($gotData->con,$row['dealer_id']);
+        $d=getDealerDataUsingID($gotData->con,$row['dealer_id']);
+        $dealer_name=$d->name." ( ".$d->email." )";
       }else{
         $notAssigned++;
       }
@@ -290,7 +291,18 @@ function getProductSerialCount($gotData){
     $sql="SELECT * FROM product_serial WHERE product_id='$productID'";
     $check=mysqli_query($gotData->con,$sql);
     if($check){
+      $notAssigned=0;
+      $assigned=0;
+      while($row=mysqli_fetch_array($check)){
+        if($row['dealer_id']!=-99){
+          $assigned++;
+        }else{
+          $notAssigned++;
+        }
+      }
       $gotData->user->totalRows=mysqli_num_rows($check);
+      $gotData->user->assigned=$assigned;
+      $gotData->user->notAssigned=$notAssigned;
       return $gotData;
     }
     $gotData->error=true;
@@ -304,6 +316,9 @@ function checkDealerEmail($gotData){
   if($check){
     if(mysqli_num_rows($check)){
       $gotData->user->dealerEmailExists=true;
+      $d=getDealerDataUsingEmail($gotData->con,$dealerEmail);
+      if($d->error) return $d;
+      $gotData->user->dealerName=$d->name;
     }else{
       $gotData->user->dealerEmailExists=false;
     }
@@ -346,6 +361,7 @@ function assignProductSerial($gotData){
         }
         $track++;
       }
+      $gotData->user->location="#!admin/dealer";
     }else{
       $gotData->error=true;
       $gotData->errorMessage=$numProductSerials." product serials can't be assigned.";
