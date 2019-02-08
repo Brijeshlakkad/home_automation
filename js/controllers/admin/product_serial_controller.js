@@ -204,6 +204,7 @@ myApp.controller("ProductSerialController", function($rootScope, $scope, $http, 
           }
           $rootScope.openNotification($rootScope.dataFrom, $rootScope.dataAlign, $rootScope.dataIcon, $rootScope.dataType[0], $rootScope.dataAnimIn, $rootScope.dataAnimOut, "Duplicate Serial Numbers ", "" + failedStr);
         } else {
+          $window.location.href="#!admin/home/"+$routeParams.productName;
           $rootScope.openNotification($rootScope.dataFrom, $rootScope.dataAlign, $rootScope.dataIcon, $rootScope.dataType[0], $rootScope.dataAnimIn, $rootScope.dataAnimOut, "Added  ", modelArray.length + " Product Serial numbers");
         }
         $scope.getAllProductSerials($scope.product.id);
