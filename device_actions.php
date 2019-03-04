@@ -1,5 +1,6 @@
 <?php
 require_once("config.php");
+require_once('user_data.php');
 require_once("device_data.php");
 function getUserID($gotData)
 {
@@ -39,13 +40,38 @@ function deservesDeviceSlider($dvImg){
   }
   return $flag;
 }
-function createDevice($gotData){
-  $gotData=getUserID($gotData);
-  if($gotData->error==true) return $gotData;
-  $userID=$gotData->user->userID;
+function checkDevicePort($gotData){
   $homeID=$gotData->user->device->homeID;
   $roomID=$gotData->user->device->roomID;
   $hwID=$gotData->user->device->hwID;
+  $userID=$gotData->user->userID;
+  $dvPort=$gotData->user->device->dvPort;
+  $sql="SELECT * FROM room_device WHERE hid='$homeID' AND room_id='$roomID' AND hw_id='$hwID' AND uid='$userID' AND port='$dvPort'";
+  $result=mysqli_query($gotData->con,$sql);
+  if($result){
+    if(mysqli_num_rows($result)>0){
+      $row=mysqli_fetch_array($result);
+      $dvName=$row['device_name'];
+      $dvPort=$row['port'];
+      $gotData->error=true;
+      $gotData->errorMessage=$dvName." has been assigned to ".$dvPort." already";
+    }
+    return $gotData;
+  }
+  $gotData->error=true;
+  $gotData->errorMessage="Try again!";
+  return $gotData;
+}
+function createDevice($gotData){
+  $u=getUserDataUsingEmail($gotData->con,$gotData->user->email);
+  if($u->error) return $u;
+  $userID=$u->id;
+  $gotData->user->userID=$userID;
+  $homeID=$gotData->user->device->homeID;
+  $roomID=$gotData->user->device->roomID;
+  $hwID=$gotData->user->device->hwID;
+  $gotData=checkDevicePort($gotData);
+  if($gotData->error) return $gotData;
   $dvName=$gotData->user->device->dvName;
   $dvPort=$gotData->user->device->dvPort;
   $dvImg=$gotData->user->device->dvImg;

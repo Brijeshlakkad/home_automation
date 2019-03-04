@@ -64,7 +64,6 @@ myApp.controller("DeviceController", function($rootScope, $scope, $http, $window
       var data = response.data;
       $scope.dvForm.$setPristine();
       $scope.dvName = "";
-      alert(JSON.stringify(data));
       if (!data.error) {
         $scope.showSuccessDialog("Device Created");
         $scope.getAllDevice();
