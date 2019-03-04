@@ -1,10 +1,8 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 require_once("config.php");
 require_once("home_data.php");
 require_once("room_data.php");
+require_once("hardware_data.php");
 function getUserID($gotData)
 {
   $email=$gotData->user->email;
@@ -47,7 +45,9 @@ function createHardware($gotData){
   if($result)
   {
     $gotData->error=false;
-    $gotData->user->hw->id=mysqli_insert_id($gotData->con);
+    $hw=getHardwareDataUsingNameIDs($gotData->con,$userID,$hwName,$rooID,$homeID);
+    if($hw->error) return $hw;
+    $gotData->user->hw->id=$hw->id;
     return $gotData;
   }
   $gotData->error=true;

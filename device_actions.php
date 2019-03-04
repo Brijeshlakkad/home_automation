@@ -1,7 +1,9 @@
 <?php
 require_once("config.php");
 require_once('user_data.php');
+require_once("hardware_data.php");
 require_once("device_data.php");
+require_once('device_slider_data.php');
 function getUserID($gotData)
 {
   $email=$gotData->user->email;
@@ -81,7 +83,9 @@ function createDevice($gotData){
   if($result)
   {
     $gotData->error=false;
-    $gotData->user->device->id=mysqli_insert_id($gotData->con);
+    $dv=getDeviceDataUsingNameIDs($gotData->con,$userID,$dvName,$hwID,$roomID,$homeID);
+    if($dv->error) return $dv;
+    $gotData->user->device->id=$dv->dvID;
     $gotData->user->device->deviceSlider="null";
     $email=$gotData->user->device->email;
     if(deservesDeviceSlider($dvImg)){
@@ -379,7 +383,9 @@ function createDeviceSlider($dvID,$con,$value="0"){
     $gotData->user->deviceSlider=(object) null;
     $gotData->user->deviceSlider->dvID=$dvID;
     $gotData->user->deviceSlider->value=$value;
-    $gotData->user->deviceSlider->id=mysqli_insert_id($con);
+    $dvSlider=getDeviceSliderDataUsingDID($con,$dvID);
+    if($dvSlider->error) return $dvSlider;
+    $gotData->user->deviceSlider->id=$dvSlider->id;
     return $gotData;
   }
   $gotData->error=true;

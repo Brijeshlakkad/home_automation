@@ -1,5 +1,6 @@
 <?php
 require_once("config.php");
+require_once('home_data.php');
 function getUserID($gotData)
 {
   $email=$gotData->user->email;
@@ -25,7 +26,9 @@ function createHome($gotData){
   if($result)
   {
     $gotData->error=false;
-    $gotData->user->home->id=mysqli_insert_id($gotData->con);
+    $h=getHomeDataUsingName($gotData->con,$userID,$homeName);
+    if($h->error) return $h;
+    $gotData->user->home->id=$h->id;
     return $gotData;
   }
   $gotData->error=true;

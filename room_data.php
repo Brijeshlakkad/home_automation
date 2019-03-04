@@ -35,4 +35,10 @@ function getRoomDataUsingName($con,$userID,$roomName,$homeName){
   $r->getData($con,$sql);
   return $r;
 }
+function getRoomDataUsingNameIDs($con,$userID,$roomName,$homeID){
+  $r = new Room;
+  $sql="SELECT * FROM room where roomname='$roomName' and hid='$homeID' and uid='$userID'";
+  $r->getData($con,$sql);
+  return $r;
+}
 ?>

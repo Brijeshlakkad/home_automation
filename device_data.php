@@ -42,4 +42,10 @@ function getDeviceDataUsingName($con,$userID,$dvName,$hwName,$roomName,$homeName
   $dv->getData($con,$sql);
   return $dv;
 }
+function getDeviceDataUsingNameIDs($con,$userID,$dvName,$hwID,$roomID,$homeID){
+  $dv = new Device;
+  $sql="SELECT * FROM room_device where device_name='$dvName' and hid='$homeID' and room_id='$roomID' and hw_id='$hwID' and uid='$userID'";
+  $dv->getData($con,$sql);
+  return $dv;
+}
 ?>

@@ -63,7 +63,9 @@ function createRoom($gotData){
   if($result)
   {
     $gotData->error=false;
-    $gotData->user->room->id=mysqli_insert_id($gotData->con);
+    $r=getRoomDataUsingNameIDs($con,$userID,$roomName,$homeID);
+    if($r->error) return $r;
+    $gotData->user->room->id=$r->id;
     return $gotData;
   }
   $gotData->error=true;
