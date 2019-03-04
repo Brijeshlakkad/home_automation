@@ -39,7 +39,7 @@ function getHardwareDataUsingName($con,$userID,$hwName,$roomName,$homeName){
   $hw->getData($con,$sql);
   return $hw;
 }
-function getHardwareDataUsingNameIDs($con,$userID,$hwName,$rooID,$homeID){
+function getHardwareDataUsingNameIDs($con,$userID,$hwName,$roomID,$homeID){
   $hw = new Hardware;
   $sql="SELECT * FROM hardware where name='$hwName' and hid='$homeID' and rid='$roomID' and uid='$userID'";
   $hw->getData($con,$sql);

@@ -45,9 +45,9 @@ function createHardware($gotData){
   if($result)
   {
     $gotData->error=false;
-    $hw=getHardwareDataUsingNameIDs($gotData->con,$userID,$hwName,$rooID,$homeID);
+    $hw=getHardwareDataUsingNameIDs($gotData->con,$userID,$hwName,$roomID,$homeID);
     if($hw->error) return $hw;
-    $gotData->user->hw->id=$hw->id;
+    $gotData->user->hw->id=$hw->hwID;
     return $gotData;
   }
   $gotData->error=true;

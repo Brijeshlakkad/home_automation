@@ -63,9 +63,9 @@ function createRoom($gotData){
   if($result)
   {
     $gotData->error=false;
-    $r=getRoomDataUsingNameIDs($con,$userID,$roomName,$homeID);
+    $r=getRoomDataUsingNameIDs($gotData->con,$userID,$roomName,$homeID);
     if($r->error) return $r;
-    $gotData->user->room->id=$r->id;
+    $gotData->user->room->id=$r->roomID;
     return $gotData;
   }
   $gotData->error=true;

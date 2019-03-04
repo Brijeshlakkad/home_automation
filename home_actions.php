@@ -28,7 +28,7 @@ function createHome($gotData){
     $gotData->error=false;
     $h=getHomeDataUsingName($gotData->con,$userID,$homeName);
     if($h->error) return $h;
-    $gotData->user->home->id=$h->id;
+    $gotData->user->home->id=$h->homeID;
     return $gotData;
   }
   $gotData->error=true;
