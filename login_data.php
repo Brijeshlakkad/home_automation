@@ -37,4 +37,12 @@ if(isset($_REQUEST['email']) && isset($_REQUEST['password']))
   $gotData->con=(object) null;
   echo json_encode($gotData);
 }
+else{
+  $gotData = (object) null;
+  $gotData->error=true;
+  $gotData->errorMessage="Try again!";
+  $gotData->con=(object) null;
+  echo json_encode($gotData);
+  exit();
+}
 ?>

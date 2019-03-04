@@ -165,7 +165,7 @@ if(isset($_REQUEST['action'])){
     echo json_encode($gotData);
   }else if($action=="1" && isset($_REQUEST['email']) && isset($_REQUEST['homeName'])){
     $email=$_REQUEST['email'];
-    $homeName=$_REQUEST['homeName'];
+    $homeName=ucfirst($_REQUEST['homeName']);
     $gotData = (object) null;
     $gotData->user=(object) null;
     $gotData->user->home=(object) null;
@@ -173,7 +173,7 @@ if(isset($_REQUEST['action'])){
     $gotData->errorMessage="null";
     $gotData->con=$con;
     $gotData->user->email=$email;
-    $gotData->user->home->homeName=$homeName;
+    $gotData->user->home->homeName=ucfirst($homeName);
     $gotData->user->home->email=$email;
     $gotData->user->home->action=$action;
     $gotData=createHome($gotData);
@@ -199,7 +199,7 @@ if(isset($_REQUEST['action'])){
   {
     $email=$_REQUEST['email'];
     $id=$_REQUEST['id'];
-    $homeName=$_REQUEST['homeName'];
+    $homeName=ucfirst($_REQUEST['homeName']);
     $gotData = (object) null;
     $gotData->user=(object) null;
     $gotData->user->home=(object) null;
@@ -208,7 +208,7 @@ if(isset($_REQUEST['action'])){
     $gotData->user->home->id=$id;
     $gotData->con=$con;
     $gotData->user->email=$email;
-    $gotData->user->home->homeName=$homeName;
+    $gotData->user->home->homeName=ucfirst($homeName);
     $gotData->user->home->email=$email;
     $gotData->user->home->action=$action;
     $gotData=renameHome($gotData);
@@ -218,7 +218,7 @@ if(isset($_REQUEST['action'])){
   {
     $email=$_REQUEST['email'];
     $id=$_REQUEST['id'];
-    $homeName=$_REQUEST['homeName'];
+    $homeName=ucfirst($_REQUEST['homeName']);
     $gotData = (object) null;
     $gotData->user=(object) null;
     $gotData->user->home=(object) null;
@@ -227,7 +227,7 @@ if(isset($_REQUEST['action'])){
     $gotData->user->home->id=$id;
     $gotData->con=$con;
     $gotData->user->email=$email;
-    $gotData->user->home->homeName=$homeName;
+    $gotData->user->home->homeName=ucfirst($homeName);
     $gotData->user->home->email=$email;
     $gotData->user->home->action=$action;
     $gotData=renameHome($gotData);
@@ -250,6 +250,11 @@ if(isset($_REQUEST['action'])){
     $gotData->errorMessage="Please, try again after few minutes!";
     echo json_encode($gotData);
   }
+}else{
+  $gotData = (object) null;
+  $gotData->error=true;
+  $gotData->errorMessage="Please, try again after few minutes!";
+  echo json_encode($gotData);
+  exit();
 }
-
 ?>

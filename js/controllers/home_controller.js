@@ -173,10 +173,10 @@ myApp.directive("homeNameDir", function($rootScope, $http) {
     link: function(scope, element, attr, mCtrl) {
       function myValidation(value) {
         mCtrl.$setValidity('homeNameExistsValid', true);
-        var pattHome = /^[a-zA-Z0-9]+$/;
+        var pattHome = /^([a-zA-Z]+)([0-9]*)$/;
         var i, flag = 0;
         var len = $rootScope.homeList.length;
-        if (pattHome.test(value) && value.length > 3) {
+        if (pattHome.test(value) && (value.length > 2 || value.length <= 8)) {
           mCtrl.$setValidity('homeNameValid', true);
           mCtrl.$setValidity('homeNameLenValid', true);
           for (i = 0; i < len; i++) {
@@ -197,14 +197,14 @@ myApp.directive("homeNameDir", function($rootScope, $http) {
               "border-bottom-color": 'green'
             });
           }
-        } else if (!pattHome.test(value) && value.length > 3) {
+        } else if (!pattHome.test(value) && (value.length > 2 || value.length <= 8)) {
           mCtrl.$setValidity('homeNameValid', false);
           mCtrl.$setValidity('homeNameLenValid', true);
           element.css({
             "border-bottom-width": "1.45px",
             "border-bottom-color": 'red'
           });
-        } else if (pattHome.test(value) && value.length <= 3) {
+        } else if (pattHome.test(value) && (value.length <= 2 || value.length > 8)) {
           mCtrl.$setValidity('homeNameValid', true);
           mCtrl.$setValidity('homeNameLenValid', false);
           element.css({

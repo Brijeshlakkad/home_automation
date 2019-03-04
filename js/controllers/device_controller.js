@@ -257,7 +257,7 @@ myApp.directive("dvNameDir", function($rootScope, $http) {
     link: function(scope, element, attr, mCtrl) {
       function myValidation(value) {
         mCtrl.$setValidity('dvNameExistsValid', true);
-        var pattDevice = /^[a-zA-Z0-9]+$/;
+        var pattDevice = /^([a-zA-Z]+)([0-9]*)$/;
         var i, flag = 0;
         var len = $rootScope.dvList.length;
         if (pattDevice.test(value)) {

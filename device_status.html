@@ -52,7 +52,7 @@
           <div class="row" ng-show="deviceStatus==1 && deviceSlider!='null'" style="padding:20px;">
             <form name="sliderForm" novalidate>
               <div class="row">
-              <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"><input class="form-control" type="number" id="deviceSliderValue" name="deviceSliderValue" min="0" max="5" ng-model="deviceSliderValue" ng-change="changeDeviceSlider(deviceSliderValue)" slider-dir/></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"><button type="submit" class="btn btn-success" ng-disabled="sliderForm.deviceSliderValue.$invalid">></button></div>
+              <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"><input class="form-control" type="number" id="deviceSliderValue" name="deviceSliderValue" min="0" max="{{deviceImg.maxVal}}" ng-model="deviceSliderValue" ng-change="changeDeviceSlider(deviceSliderValue)" slider-dir/></div><div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"><button type="submit" class="btn btn-success" ng-disabled="sliderForm.deviceSliderValue.$invalid">></button></div>
               </div>
               <span style="color:red;" ng-show="sliderForm.deviceSliderValue.$dirty && sliderForm.deviceSliderValue.$invalid">
               <span ng-show="sliderForm.deviceSliderValue.$error.required">Please enter valid value</span>

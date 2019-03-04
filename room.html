@@ -98,7 +98,7 @@
                 <span style="color:red;" id="roomReName" ng-show="roomReNameForm.roomReName.$dirty && roomReNameForm.roomReName.$invalid">
                 <span ng-show="roomReNameForm.roomReName.$error.required">Please enter room name</span>
                 <span ng-show="!roomReNameForm.roomReName.$error.required && roomReNameForm.roomReName.$error.roomNameValid">Please enter only alphabetics and digits</span>
-                <span ng-show="!roomReNameForm.roomReName.$error.required && !roomReNameForm.roomReName.$error.roomNameValid && roomReNameForm.roomReName.$error.roomNameLenValid">Please enter only more than 3 characters</span>
+                <span ng-show="!roomReNameForm.roomReName.$error.required && !roomReNameForm.roomReName.$error.roomNameValid && roomReNameForm.roomReName.$error.roomNameLenValid">Please enter room name between 2 to 9 characters.</span>
                 <span ng-show="roomReNameForm.roomReName.$error.roomNameExistsValid">Room name already exists</span>
                 </span>
               </div>

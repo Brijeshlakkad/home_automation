@@ -196,8 +196,8 @@ if(isset($_REQUEST['action'])){
   if($action=="0" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['userID']))
   {
     $email=$_REQUEST['email'];
-    $homeName=$_REQUEST['homeName'];
-    $roomName=$_REQUEST['roomName'];
+    $homeName=ucfirst($_REQUEST['homeName']);
+    $roomName=ucfirst($_REQUEST['roomName']);
     $userID=$_REQUEST['userID'];
     $gotData = (object) null;
     $gotData->error=false;
@@ -221,9 +221,9 @@ if(isset($_REQUEST['action'])){
     }
   }else if($action=="1" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName']) && isset($_REQUEST['hwSeries']) && isset($_REQUEST['hwIP']) && isset($_REQUEST['userID'])){
     $email=$_REQUEST['email'];
-    $homeName=$_REQUEST['homeName'];
-    $roomName=$_REQUEST['roomName'];
-    $hwName=$_REQUEST['hwName'];
+    $homeName=ucfirst($_REQUEST['homeName']);
+    $roomName=ucfirst($_REQUEST['roomName']);
+    $hwName=ucfirst($_REQUEST['hwName']);
     $hwSeries=$_REQUEST['hwSeries'];
     $hwIP=$_REQUEST['hwIP'];
     $userID=$_REQUEST['userID'];
@@ -269,7 +269,7 @@ if(isset($_REQUEST['action'])){
   }
   else if($action=="3" && isset($_REQUEST['email']) && isset($_REQUEST['hwName']) && isset($_REQUEST['hwSeries']) && isset($_REQUEST['hwIP']) && isset($_REQUEST['id'])){
     $email=$_REQUEST['email'];
-    $hwName=$_REQUEST['hwName'];
+    $hwName=ucfirst($_REQUEST['hwName']);
     $hwSeries=$_REQUEST['hwSeries'];
     $hwIP=$_REQUEST['hwIP'];
     $id=$_REQUEST['id'];
@@ -291,8 +291,8 @@ if(isset($_REQUEST['action'])){
   }else if($action=="4" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['userID']))
   {
     $email=$_REQUEST['email'];
-    $homeName=$_REQUEST['homeName'];
-    $roomName=$_REQUEST['roomName'];
+    $homeName=ucfirst($_REQUEST['homeName']);
+    $roomName=ucfirst($_REQUEST['roomName']);
     $userID=$_REQUEST['userID'];
     $gotData = (object) null;
     $gotData->error=false;
@@ -331,5 +331,11 @@ if(isset($_REQUEST['action'])){
     $gotData->errorMessage="Please, try again after few minutes!";
     echo json_encode($gotData);
   }
+}else{
+  $gotData = (object) null;
+  $gotData->error=true;
+  $gotData->errorMessage="Please, try again after few minutes!";
+  echo json_encode($gotData);
+  exit();
 }
 ?>

@@ -32,6 +32,7 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
           $rootScope.device = "";
         } else {
           $rootScope.device = data.user;
+          $rootScope.deviceImg = data.user.deviceImg;
           $rootScope.deviceSlider = data.user.deviceSlider;
           $scope.deviceStatus = $rootScope.device.dvStatus;
           if ($rootScope.deviceSlider != "null") {
@@ -80,6 +81,7 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
           $rootScope.device = "";
         } else {
           $rootScope.device = data.user;
+          $rootScope.deviceImg = data.deviceImg;
           $rootScope.deviceSlider = data.user.deviceSlider;
           $scope.deviceStatus = $rootScope.device.dvStatus;
           if ($rootScope.deviceSlider != "null") {
@@ -144,7 +146,7 @@ myApp.directive("sliderDir", function($rootScope, $http) {
     require: 'ngModel',
     link: function(scope, element, attr, mCtrl) {
       function myValidation(val) {
-        if (typeof val == 'undefined' || val == null || val < 0 || val > 5) {
+        if (typeof val == 'undefined' || val == null || val < 0 || val > $rootScope.deviceImg.maxVal) {
           mCtrl.$setValidity('sliderValid', false);
         } else {
           mCtrl.$setValidity('sliderValid', true);

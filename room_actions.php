@@ -1,5 +1,6 @@
 <?php
 require_once("config.php");
+require_once("user_data.php");
 require_once("home_data.php");
 function getUserID($gotData)
 {
@@ -29,10 +30,32 @@ function checkHomeID($gotData)
   $gotData->errorMessage="You do not have home in OUR app.";
   return $gotData;
 }
+function roomExistsInAnotherHome($gotData,$ignoreID){
+    $userID=$gotData->user->userID;
+    $roomName=$gotData->user->room->roomName;
+    $sql="SELECT * FROM room WHERE roomname='$roomName' AND uid='$userID' AND id!='$ignoreID'";
+    $result=mysqli_query($gotData->con,$sql);
+    if($result){
+        if(mysqli_num_rows($result)!=0){
+            $row=mysqli_fetch_array($result);
+            $homeID=$row['hid'];
+            $home=getHomeDataUsingID($gotData->con,$userID,$homeID);
+            $gotData->error=true;
+            $gotData->errorMessage="$roomName exists in $home->homeName Home";
+        }
+        return $gotData;
+    }
+    $gotData->error=true;
+    $gotData->errorMessage="Try again!";
+    return $gotData;
+}
 function createRoom($gotData){
-  $gotData=getUserID($gotData);
+  $u=getUserDataUsingEmail($gotData->con,$gotData->user->email);
+  if($u->error) return $u;
+  $userID=$u->id;
+  $gotData->user->userID=$userID;
+  $gotData=roomExistsInAnotherHome($gotData,null);
   if($gotData->error) return $gotData;
-  $userID=$gotData->user->userID;
   $roomName=$gotData->user->room->roomName;
   $homeID=$gotData->user->room->homeID;
   $sql="INSERT INTO room(uid,hid,roomname) VALUES('$userID','$homeID','$roomName')";
@@ -79,10 +102,14 @@ function deleteRoom($gotData){
   return $gotData;
 }
 function renameRoom($gotData){
-  $gotData=getUserID($gotData);
+  $u=getUserDataUsingEmail($gotData->con,$gotData->user->email);
+  if($u->error) return $u;
+  $userID=$u->id;
+  $id=$gotData->user->room->id;
+  $gotData->user->userID=$userID;
+  $gotData=roomExistsInAnotherHome($gotData,$id);
   if($gotData->error) return $gotData;
   $roomName=$gotData->user->room->roomName;
-  $id=$gotData->user->room->id;
   $sql="UPDATE room SET roomname='$roomName' where id='$id'";
   $result=mysqli_query($gotData->con,$sql);
   if($result && (mysqli_affected_rows($gotData->con)==1))
@@ -166,7 +193,7 @@ if(isset($_REQUEST['action'])){
   $action=$_REQUEST['action'];
   if($action=="0" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['userID']))
   {
-    $homeName=$_REQUEST['homeName'];
+    $homeName=ucfirst($_REQUEST['homeName']);
     $email=$_REQUEST['email'];
     $userID=$_REQUEST['userID'];
     $gotData = (object) null;
@@ -175,7 +202,7 @@ if(isset($_REQUEST['action'])){
     $gotData->errorMessage="null";
     $gotData->con=$con;
     $gotData->user->email=$email;
-    $gotData->user->homeName=$homeName;
+    $gotData->user->homeName=ucfirst($homeName);
     $h=getHomeDataUsingName($gotData->con,$userID,$homeName);
     if($h->error){
       echo json_encode($h);
@@ -189,8 +216,8 @@ if(isset($_REQUEST['action'])){
   else if($action=="1" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['userID']))
     {
       $email=$_REQUEST['email'];
-      $roomName=$_REQUEST['roomName'];
-      $homeName=$_REQUEST['homeName'];
+      $roomName=ucfirst($_REQUEST['roomName']);
+      $homeName=ucfirst($_REQUEST['homeName']);
       $userID=$_REQUEST['userID'];
       $gotData = (object) null;
       $gotData->user=(object) null;
@@ -198,10 +225,10 @@ if(isset($_REQUEST['action'])){
       $gotData->error=false;
       $gotData->errorMessage="null";
       $gotData->con=$con;
-      $gotData->user->room->homeName=$homeName;
+      $gotData->user->room->homeName=ucfirst($homeName);
       $gotData->user->email=$email;
       $gotData->user->room->email=$email;
-      $gotData->user->room->roomName=$roomName;
+      $gotData->user->room->roomName=ucfirst($roomName);
       $gotData->user->room->action=$action;
       $h=getHomeDataUsingName($gotData->con,$userID,$homeName);
       if($h->error){
@@ -229,7 +256,7 @@ if(isset($_REQUEST['action'])){
       echo json_encode($gotData);
     }else if($action=="3" && isset($_REQUEST['email']) && isset($_REQUEST['id']) && isset($_REQUEST['roomName'])){
       $email=$_REQUEST['email'];
-      $roomName=$_REQUEST['roomName'];
+      $roomName=ucfirst($_REQUEST['roomName']);
       $id=$_REQUEST['id'];
       $gotData = (object) null;
       $gotData->user=(object) null;
@@ -240,13 +267,13 @@ if(isset($_REQUEST['action'])){
       $gotData->user->room->id=$id;
       $gotData->user->email=$email;
       $gotData->user->room->email=$email;
-      $gotData->user->room->roomName=$roomName;
+      $gotData->user->room->roomName=ucfirst($roomName);
       $gotData->user->room->action=$action;
       $gotData=renameRoom($gotData);
       echo json_encode($gotData);
     }else if($action=="4" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['userID']))
     {
-      $homeName=$_REQUEST['homeName'];
+      $homeName=ucfirst($_REQUEST['homeName']);
       $email=$_REQUEST['email'];
       $userID=$_REQUEST['userID'];
       $gotData = (object) null;
@@ -255,7 +282,7 @@ if(isset($_REQUEST['action'])){
       $gotData->errorMessage="null";
       $gotData->con=$con;
       $gotData->user->email=$email;
-      $gotData->user->homeName=$homeName;
+      $gotData->user->homeName=ucfirst($homeName);
       $h=getHomeDataUsingName($gotData->con,$userID,$homeName);
       if($h->error){
         echo json_encode($h);
@@ -271,5 +298,11 @@ if(isset($_REQUEST['action'])){
       $gotData->errorMessage="Please, try again after few minutes!";
       echo json_encode($gotData);
     }
+}else{
+  $gotData = (object) null;
+  $gotData->error=true;
+  $gotData->errorMessage="Please, try again after few minutes!";
+  echo json_encode($gotData);
+  exit();
 }
 ?>

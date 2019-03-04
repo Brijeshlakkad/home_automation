@@ -130,6 +130,23 @@ function getDvImgValue($con,$dvImg){
     return $dvImg;
   }
 }
+function getDeviceImg($con,$dvImg){
+  $sql="SELECT * FROM device WHERE image='$dvImg'";
+  $check=mysqli_query($con,$sql);
+  if($check && (mysqli_num_rows($check)>0))
+  {
+    $row=mysqli_fetch_array($check);
+    $key=$row['image'];
+    $value=$row['name'];
+    $maxVal=$row['max_val'];
+    $deviceImg=(object) null;
+    $deviceImg->key=$key;
+    $deviceImg->value=$value;
+    $deviceImg->maxVal=$maxVal;
+    return $deviceImg;
+  }
+  return null;
+}
 function getDeviceData($gotData){
   $gotData=getUserID($gotData);
   if($gotData->error) return $gotData;
@@ -204,7 +221,10 @@ function getDeviceList($gotData){
       $dvImg=$row['device_image'];
       $dvStatus=$row['status'];
       $id=$row['id'];
+      $deviceImg=getDeviceImg($gotData->con,$dvImg);
       $gotData->user->device[$i]=(object) null;
+      $gotData->user->device[$i]->deviceImg=(object) null;
+      $gotData->user->device[$i]->deviceImg=$deviceImg;
       $gotData->user->device[$i]->dvName=$dvName;
       $gotData->user->device[$i]->dvPort=$dvPort;
       $gotData->user->device[$i]->dvImg=$dvImg;
@@ -251,6 +271,8 @@ function getDevice($gotData){
     $hwID=$row['hw_id'];
     $id=$row['id'];
     $gotData->error=false;
+    $deviceImg=getDeviceImg($gotData->con,$dvImg);
+    $gotData->user->deviceImg=$deviceImg;
     $gotData->user->dvName=$dvName;
     $gotData->user->dvPort=$dvPort;
     $gotData->user->dvImg=$dvImg;
@@ -393,9 +415,9 @@ if(isset($_REQUEST['action'])){
   if($action=="0" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName']) && isset($_REQUEST['userID']))
   {
     $email=$_REQUEST['email'];
-    $hwName=$_REQUEST['hwName'];
-    $roomName=$_REQUEST['roomName'];
-    $homeName=$_REQUEST['homeName'];
+    $hwName=ucfirst($_REQUEST['hwName']);
+    $roomName=ucfirst($_REQUEST['roomName']);
+    $homeName=ucfirst($_REQUEST['homeName']);
     $userID=$_REQUEST['userID'];
     $gotData = (object) null;
     $gotData->error=false;
@@ -422,10 +444,10 @@ if(isset($_REQUEST['action'])){
     }
   }else if($action=="1" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName']) && isset($_REQUEST['dvName']) && isset($_REQUEST['dvPort']) && isset($_REQUEST['dvImg']) && isset($_REQUEST['userID'])){
     $email=$_REQUEST['email'];
-    $homeName=$_REQUEST['homeName'];
-    $roomName=$_REQUEST['roomName'];
-    $hwName=$_REQUEST['hwName'];
-    $dvName=$_REQUEST['dvName'];
+    $homeName=ucfirst($_REQUEST['homeName']);
+    $roomName=ucfirst($_REQUEST['roomName']);
+    $hwName=ucfirst($_REQUEST['hwName']);
+    $dvName=ucfirst($_REQUEST['dvName']);
     $dvPort=$_REQUEST['dvPort'];
     $dvImg=$_REQUEST['dvImg'];
     $userID=$_REQUEST['userID'];
@@ -475,7 +497,7 @@ if(isset($_REQUEST['action'])){
   }
   else if($action=="3" && isset($_REQUEST['email']) && isset($_REQUEST['dvName']) && isset($_REQUEST['dvPort']) && isset($_REQUEST['dvImg']) && isset($_REQUEST['id'])){
     $email=$_REQUEST['email'];
-    $dvName=$_REQUEST['dvName'];
+    $dvName=ucfirst($_REQUEST['dvName']);
     $dvPort=$_REQUEST['dvPort'];
     $dvImg=$_REQUEST['dvImg'];
     $id=$_REQUEST['id'];
@@ -506,10 +528,10 @@ if(isset($_REQUEST['action'])){
   }
   else if($action=="5" && isset($_REQUEST['email']) && isset($_REQUEST['deviceName']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName']) && isset($_REQUEST['userID'])){
     $email=$_REQUEST['email'];
-    $homeName=$_REQUEST['homeName'];
-    $roomName=$_REQUEST['roomName'];
-    $hwName=$_REQUEST['hwName'];
-    $deviceName=$_REQUEST['deviceName'];
+    $homeName=ucfirst($_REQUEST['homeName']);
+    $roomName=ucfirst($_REQUEST['roomName']);
+    $hwName=ucfirst($_REQUEST['hwName']);
+    $deviceName=ucfirst($_REQUEST['deviceName']);
     $userID=$_REQUEST['userID'];
     $gotData = (object) null;
     $gotData->error=false;
@@ -529,10 +551,10 @@ if(isset($_REQUEST['action'])){
   }
   else if($action=="6" && isset($_REQUEST['email']) && isset($_REQUEST['deviceName']) && isset($_REQUEST['status']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName']) && isset($_REQUEST['userID'])){
     $email=$_REQUEST['email'];
-    $homeName=$_REQUEST['homeName'];
-    $roomName=$_REQUEST['roomName'];
-    $hwName=$_REQUEST['hwName'];
-    $deviceName=$_REQUEST['deviceName'];
+    $homeName=ucfirst($_REQUEST['homeName']);
+    $roomName=ucfirst($_REQUEST['roomName']);
+    $hwName=ucfirst($_REQUEST['hwName']);
+    $deviceName=ucfirst($_REQUEST['deviceName']);
     $status=$_REQUEST['status'];
     $userID=$_REQUEST['userID'];
     $gotData = (object) null;
@@ -554,9 +576,9 @@ if(isset($_REQUEST['action'])){
   }
   else if($action=="7" && isset($_REQUEST['email']) && isset($_REQUEST['deviceName']) & isset($_REQUEST['value']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName'])){
     $email=$_REQUEST['email'];
-    $homeName=$_REQUEST['homeName'];
-    $roomName=$_REQUEST['roomName'];
-    $hwName=$_REQUEST['hwName'];
+    $homeName=ucfirst($_REQUEST['homeName']);
+    $roomName=ucfirst($_REQUEST['roomName']);
+    $hwName=ucfirst($_REQUEST['hwName']);
     $deviceName=$_REQUEST['deviceName'];
     $userID=$_REQUEST['userID'];
     $value=$_REQUEST['value'];
@@ -581,9 +603,9 @@ if(isset($_REQUEST['action'])){
   }else if($action=="8" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName']) && isset($_REQUEST['userID']))
   {
     $email=$_REQUEST['email'];
-    $hwName=$_REQUEST['hwName'];
-    $roomName=$_REQUEST['roomName'];
-    $homeName=$_REQUEST['homeName'];
+    $hwName=ucfirst($_REQUEST['hwName']);
+    $roomName=ucfirst($_REQUEST['roomName']);
+    $homeName=ucfirst($_REQUEST['homeName']);
     $userID=$_REQUEST['userID'];
     $gotData = (object) null;
     $gotData->error=false;
@@ -591,9 +613,9 @@ if(isset($_REQUEST['action'])){
     $gotData->user=(object) null;
     $gotData->con=$con;
     $gotData->user->email=$email;
-    $gotData->user->homeName=$homeName;
-    $gotData->user->roomName=$roomName;
-    $gotData->user->hwName=$hwName;
+    $gotData->user->homeName=ucfirst($homeName);
+    $gotData->user->roomName=ucfirst($roomName);
+    $gotData->user->hwName=ucfirst($hwName);
     $gotData->user->action=$action;
     $hw=getHardwareDataUsingName($gotData->con,$userID,$hwName,$roomName,$homeName);
     if($hw->error){
@@ -614,5 +636,11 @@ if(isset($_REQUEST['action'])){
     $gotData->errorMessage="Please, try again after few minutes!";
     echo json_encode($gotData);
   }
+}else{
+  $gotData = (object) null;
+  $gotData->error=true;
+  $gotData->errorMessage="Please, try again after few minutes!";
+  echo json_encode($gotData);
+  exit();
 }
 ?>

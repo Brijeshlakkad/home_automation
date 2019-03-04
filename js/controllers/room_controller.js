@@ -54,7 +54,7 @@ myApp.controller("RoomController", function($rootScope, $scope, $http, $window, 
 
     });
   };
-  
+
   $scope.getAllRoom = function() {
     $rootScope.body.addClass("loading");
     $http({
@@ -166,10 +166,10 @@ myApp.directive("roomNameDir", function($rootScope, $http) {
     link: function(scope, element, attr, mCtrl) {
       function myValidation(value) {
         mCtrl.$setValidity('roomNameExistsValid', true);
-        var pattRoom = /^[a-zA-Z0-9]+$/;
+        var pattRoom = /^([a-zA-Z]+)([0-9]*)$/;
         var i, flag = 0;
         var len = $rootScope.roomList.length;
-        if (pattRoom.test(value) && value.length > 3) {
+        if (pattRoom.test(value) && (value.length > 2 || value.length <= 8)) {
           mCtrl.$setValidity('roomNameValid', true);
           mCtrl.$setValidity('roomNameLenValid', true);
           for (i = 0; i < len; i++) {
@@ -190,14 +190,14 @@ myApp.directive("roomNameDir", function($rootScope, $http) {
               "border-bottom-color": 'green'
             });
           }
-        } else if (!pattHome.test(value) && value.length > 3) {
+        } else if (!pattHome.test(value) && (value.length > 2 || value.length <= 8)) {
           mCtrl.$setValidity('roomNameValid', false);
           mCtrl.$setValidity('roomNameLenValid', true);
           element.css({
             "border-bottom-width": "1.45px",
             "border-bottom-color": 'red'
           });
-        } else if (pattHome.test(value) && value.length <= 3) {
+        } else if (pattHome.test(value) && (value.length <= 2 || value.length > 8)) {
           mCtrl.$setValidity('roomNameValid', true);
           mCtrl.$setValidity('roomNameLenValid', false);
           element.css({
