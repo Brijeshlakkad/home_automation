@@ -3,7 +3,7 @@ myApp.controller("DealerLoginController", function($rootScope, $scope, $http, $w
     if($localStorage.userType=="customer"){
       $window.location.href = "#!customer/home";
     }else if($localStorage.userType=="dealer"){
-      $window.location.href = "#!dealer/home";
+      $window.location.href = "#!dealer_distributor/home";
     }else if($localStorage.userType=="admin"){
       $window.location.href = "#!admin/home";
     }
@@ -22,7 +22,7 @@ myApp.controller("DealerLoginController", function($rootScope, $scope, $http, $w
   $scope.login_status = function() {
     $http({
       method: "POST",
-      url: "dealer/login_data.php",
+      url: "dealer_distributor/login_data.php",
       data: "email=" + $scope.l_email + "&password=" + $scope.l_password,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'

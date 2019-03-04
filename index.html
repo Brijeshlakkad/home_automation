@@ -337,14 +337,16 @@
       }).when('/customer/subscription', {
         templateUrl: 'subscription.html',
         controller: 'SubscriptionController'
-      }).when('/dealer/login', {
-        templateUrl: 'dealer/dealer_login.html',
+      }).when('/dealer_distributor/login', {
+        templateUrl: 'dealer_distributor/login.html',
         controller: 'DealerLoginController'
-      }).when('/dealer/signup', {
-        templateUrl: 'dealer/dealer_signup.html',
+      }).when('/dealer_distributor/signup', {
+        templateUrl: 'dealer_distributor/signup.html',
         controller: 'DealerSignupController'
-      }).when('/dealer/forget_password', {
-        templateUrl: 'dealer/forget_password.html'
+      }).when('/dealer_distributor/forget_password', {
+        templateUrl: 'dealer_distributor/forget_password.html'
+      }).when('/dealer_distributor/home', {
+        templateUrl: 'dealer_distributor/home.html'
       }).when('/admin/login', {
         templateUrl: 'admin/admin_login.html',
         controller: 'AdminLoginController'
@@ -382,8 +384,8 @@
   <script src="js/controllers/settings_controller.js"></script>
   <script src="js/controllers/subscription_controller.js"></script>
   <script src="js/controllers/device_status_controller.js"></script>
-  <script src="js/controllers/dealer/dealer_login_controller.js"></script>
-  <script src="js/controllers/dealer/dealer_signup_controller.js"></script>
+  <script src="js/controllers/dealer_distributor/dealer_login_controller.js"></script>
+  <script src="js/controllers/dealer_distributor/dealer_signup_controller.js"></script>
   <script src="js/controllers/admin/admin_login_controller.js"></script>
   <script src="js/controllers/admin/admin_home_controller.js"></script>
   <script src="js/controllers/admin/create_product_controller.js"></script>

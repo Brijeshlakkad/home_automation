@@ -17,7 +17,7 @@ function check_user($gotData){
     }
     $gotData->user->userID=$u->id;
     $gotData->user->userType=$u->type;
-    $gotData->user->location="#!/dealer/home";
+    $gotData->user->location="#!/dealer_distributor/home";
     return $gotData;
   }
   $gotData->error=true;

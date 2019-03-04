@@ -3,7 +3,7 @@ myApp.controller("DealerSignupController", function($scope, $http, $window, $ocL
     if($localStorage.userType=="customer"){
       $window.location.href = "#!customer/home";
     }else if($localStorage.userType=="dealer"){
-      $window.location.href = "#!dealer/home";
+      $window.location.href = "#!dealer_distributor/home";
     }else if($localStorage.userType=="admin"){
       $window.location.href = "#!admin/home";
     }
@@ -22,7 +22,7 @@ myApp.controller("DealerSignupController", function($scope, $http, $window, $ocL
   $scope.signup_status = function() {
     $http({
       method: "POST",
-      url: "dealer/signup_data.php",
+      url: "dealer_distributor/signup_data.php",
       data: "email=" + $scope.s_email + "&password=" + $scope.s_password + "&name=" + $scope.s_name + "&address=" + $scope.s_address + "&city=" + $scope.s_city + "&contact=" + $scope.s_contact + "&type=" + $scope.s_type.key,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
