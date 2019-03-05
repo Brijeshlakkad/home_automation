@@ -3,6 +3,7 @@ myApp.controller("userController", function($rootScope, $scope, $localStorage, $
   $scope.index = ['/customer', '/customer/login', '/customer/register', '/dealer/login', '/dealer/signup', '/customer/forget_password', '/dealer/forget_password', '/admin/login'];
   $scope.path = 0;
   var i;
+  $rootScope.isLoggedIn=false;
   for (i = 0; i < $scope.index.length; i++) {
     if ($location.path() == $scope.index[i]) {
       $scope.path = 1;
