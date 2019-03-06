@@ -1,6 +1,6 @@
 <?php
 include_once('../config.php');
-include_once('../dealer/dealer_data.php');
+include_once('../dealer_distributor/dealer_data.php');
 function getAllProducts($gotData){
   $sql="SELECT * FROM product";
   $check=mysqli_query($gotData->con,$sql);

@@ -20,7 +20,6 @@ myApp.controller("DealerProductSerialsController", function($rootScope, $scope, 
     }).then(function mySuccess(response) {
       $rootScope.body.addClass("loading");
       var data = response.data;
-      alert(JSON.stringify(data));
       if (!data.error) {
         if (data.d.productSerialRows > 0) {
           $scope.productSerialArray = data.d.productSerial;

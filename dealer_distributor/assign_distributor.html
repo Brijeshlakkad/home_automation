@@ -1,0 +1,113 @@
+<!-- Mobile Menu start -->
+<div class="mobile-menu-area">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="mobile-menu">
+          <nav id="dropdown">
+            <ul class="mobile-menu-nav">
+              <li><a href="#!dealer_distributor/home">Home</a></li>
+              <li ng-if="userType=='dealer'"><a href="#!dealer_distributor/distributor">Assign Distributor</a></li>
+              <li><a href="#!dealer_distributor/customer">Assign Customer</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Mobile Menu end -->
+<!-- Main Menu area start-->
+<div class="main-menu-area mg-tb-40">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
+          <li><a href="#!dealer_distributor/home" data-toggle="tab"><i class="notika-icon notika-house"></i> Home</a>
+          </li>
+          <li ng-if="userType=='dealer'" class="active"><a href="#!dealer_distributor/distributor" data-toggle="tab">Assign Distributor</a>
+          </li>
+          <li><a href="#!dealer_distributor/customer">Customer</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Main Menu area End-->
+<div class="container">
+  <div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-0">
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+      <form name="assignDistributorForm" novalidate>
+        <div class="row">
+          <div class="row">
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+              <div class="input-group">
+                <div class="input-group-addon">
+                  <span>Add Dealer Email: </span>
+                </div>
+                <input class="form-control" type="email" name="distributorEmail" ng-model="distributorEmail" ng-required="true" distributor-email-exists-dir />
+                <div class="input-group-addon" ng-show="assignDistributorForm.distributorEmail.$dirty && assignDistributorForm.distributorEmail.$invalid" ng-bind-html="inputNotValid">
+                </div>
+                <div class="input-group-addon" ng-show="assignDistributorForm.distributorEmail.$dirty && !assignDistributorForm.distributorEmail.$invalid" ng-bind-html="inputValid">
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+              <span style="margin-top:10px;font-size:20px;" ng-show="assignDistributorForm.distributorEmail.$dirty && !assignDistributorForm.distributorEmail.$invalid">{{distributorName}}</span>
+            </div>
+          </div>
+          <span style="color:red;" ng-show="assignDistributorForm.distributorEmail.$dirty && assignDistributorForm.distributorEmail.$invalid">
+            <span ng-show="assignDistributorForm.distributorEmail.$error.required">Distributor Email ID is required</span>
+            <span ng-show="!assignDistributorForm.distributorEmail.$error.required && assignDistributorForm.distributorEmail.$error.email">Distributor Email ID is not correct</span>
+            <span ng-show="assignDistributorForm.distributorEmail.$error.distributorEmailExists">Distributor Email ID is not registered.</span>
+          </span>
+        </div>
+        <br />
+        <div class="row" ng-if="showBlock2">
+          <div class="input-group">
+            <div class="input-group-addon">
+              <span>Select Prodcut: </span>
+            </div>
+            <select class="form-control" ng-model="selectedProduct" name="selectedProduct" ng-options="option.name for option in productList track by option.name" ng-change="changedProductSelected(selectedProduct)" ng-style="selectProductStyle"
+              ng-required="true"></select>
+            <div class="input-group-addon" ng-show="assignDistributorForm.selectedProduct.$invalid" ng-bind-html="inputNotValid">
+            </div>
+            <div class="input-group-addon" ng-show="!assignDistributorForm.selectedProduct.$invalid" ng-bind-html="inputValid">
+            </div>
+          </div>
+          <span style="color:red;" ng-show="assignDistributorForm.selectedProduct.$dirty && assignDistributorForm.selectedProduct.$invalid">
+            <span ng-show="assignDistributorForm.selectedProduct.$error.required">Product selection is required</span>
+          </span>
+        </div>
+        <br />
+        <div class="row" ng-if="showBlock3 && maxNumProductSerials==0" style="color:rgba(236,95,26,1)">
+          All product serials for {{product.name}} has been used.
+        </div>
+        <div class="row" ng-if="showBlock3 && maxNumProductSerials!=0">
+          <div class="input-group">
+            <div class="input-group-addon">
+              <span>Number to sell: </span>
+            </div>
+            <input class="form-control" type="number" name="numProductSerials" min="{{minNumProductSerials}}" max="{{maxNumProductSerials}}" step="1" ng-model="numProductSerials" ng-required="true" range-number-dir />
+            <div class="input-group-addon" ng-show="assignDistributorForm.numProductSerials.$dirty && assignDistributorForm.numProductSerials.$invalid" ng-bind-html="inputNotValid">
+            </div>
+            <div class="input-group-addon" ng-show="assignDistributorForm.numProductSerials.$dirty && !assignDistributorForm.numProductSerials.$invalid" ng-bind-html="inputValid">
+            </div>
+          </div>
+          <span style="color:red;" ng-show="assignDistributorForm.numProductSerials.$dirty && assignDistributorForm.numProductSerials.$invalid">
+            <span ng-show="assignDistributorForm.numProductSerials.$error.required">Please specify number of serial for product</span>
+            <span ng-show="!assignDistributorForm.numProductSerials.$error.required && assignDistributorForm.numProductSerials.$error.rangeNumberValid">Please specify number between from {{minNumProductSerials-1}} to {{maxNumProductSerials}}</span>
+          </span>
+          <div style="margin:20px;">
+            <button class="btn btn-primary" type="submit" ng-click="assignProductSerial(distributorEmail,selectedProduct.id,numProductSerials)" ng-disabled="assignDistributorForm.distributorEmail.$invalid || assignDistributorForm.selectedProduct.$invalid || assignDistributorForm.numProductSerials.$invalid">Assign</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-0">
+    </div>
+  </div>
+</div>

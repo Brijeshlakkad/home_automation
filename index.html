@@ -351,6 +351,9 @@
       }).when('/dealer_distributor/home/:productName', {
         templateUrl: 'dealer_distributor/assigned_product_serials.html',
         controller: 'DealerProductSerialsController'
+      }).when('/dealer_distributor/distributor', {
+        templateUrl: 'dealer_distributor/assign_distributor.html',
+        controller: 'AssignDistributorController'
       }).when('/admin/login', {
         templateUrl: 'admin/admin_login.html',
         controller: 'AdminLoginController'
@@ -392,6 +395,7 @@
   <script src="js/controllers/dealer_distributor/dealer_signup_controller.js"></script>
   <script src="js/controllers/dealer_distributor/dealer_home_controller.js"></script>
   <script src="js/controllers/dealer_distributor/dealer_product_serials_controller.js"></script>
+  <script src="js/controllers/dealer_distributor/assign_distributor_controller.js"></script>
   <script src="js/controllers/admin/admin_login_controller.js"></script>
   <script src="js/controllers/admin/admin_home_controller.js"></script>
   <script src="js/controllers/admin/create_product_controller.js"></script>
@@ -399,5 +403,4 @@
   <script src="js/controllers/admin/product_serial_controller.js"></script>
   <script src="js/controllers/admin/assign_dealer_controller.js"></script>
 </body>
-
 </html>
