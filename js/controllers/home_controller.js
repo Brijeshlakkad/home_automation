@@ -2,6 +2,7 @@ myApp.controller("HomeController", function($rootScope, $scope, $http, $window, 
   $ocLazyLoad.load('js/meanmenu/jquery.meanmenu.js');
   $scope.user = $rootScope.$storage.user;
   $scope.userID = $rootScope.$storage.userID;
+  $scope.userType = $rootScope.$storage.userType;
   $scope.showAddHome = false;
   $scope.homeReName = "";
   $scope.beforeHomeName = "";

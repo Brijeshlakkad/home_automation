@@ -10,10 +10,7 @@ myApp.controller("userController", function($rootScope, $scope, $localStorage, $
     }
   }
   if ($localStorage.userID == null || $localStorage.user == null || $localStorage.userType == null) {
-    $rootScope.isLoggedIn = false;
-    if ($scope.path != 1) {
-      $window.location.href = "#!/";
-    }
+    $rootScope.logout();
   } else {
     $rootScope.isLoggedIn = true;
   }
@@ -41,4 +38,15 @@ myApp.controller("userController", function($rootScope, $scope, $localStorage, $
   };
   $rootScope.inputNotValid=$sce.trustAsHtml("<span style='color:red;'><i class='glyphicon glyphicon-remove'></i></span>");
   $rootScope.inputValid=$sce.trustAsHtml("<span style='color:green;'><i class='glyphicon glyphicon-ok'></i></span>");
+  $scope.noProduct="No Products";
+  $scope.noProductSerial="No Product Serial";
+});
+myApp.directive('showNothing', function() {
+  return {
+    restrict: 'E',
+    scope: {
+      nothing: '=stringb',
+    },
+    templateUrl: 'show_nothing.html'
+  };
 });

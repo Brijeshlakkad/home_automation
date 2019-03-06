@@ -6,17 +6,9 @@
         <div class="mobile-menu">
           <nav id="dropdown">
             <ul class="mobile-menu-nav">
-              <li><a data-toggle="collapse" data-target="#Charts" href="#!admin/home">Home</a>
-                <ul class="collapse dropdown-header-top">
-                  <li><a href="#!admin/home">View Products</a>
-                  </li>
-                  <li><a href="#!admin/create_product">Add Product</a>
-                  </li>
-                </ul>
-              </li>
-              <li><a href="#!admin/dealer">Assign Dealer</a>
-              <li><a href="#!admin/settings">Settings</a>
-              </li>
+              <li><a href="#!dealer_distributor/home">Home</a></li>
+              <li ng-if="userType=='dealer'"><a href="#!dealer_distributor/distributor">Assign Distributor</a></li>
+              <li><a href="#!dealer_distributor/customer">Assign Customer</a></li>
             </ul>
           </nav>
         </div>
@@ -31,23 +23,13 @@
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
-          <li class="active"><a href="#!admin/home" data-toggle="tab"><i class="notika-icon notika-house"></i> Home</a>
+          <li class="active"><a href="#!dealer_distributor/home" data-toggle="tab"><i class="notika-icon notika-house"></i> Home</a>
           </li>
-          <li><a href="#!admin/dealer" data-toggle="tab"><i class="glyphicon glyphicon-user"></i> Assign Dealer</a>
+          <li ng-if="userType=='dealer'"><a href="#!dealer_distributor/distributor" data-toggle="tab">Assign Distributor</a>
           </li>
-          <li><a href="#!admin/settings"><i class="notika-icon notika-settings"></i> Settings</a>
+          <li><a href="#!dealer_distributor/customer">Customer</a>
           </li>
         </ul>
-        <div class="tab-content custom-menu-content">
-          <div id="Home" class="tab-pane active in notika-tab-menu-bg animated flipInX">
-            <ul class="notika-main-menu-dropdown">
-              <li><a href="#!admin/home">View Products</a>
-              </li>
-              <li><a href="#!admin/create_product">Add Product</a>
-              </li>
-            </ul>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -55,7 +37,8 @@
 <!-- Main Menu area End-->
 <div class="container">
   <div class="row">
-    <div ng-if="productArray.length==0" ng-bind-html="showNothing">
+    <div ng-if="productArray.length==0">
+      <show-nothing stringb="noProduct"></show-nothing>
     </div>
     <div ng-if="productArray.length>0">
       <div class="data-table-area">
@@ -78,12 +61,10 @@
                         <th>Taxation</th>
                         <th>Hashcode</th>
                         <th>Qty Name</th>
-                        <th>Edit</th>
-                        <th>Add</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr ng-repeat="product in productArray track by $id(product)">
+                      <tr ng-repeat="product in productArray track by $id(product)" ng-click="goToProduct(product.name)" style="cursor:pointer;">
                         <td>
                           {{$index+1}}
                         </td>
@@ -108,13 +89,6 @@
                         <td>
                           {{product.qty_name}}
                         </td>
-                        <td>
-                          <a class="btn btn-primary" href="#!admin/product/{{product.name}}"><span class="glyphicon glyphicon-pencil"></span></a>
-                          <!-- <a class="btn btn-danger" ng-click="deleteProduct(product.name)"><span class="glyphicon glyphicon-trash"></span></a> -->
-                        </td>
-                        <td>
-                          <a class="btn btn-default" href="#!admin/home/{{product.name}}"><span class="glyphicon glyphicon-plus"></span></a>
-                        </td>
                       </tr>
                     </tbody>
                     <tfoot>
@@ -127,8 +101,6 @@
                         <th>Taxation</th>
                         <th>Hashcode</th>
                         <th>Qty Name</th>
-                        <th>Edit</th>
-                        <th>Add</th>
                       </tr>
                     </tfoot>
                   </table>

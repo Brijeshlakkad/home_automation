@@ -346,7 +346,11 @@
       }).when('/dealer_distributor/forget_password', {
         templateUrl: 'dealer_distributor/forget_password.html'
       }).when('/dealer_distributor/home', {
-        templateUrl: 'dealer_distributor/home.html'
+        templateUrl: 'dealer_distributor/dealer_home.html',
+        controller: 'DealerHomeController'
+      }).when('/dealer_distributor/home/:productName', {
+        templateUrl: 'dealer_distributor/assigned_product_serials.html',
+        controller: 'DealerProductSerialsController'
       }).when('/admin/login', {
         templateUrl: 'admin/admin_login.html',
         controller: 'AdminLoginController'
@@ -386,6 +390,8 @@
   <script src="js/controllers/device_status_controller.js"></script>
   <script src="js/controllers/dealer_distributor/dealer_login_controller.js"></script>
   <script src="js/controllers/dealer_distributor/dealer_signup_controller.js"></script>
+  <script src="js/controllers/dealer_distributor/dealer_home_controller.js"></script>
+  <script src="js/controllers/dealer_distributor/dealer_product_serials_controller.js"></script>
   <script src="js/controllers/admin/admin_login_controller.js"></script>
   <script src="js/controllers/admin/admin_home_controller.js"></script>
   <script src="js/controllers/admin/create_product_controller.js"></script>

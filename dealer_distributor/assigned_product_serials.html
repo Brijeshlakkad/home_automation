@@ -1,0 +1,85 @@
+<!-- Mobile Menu start -->
+<div class="mobile-menu-area">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="mobile-menu">
+          <nav id="dropdown">
+            <ul class="mobile-menu-nav">
+              <li><a href="#!dealer_distributor/home">Home</a></li>
+              <li ng-if="userType=='dealer'"><a href="#!dealer_distributor/distributor">Assign Distributor</a></li>
+              <li><a href="#!dealer_distributor/customer">Assign Customer</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Mobile Menu end -->
+<!-- Main Menu area start-->
+<div class="main-menu-area mg-tb-40">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
+          <li class="active"><a href="#!dealer_distributor/home" data-toggle="tab"><i class="notika-icon notika-house"></i> Home</a>
+          </li>
+          <li ng-if="userType=='dealer'"><a href="#!dealer_distributor/distributor" data-toggle="tab">Assign Distributor</a>
+          </li>
+          <li><a href="#!dealer_distributor/customer">Customer</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Main Menu area End-->
+<div class="container">
+  <div class="row">
+    <div ng-if="productSerialArray.length==0">
+      <show-nothing stringb="noPorductSerial"></show-nothing>
+    </div>
+    <div ng-if="productSerialArray.length>0">
+      <div class="data-table-area">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="data-table-list">
+                <div class="basic-tb-hd">
+                  <h2>Product {{productName}}</h2>
+                </div>
+                <div class="table-responsive">
+                  <table id="data-table-basic" class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>index</th>
+                        <th>Product Serial</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="productSerial in productSerialArray track by $id(productSerial)" style="cursor:pointer;">
+                        <td>
+                          {{$index+1}}
+                        </td>
+                        <td>
+                          {{productSerial.serialNo}}
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <th>index</th>
+                        <th>Product Name</th>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
