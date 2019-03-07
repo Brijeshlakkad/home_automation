@@ -10,7 +10,13 @@ myApp.controller("userController", function($rootScope, $scope, $localStorage, $
     }
   }
   if ($localStorage.userID == null || $localStorage.user == null || $localStorage.userType == null) {
-    $rootScope.logout();
+    $localStorage.$reset({
+      userID: null,
+      user: null,
+      userType: null
+    });
+    $window.location.href = "#!/";
+    $rootScope.isLoggedIn = false;
   } else {
     $rootScope.isLoggedIn = true;
   }
