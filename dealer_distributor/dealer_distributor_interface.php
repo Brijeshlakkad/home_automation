@@ -15,7 +15,14 @@ function getUniqueProductIDs($productSerial){
 }
 function getProducts($gotData){
   $id=$gotData->d->id;
-  $gotData->sql="SELECT * FROM product_serial WHERE dealer_id='$id'";
+  $d=getDealerDataUsingID($gotData->con,$id);
+  if($d->error) return $d;
+  $userType=$d->type;
+  if($userType=="dealer"){
+    $gotData->sql="SELECT * FROM product_serial WHERE dealer_id='$id'";
+  }else{
+    $gotData->sql="SELECT * FROM product_serial WHERE distributor_id='$id'";
+  }
   $got=getProductSerialUsingSQL($gotData);
   if($got->error) return $got;
   $k=0;
@@ -68,7 +75,15 @@ function getProductSerialsUsingIDAndName($gotData){
   $p=getProductDataUsingName($gotData->con,$productName);
   if($p->error) return $p;
   $productID=$p->id;
-  $gotData->sql="SELECT * FROM product_serial WHERE dealer_id='$id' AND product_id='$productID'";
+  $d=getDealerDataUsingID($gotData->con,$id);
+  if($d->error) return $d;
+  $userType=$d->type;
+  if($userType=="dealer"){
+    $gotData->sql="SELECT * FROM product_serial WHERE dealer_id='$id' AND product_id='$productID'";
+  }else{
+    $gotData->sql="SELECT * FROM product_serial WHERE distributor_id='$id' AND product_id='$productID'";
+  }
+
   $got=getProductSerialUsingSQL($gotData);
   if($got->error) return $got;
   $gotData->d=$got->d;
@@ -129,7 +144,7 @@ function assignProductSerial($gotData){
       $gotData->user->failed=(object) null;
       while($track<$j){
         $id=$serialIDs[$track];
-        $sql="UPDATE product_serial SET dealer_id='$distributorID' where id='$id'";
+        $sql="UPDATE product_serial SET distributor_id='$distributorID' where id='$id'";
         $check=mysqli_query($gotData->con,$sql);
         if(!$check){
           $gotData->user->failed->error=true;
