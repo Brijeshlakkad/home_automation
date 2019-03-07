@@ -32,14 +32,22 @@ function checkHomeID($gotData)
   return $gotData;
 }
 function createHardware($gotData){
-  $gotData=getUserID($gotData);
-  if($gotData->error) return $gotData;
-  $userID=$gotData->user->userID;
   $homeID=$gotData->user->hw->homeID;
   $roomID=$gotData->user->hw->roomID;
   $hwName=$gotData->user->hw->hwName;
   $hwSeries=$gotData->user->hw->hwSeries;
   $hwIP=$gotData->user->hw->hwIP;
+  $got=(object) null;
+  $got->user=(object) null;
+  $got->user->hwSeries=$hwSeries;
+  $got->con=$gotData->con;
+  $got->isModifying=false;
+  $got->error=false;
+  $got=checkHardwareSeries($got);
+  if($got->error) return $got;
+  $gotData=getUserID($gotData);
+  if($gotData->error) return $gotData;
+  $userID=$gotData->user->userID;
   $sql="INSERT INTO hardware(uid,hid,rid,name,series,ip_value) VALUES('$userID','$homeID','$roomID','$hwName','$hwSeries','$hwIP')";
   $result=mysqli_query($gotData->con,$sql);
   if($result)
@@ -84,6 +92,15 @@ function renameHardware($gotData){
   $hwSeries=$gotData->user->hw->hwSeries;
   $hwIP=$gotData->user->hw->hwIP;
   $id=$gotData->user->hw->id;
+  $got=(object) null;
+  $got->user=(object) null;
+  $got->user->hwSeries=$hwSeries;
+  $got->isModifying=true;
+  $got->user->id=$id;
+  $got->con=$gotData->con;
+  $got->error=false;
+  $got=checkHardwareSeries($got);
+  if($got->error) return $got;
   $sql="UPDATE hardware SET name='$hwName', series='$hwSeries', ip_value='$hwIP' where id='$id'";
   $result=mysqli_query($gotData->con,$sql);
   if($result && (mysqli_affected_rows($gotData->con)==1))
@@ -173,18 +190,30 @@ function getHardwareList($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-
 function checkHardwareSeries($gotData){
   $hwSeries = $gotData->user->hwSeries;
-  $sql="SELECT * FROM product_serial WHERE serial_no='$hwSeries'";
+  $sql="SELECT * FROM product_serial WHERE serial_no='$hwSeries' AND dealer_id!='-99' AND distributor_id!=''";
   $check=mysqli_query($gotData->con,$sql);
   if($check){
-    if(mysqli_num_rows($check)==1){
-      $gotData->user->hwSeriesExists=true;
-      return $gotData;
+    if(mysqli_num_rows($check)==0){
+        $gotData->error=true;
+        $gotData->errorMessage="Hardware series doesn't exist with our record.";
+        return $gotData;
     }
-    $gotData->user->hwSeriesExists=false;
-    return $gotData;
+    if($gotData->isModifying){
+      $id=$gotData->user->id;
+      $sql="SELECT * FROM hardware WHERE series='$hwSeries' AND id!='$id'";
+    }else{
+        $sql="SELECT * FROM hardware WHERE series='$hwSeries'";
+    }
+    $result=mysqli_query($gotData->con,$sql);
+    if($result){
+        if(mysqli_num_rows($result)>0){
+            $gotData->error=true;
+            $gotData->errorMessage="Hardware series has been already used.";
+        }
+        return $gotData;
+    }
   }
   $gotData->error=true;
   $gotData->errorMessage="Try Again!";

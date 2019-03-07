@@ -259,43 +259,17 @@ myApp.directive("hwNameDir", function($rootScope, $http) {
   };
 });
 
-myApp.directive("hwSeriesDir", function($rootScope, $http) {
+myApp.directive("hwSeriesDir", function() {
   return {
     require: 'ngModel',
     link: function(scope, element, attr, mCtrl) {
       function myValidation(value) {
-        mCtrl.$setValidity('hwSeriesExists', true);
         var pattSeries = /^([0-9]{4})([A-Z0-9]{4})([0-9]{4})$/;
         if (pattSeries.test(value)) {
           mCtrl.$setValidity('hwSeriesValid', true);
-          $http({
-            method: "POST",
-            url: "hardware_actions.php",
-            data: "action=5&hwSeries=" + value,
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-            }
-          }).then(function mySuccess(response) {
-            var data = response.data;
-            if (data.user.hwSeriesExists) {
-              mCtrl.$setValidity('hwSeriesExists', true);
-              element.css({
-                "border-bottom-width": "1.45px",
-                "border-bottom-color": 'green'
-              });
-            } else {
-              mCtrl.$setValidity('hwSeriesExists', false);
-              element.css({
-                "border-bottom-width": "1.45px",
-                "border-bottom-color": 'red'
-              });
-            }
-          }, function myError(response) {
-            mCtrl.$setValidity('hwSeriesExists', false);
-            element.css({
-              "border-bottom-width": "1.45px",
-              "border-bottom-color": 'red'
-            });
+          element.css({
+            "border-bottom-width": "1.45px",
+            "border-bottom-color": 'green'
           });
         } else {
           mCtrl.$setValidity('hwSeriesValid', false);
