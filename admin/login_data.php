@@ -3,7 +3,7 @@ require_once("../config.php");
 function check_user($gotData){
   $email=$gotData->user->email;
   $password=$gotData->user->password;
-  if($email=="brijeshlakkad22@gmail.com" && $password="123456bB")
+  if($email=="brijeshlakkad22@gmail.com" && $password=="123456bB")
   {
     $gotData->user->userID="-99";
     $gotData->user->userType="admin";

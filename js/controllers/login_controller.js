@@ -8,7 +8,10 @@ myApp.controller("LoginController", function($rootScope, $scope, $http, $window,
       $window.location.href = "#!admin/home";
     }
   }
-  $ocLazyLoad.load('js/meanmenu/jquery.meanmenu.js');
+  $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js','js/notification/bootstrap-growl.min.js','js/wow.min.js','js/main.js'], {
+    rerun: true,
+    cache: false
+  });
   $scope.passwordStyle = {
     "border-bottom-width": "1.45px"
   };

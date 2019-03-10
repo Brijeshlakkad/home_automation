@@ -1,5 +1,4 @@
 myApp.controller("SignupController", function($scope, $http, $window, $localStorage, $sessionStorage, $ocLazyLoad) {
-  //$ocLazyLoad.load('js/meanmenu/jquery.meanmenu.js');
   if ($localStorage.userID != null && $localStorage.user != null && $localStorage.userType != null) {
     if($localStorage.userType=="customer"){
       $window.location.href = "#!customer/home";
@@ -9,6 +8,10 @@ myApp.controller("SignupController", function($scope, $http, $window, $localStor
       $window.location.href = "#!admin/home";
     }
   }
+  $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js','js/notification/bootstrap-growl.min.js','js/wow.min.js','js/main.js'], {
+    rerun: true,
+    cache: false
+  });
   $scope.signupStatus = "";
   $scope.signup_status = function() {
     $http({

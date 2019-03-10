@@ -1,6 +1,8 @@
 myApp.controller("CreateProductController", function($rootScope, $scope, $http, $window, $sce, $timeout, $cookies, $ocLazyLoad) {
-  $ocLazyLoad.load('js/meanmenu/jquery.meanmenu.js');
-  $ocLazyLoad.load('js/notification/bootstrap-growl.min.js');
+  $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js', 'js/data-table/jquery.dataTables.min.js', 'js/data-table/data-table-act.js', 'js/notification/bootstrap-growl.min.js','js/wow.min.js','js/main.js'], {
+    rerun: true,
+    cache: false
+  });
   $scope.user = $rootScope.$storage.user;
   $scope.userID = $rootScope.$storage.userID;
   $rootScope.dataFrom = undefined;

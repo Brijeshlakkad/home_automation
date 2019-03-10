@@ -1,5 +1,8 @@
 myApp.controller("HardwareController", function($rootScope, $scope, $http, $window, $sce, $timeout, $cookies, $routeParams, $ocLazyLoad) {
-  $ocLazyLoad.load('js/main.js');
+  $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js','js/notification/bootstrap-growl.min.js','js/wow.min.js','js/main.js'], {
+    rerun: true,
+    cache: false
+  });
   $scope.user = $rootScope.$storage.user;
   $scope.userID = $rootScope.$storage.userID;
   $scope.showAddHardware = false;

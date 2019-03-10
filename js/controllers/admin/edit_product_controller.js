@@ -1,5 +1,8 @@
 myApp.controller("EditProductController", function($rootScope, $scope, $http, $window, $sce, $timeout, $routeParams, $cookies, $ocLazyLoad) {
-  $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js','js/notification/bootstrap-growl.min.js'],{cache:false});
+  $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js', 'js/data-table/jquery.dataTables.min.js', 'js/data-table/data-table-act.js', 'js/notification/bootstrap-growl.min.js','js/wow.min.js','js/main.js'], {
+    rerun: true,
+    cache: false
+  });
   $scope.productName = $routeParams.productName;
   $scope.product="";
   $rootScope.copyProduct="";
@@ -51,7 +54,7 @@ myApp.controller("EditProductController", function($rootScope, $scope, $http, $w
         var data = response.data;
         if (!data.error) {
           $window.location.href=data.product.location;
-          $rootScope.openNotification($rootScope.dataFrom, $rootScope.dataAlign, $rootScope.dataIcon, $rootScope.dataType[0], $rootScope.dataAnimIn, $rootScope.dataAnimOut, "Added  ", "Product named " + data.product.name + " is created");
+          $rootScope.openNotification($rootScope.dataFrom, $rootScope.dataAlign, $rootScope.dataIcon, $rootScope.dataType[0], $rootScope.dataAnimIn, $rootScope.dataAnimOut, "Modified ", ""+data.product.name + "Product is modified");
         } else {
           $rootScope.openNotification($rootScope.dataFrom, $rootScope.dataAlign, $rootScope.dataIcon, $rootScope.dataType[1], $rootScope.dataAnimIn, $rootScope.dataAnimOut, "Error  ", "Please, check entered product deatils or try again later");
         }
