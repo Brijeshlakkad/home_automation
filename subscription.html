@@ -42,21 +42,24 @@
 </div>
 <!-- Main Menu area End-->
 <div class="container well myCode" ng-controller="SubscriptionController" id="subscriptionModificationCtrl">
-  <div ng-if="subscriptionArray.length<=0">
+  <div ng-if="subscriptionArray.length==0">
     <show-nothing stringb="noSubscription"></show-nothing>
   </div>
-  <div ng-if="subscriptionArray.length<=0">
+  <div ng-if="subscriptionArray.length>0">
     <table class="table table-sc-ex">
       <thead>
         <tr>
           <th>Subscription</th>
-          <th>Cancellation Date</th>
+          <th>Expiration Date</th>
           <th>State</th>
-          <th>Actions</th>
         </tr>
       </thead>
-      <tbody id="subscription_details">
-
+      <tbody id="subscription_details" ng-repeat="subscription in subscriptionArray">
+        <tr>
+          <td>{{$index+1}}</td>
+          <td>{{subscription.leftTime}}</td>
+          <td><span ng-if="subscription.state==1" style='color:green;'>Running</span><span ng-if="subscription.state!=1" style='color:red;'>Expired</span></td>
+        </tr>
       </tbody>
     </table>
   </div>

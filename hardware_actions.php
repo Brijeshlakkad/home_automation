@@ -31,6 +31,18 @@ function checkHomeID($gotData)
   $gotData->errorMessage="You do not have home in OUR app.";
   return $gotData;
 }
+function createSubscription($gotData){
+  $hwID=$gotData->user->hw->id;
+  $sql="INSERT INTO amc(serial_no_id) VALUES('$hwID')";
+  $result=mysqli_query($gotData->con,$sql);
+  if($result)
+  {
+    return $gotData;
+  }
+  $gotData->error=true;
+  $gotData->errorMessage="Error in Subscription.";
+  return $gotData;
+}
 function createHardware($gotData){
   $homeID=$gotData->user->hw->homeID;
   $roomID=$gotData->user->hw->roomID;
@@ -56,6 +68,11 @@ function createHardware($gotData){
     $hw=getHardwareDataUsingNameIDs($gotData->con,$userID,$hwName,$roomID,$homeID);
     if($hw->error) return $hw;
     $gotData->user->hw->id=$hw->hwID;
+    $gotData=createSubscription($gotData);
+    if($gotData->error){
+      $got=deleteHardware($gotData);
+      return $gotData;
+    }
     return $gotData;
   }
   $gotData->error=true;

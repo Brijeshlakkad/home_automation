@@ -8,24 +8,29 @@ function getSubscriptionDetails($gotData){
   if($result){
     $gotData->user->totalRows=mysqli_num_rows($result);
     if($gotData->user->totalRows>0){
-      while($row=mysqli_fetch_array($result)){
-        $i=0;
-        $hardwareID=$row['serial_no_id'];
+      $i=0;
+      while($rowHw=mysqli_fetch_array($result)){
+        $hardwareID=$rowHw['id'];
         $sql="SELECT * FROM amc WHERE serial_no_id='$hardwareID'";
         $resultAMC=mysqli_query($gotData->con,$sql);
         if($resultAMC && mysqli_num_rows($resultAMC)==1){
             $row=mysqli_fetch_array($resultAMC);
             $gotData->user->row[$i]=(object) null;
-            $gotData->user->row[$i]->seriesNo=$row['series_no_id'];
+            $gotData->user->row[$i]->seriesNo=$row['serial_no_id'];
             $date = new DateTime($row['date']);
             $gotData->user->row[$i]->date=$date->format('d-m-Y');
-            $from = strtotime($row['date']);
-            $today = time();
-            $difference = $today - $from;
-            $leftTime = floor($difference / 86400);
-            $gotData->user->amc->row[$i]->leftTime=$leftTime;
-            $i++;
+            $timestamp=strtotime($row['date']);
+            $gotData->user->row[$i]->leftTime=date('Y-m-d', strtotime('+1 years',$timestamp));
+            $date1=date_create(date('Y-m-d',time()));
+            $date2=date_create($gotData->user->row[$i]->leftTime);
+            $diff=date_diff($date1,$date2);
+            $gotData->user->row[$i]->diff=$diff->format("%R%a");
+            $gotData->user->row[$i]->state=1;
+            if(((int)$diff->format("%R%a"))<0){
+              $gotData->user->row[$i]->state=-1;
+            }
         }
+        $i++;
       }
     }
     return $gotData;

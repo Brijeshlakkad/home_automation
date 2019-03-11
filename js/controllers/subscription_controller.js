@@ -17,7 +17,6 @@ myApp.controller("SubscriptionController", function($rootScope, $scope, $http, $
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     }).then(function mySuccess(response) {
-      //alert(JSON.stringify(response));
       var data = response.data;
       if (data.error == false) {
         if(data.user.totalRows>0){

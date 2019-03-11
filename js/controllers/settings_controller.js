@@ -5,7 +5,6 @@ myApp.controller("SettingsController", function($rootScope, $scope, $http, $wind
   });
   $scope.user = $rootScope.$storage.user;
   $scope.userID = $rootScope.$storage.userID;
-  $scope.dataLoading = false;
   $scope.editStatus = "";
   $rootScope.userDetails = {};
   $scope.openTab = function(index, tabName) {
@@ -29,7 +28,6 @@ myApp.controller("SettingsController", function($rootScope, $scope, $http, $wind
   $scope.openTab('0', 'account_details');
 
   $scope.editDetails = function() {
-    $scope.dataLoading = true;
     if ($rootScope.userDetails['name'] != $scope.s_name || $rootScope.userDetails['city'] != $scope.s_city || $rootScope.userDetails['address'] != $scope.s_address || $rootScope.userDetails['contact'] != $scope.s_contact) {
       $rootScope.body.addClass("loading");
       $http({
@@ -45,7 +43,7 @@ myApp.controller("SettingsController", function($rootScope, $scope, $http, $wind
         // we should be using flag in only this block so logic in following
         if (!flag.error) {
           $scope.editStatus = "Details Updated!";
-          $scope.dataLoading = false;
+          $rootScope.userDetails=flag.userUpdated;
           $scope.s_status_0 = false;
           $scope.s_status_1 = true;
         } else {
@@ -135,6 +133,16 @@ myApp.controller("SettingsController", function($rootScope, $scope, $http, $wind
       $scope.cnew_passwordStrength["border-color"] = "red";
     }
   };
+  $scope.showErrorDialog = function(error) {
+    swal({
+      title: "Try Again!",
+      text: "" + error,
+      timer: 2000
+    });
+  };
+  $scope.showSuccessDialog = function(val) {
+    swal("" + val, "", "success");
+  };
   $scope.submit_password = function() {
     if ($scope.new_password == $scope.confirm_new_password) {
       $http({
@@ -145,15 +153,15 @@ myApp.controller("SettingsController", function($rootScope, $scope, $http, $wind
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       }).then(function mySuccess(response) {
-        $scope.passwordForm.$setPristine();
-        $scope.old_password = "";
-        $scope.new_password = "";
-        $scope.confirm_new_password = "";
         var data = response.data;
         if (data.error) {
-          alert(data.errorMessage);
+          $scope.showErrorDialog(data.errorMessage);
         } else {
-          alert("Password is changed");
+          $scope.passwordForm.$setPristine();
+          $scope.old_password = "";
+          $scope.new_password = "";
+          $scope.confirm_new_password = "";
+          $scope.showSuccessDialog(data.responseMessage);
         }
       }, function myError(response) {
         alert("error");
