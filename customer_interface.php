@@ -16,6 +16,9 @@ function updateUser($gotData){
   {
     $gotData->error=false;
     $gotData->errorMessage="null";
+    $u=getUserDataUsingEmail($gotData->con,$email);
+    if($u->error) return $u;
+    $gotData->userUpdated=$u;
     return $gotData;
   }
   $gotData->error=true;
@@ -31,6 +34,7 @@ function changePassword($gotData){
   {
     $gotData->error=false;
     $gotData->errorMessage="null";
+    $gotData->responseMessage="Password is changed.";
     return $gotData;
   }
   $gotData->error=true;

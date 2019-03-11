@@ -120,6 +120,23 @@ function deleteDevice($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
+function checkDevicePortUsingID($gotData){
+  $dvPort=$gotData->user->device->dvPort;
+  $id=$gotData->user->device->id;
+  $sql="SELECT * FROM room_device WHERE id='$id'";
+  $result=mysqli_query($gotData->con,$sql);
+  if($result){
+    $row=mysqli_fetch_array($result);
+    $gotData->user->device->homeID=$row['hid'];
+    $gotData->user->device->roomID=$row['room_id'];
+    $gotData->user->device->hwID=$row['hw_id'];
+    $gotData->user->device->userID=$row['uid'];
+    return checkDevicePort($gotData);
+  }
+  $gotData->error=true;
+  $gotData->errorMessage="Try Again!";
+  return $gotData;
+}
 function renameDevice($gotData){
   $gotData=getUserID($gotData);
   if($gotData->error==true) return $gotData;
@@ -128,6 +145,8 @@ function renameDevice($gotData){
   $dvImg=$gotData->user->device->dvImg;
   $id=$gotData->user->device->id;
   $email=$gotData->user->device->email;
+  $gotData=checkDevicePortUsingID($gotData);
+  if($gotData->error) return $gotData;
   $sql="UPDATE room_device SET device_name='$dvName', port='$dvPort', device_image='$dvImg' where id='$id'";
   $result=mysqli_query($gotData->con,$sql);
   if($result && (mysqli_affected_rows($gotData->con)==1))
