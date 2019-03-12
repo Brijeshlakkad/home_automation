@@ -1,5 +1,5 @@
 myApp.controller("SettingsController", function($rootScope, $scope, $http, $window, $sce, $timeout, $cookies, $ocLazyLoad) {
-  $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js','js/notification/bootstrap-growl.min.js','js/wow.min.js','js/main.js'], {
+  $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js', 'js/notification/bootstrap-growl.min.js', 'js/wow.min.js', 'js/main.js'], {
     rerun: true,
     cache: false
   });
@@ -43,7 +43,7 @@ myApp.controller("SettingsController", function($rootScope, $scope, $http, $wind
         // we should be using flag in only this block so logic in following
         if (!flag.error) {
           $scope.editStatus = "Details Updated!";
-          $rootScope.userDetails=flag.userUpdated;
+          $rootScope.userDetails = flag.userUpdated;
           $scope.s_status_0 = false;
           $scope.s_status_1 = true;
         } else {
@@ -168,6 +168,67 @@ myApp.controller("SettingsController", function($rootScope, $scope, $http, $wind
       });
     } else {
       alert("passwords are not matching");
+    }
+  };
+  // Add input field dynamically (Author: Brijesh Lakkad)
+  $scope.memberInputCount = 0; // To track of count of input field
+  $scope.memberInputList = []; // To give name to name in input field
+  $rootScope.memberModelList = []; // To store inut value in ng-model
+  $scope.incrementMemberInput = function() {
+    $scope.memberInputCount++;
+    for (i = 0; i < $scope.memberInputCount; i++) {
+      $scope.memberInputList[i] = "memberInput" + (i + 1);
+    }
+  };
+  $scope.removeMemberInput = function(memberInput) {
+    $scope.memberInputCount--;
+    var index = $scope.memberInputList.indexOf(memberInput);
+    var memberList = [];
+    for (i = 0; i < index; i++) {
+      memberList[i] = $scope.memberInputList[i];
+    }
+    for (j = index + 1; j < $scope.memberInputList.length; j++) {
+      memberList[i] = $scope.memberInputList[j];
+      $scope.memberModelList[i] = $scope.memberModelList[j];
+      i++;
+    }
+    $scope.memberModelList[i] = null;
+    $scope.memberInputList = memberList;
+  };
+});
+myApp.directive('memberEmailDir', function($rootScope,$http) {
+  return {
+    require: 'ngModel',
+    link: function(scope, element, attr, mCtrl) {
+      function myValidation(value) {
+        var patt = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+        if (patt.test(value)) {
+          if(value!=$rootScope.$storage.user){
+            mCtrl.$setValidity('emailValid', true);
+            mCtrl.$setValidity('selfEmailValid', true);
+            element.css({
+              "border-bottom-width": "1.45px",
+              "border-bottom-color": 'green'
+            });
+          }else{
+            mCtrl.$setValidity('selfEmailValid', false);
+            mCtrl.$setValidity('emailValid', true);
+            element.css({
+              "border-bottom-width": "1.45px",
+              "border-bottom-color": 'green'
+            });
+          }
+        } else {
+          mCtrl.$setValidity('selfEmailValid', true);
+          mCtrl.$setValidity('emailValid', false);
+          element.css({
+            "border-bottom-width": "1.45px",
+            "border-bottom-color": 'red'
+          });
+        }
+        return value;
+      }
+      mCtrl.$parsers.push(myValidation);
     }
   };
 });

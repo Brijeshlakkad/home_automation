@@ -1,167 +1,194 @@
 <div class="mobile-menu-area">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="mobile-menu">
-                    <nav id="dropdown">
-                        <ul class="mobile-menu-nav">
-                            <li><a href="#!customer/home">Home</a>
-                            </li>
-                            <li><a href="#!customer/subscription">Subscription</a>
-                            </li>
-                            <li><a href="#!customer/settings">Settings</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="mobile-menu">
+          <nav id="dropdown">
+            <ul class="mobile-menu-nav">
+              <li><a href="#!customer/home">Home</a>
+              </li>
+              <li><a href="#!customer/subscription">Subscription</a>
+              </li>
+              <li><a href="#!customer/settings">Settings</a>
+              </li>
+            </ul>
+          </nav>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 <!-- Mobile Menu end -->
 <!-- Main Menu area start-->
 <div class="main-menu-area mg-tb-40">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
-                    <li><a href="#!customer/home"><i class="notika-icon notika-house"></i> Home</a>
-                    </li>
-                    <li><a href="#!customer/subscription"><i class="notika-icon notika-form"></i> Subscription</a>
-                    </li>
-                    <li class="active"><a href="#!customer/settings"><i class="notika-icon notika-settings"></i> Settings</a>
-                    </li>
-                </ul>
-                <div class="tab-content custom-menu-content">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
+          <li><a href="#!customer/home"><i class="notika-icon notika-house"></i> Home</a>
+          </li>
+          <li><a href="#!customer/subscription"><i class="notika-icon notika-form"></i> Subscription</a>
+          </li>
+          <li class="active"><a href="#!customer/settings"><i class="notika-icon notika-settings"></i> Settings</a>
+          </li>
+        </ul>
+        <div class="tab-content custom-menu-content">
 
-                </div>
-            </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- Main Menu area End-->
 <div class="container" id="settingsModificationCtrl">
   <div class="tab">
     <button ng-click="openTab('0','account_details')" class="tablinks" id="0">Account Details</button>
-	  <button ng-click="openTab('1','change_password')" class="tablinks" id="1">Change Password</button>
+    <button ng-click="openTab('1','change_password')" class="tablinks" id="1">Change Password</button>
+    <button ng-click="openTab('2','control_members')" class="tablinks" id="2">Control Members</button>
   </div>
-	<div id="account_details" class="tabcontent" align="center">
+  <div id="account_details" class="tabcontent" align="center">
     <div class="form-element-area">
       <div class="row">
-          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <form name="editForm" method="post" novalidate>
-              <div class="nk-form" style="padding:15px;">
-                  <div class="input-group mg-t-15">
-                      <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-user"></i></span>
-                      <div class="nk-int-st">
-                          <input type="text" class="form-control" placeholder="Name" ng-model="s_name" name="s_name" ng-style="nameStyle" ng-change="analyzeName(s_name)" required  names-dir nameslen-dir>
-                      </div>
-                      <span style="color:red" id="s_name" ng-show="editForm.s_name.$dirty && editForm.s_name.$invalid">
-                      <span ng-show="editForm.s_name.$error.required">First name is required</span>
-                      <span ng-show="!editForm.s_name.$error.required && editForm.s_name.$error.namesvalid">Enter only characters</span>
-                      <span ng-show="!editForm.s_name.$error.required && editForm.s_name.$error.nameslenvalid">Enter more than three characters</span>
-                      </span>
-                  </div>
-
-                  <div class="input-group mg-t-15">
-                      <span class="input-group-addon nk-ic-st-pro"><i class="	glyphicon glyphicon-envelope"></i></span>
-                      <div class="nk-int-st">
-                          <input type="text" class="form-control" placeholder="Email Address" name="s_email" ng-model="s_email"  readonly disabled>
-                      </div>
-                  </div>
-
-                  <div class="input-group mg-t-15">
-                      <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-book"></i></span>
-                      <div class="nk-int-st">
-                          <input type="text" class="form-control" placeholder="Address" name="s_address" ng-model="s_address"  ng-style="addressStyle" ng-change="analyzeAddress(s_address)" required address-dir>
-                          </div><span style="color:red" id="s_address" ng-show="editForm.s_address.$dirty && editForm.s_address.$invalid">
-                          <span ng-show="editForm.s_address.$error.required">Address is required</span>
-                          <span ng-show="!editForm.s_address.$error.required && editForm.s_address.$error.addressvalid">Do not use unused character.</span>
-                          <span ng-show="!editForm.s_address.$error.required && editForm.s_address.$error.addresslengthvalid">Enter more details so we can understand</span>
-                          </span>
-                  </div>
-
-                  <div class="input-group mg-t-15">
-                      <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-home"></i></span>
-                      <div class="nk-int-st">
-                          <input type="text" class="form-control" placeholder="City" name="s_city" ng-model="s_city"  ng-style="cityStyle" ng-change="analyzeCity(s_city)" required  names-dir>
-                      </div>
-                      <span style="color:red" id="s_city" ng-show="editForm.s_city.$dirty && editForm.s_city.$invalid">
-                      <span ng-show="editForm.s_city.$error.required">City is required</span>
-                      <span ng-show="!editForm.s_city.$error.required && editForm.s_city.$error.namesvalid">Enter only characters</span>
-                      </span>
-                  </div>
-                  <div class="input-group mg-t-15">
-                      <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-phone"></i></span>
-                      <div class="nk-int-st">
-                        <input type="text" class="form-control" placeholder="Contact" name="s_contact" ng-model="s_contact" ng-required="true" contact-dir for="user"/>
-                      </div>
-                      <span style="color:red"  id="s_contact" ng-show="editForm.s_contact.$dirty && editForm.s_contact.$invalid">
-                      <span ng-show="editForm.s_contact.$error.required">Contact is required.</span>
-                      <span ng-show="!editForm.s_contact.$error.required && editForm.s_contact.$error.contactValid">Contact is invalid.</span>
-                      <span ng-show="!editForm.s_contact.$error.required && editForm.s_contact.$error.contactExists">Contact is already exists.</span>
-                      </span>
-                  </div>
-                  <div style="padding:10px;">
-                    <button class="btn btn-login btn-success" ng-click="editDetails()" ng-disabled="(editForm.s_email.$invalid || editForm.s_name.$invalid || editForm.s_address.$invalid || editForm.s_city.$invalid || editForm.s_contact.$invalid) || (editForm.s_name.$pristine && editForm.s_city.$pristine && editForm.s_address.$pristine && editForm.s_contact.$pristine)"><i class="notika-icon notika-right-arrow right-arrow-ant"></i></button>
-                  </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <form name="editForm" method="post" novalidate>
+            <div class="nk-form" style="padding:15px;">
+              <div class="input-group mg-t-15">
+                <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-user"></i></span>
+                <div class="nk-int-st">
+                  <input type="text" class="form-control" placeholder="Name" ng-model="s_name" name="s_name" ng-style="nameStyle" ng-change="analyzeName(s_name)" required names-dir nameslen-dir>
+                </div>
+                <span style="color:red" id="s_name" ng-show="editForm.s_name.$dirty && editForm.s_name.$invalid">
+                  <span ng-show="editForm.s_name.$error.required">First name is required</span>
+                  <span ng-show="!editForm.s_name.$error.required && editForm.s_name.$error.namesvalid">Enter only characters</span>
+                  <span ng-show="!editForm.s_name.$error.required && editForm.s_name.$error.nameslenvalid">Enter more than three characters</span>
+                </span>
               </div>
-              <div ng-show="s_status_0" class="alert alert-danger">Please fill details carefully!</div><div ng-show="s_status_1" class="alert alert-success">{{editStatus}}</div>
-            </form>
+
+              <div class="input-group mg-t-15">
+                <span class="input-group-addon nk-ic-st-pro"><i class="	glyphicon glyphicon-envelope"></i></span>
+                <div class="nk-int-st">
+                  <input type="text" class="form-control" placeholder="Email Address" name="s_email" ng-model="s_email" readonly disabled>
+                </div>
+              </div>
+
+              <div class="input-group mg-t-15">
+                <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-book"></i></span>
+                <div class="nk-int-st">
+                  <input type="text" class="form-control" placeholder="Address" name="s_address" ng-model="s_address" ng-style="addressStyle" ng-change="analyzeAddress(s_address)" required address-dir>
+                </div><span style="color:red" id="s_address" ng-show="editForm.s_address.$dirty && editForm.s_address.$invalid">
+                  <span ng-show="editForm.s_address.$error.required">Address is required</span>
+                  <span ng-show="!editForm.s_address.$error.required && editForm.s_address.$error.addressvalid">Do not use unused character.</span>
+                  <span ng-show="!editForm.s_address.$error.required && editForm.s_address.$error.addresslengthvalid">Enter more details so we can understand</span>
+                </span>
+              </div>
+
+              <div class="input-group mg-t-15">
+                <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-home"></i></span>
+                <div class="nk-int-st">
+                  <input type="text" class="form-control" placeholder="City" name="s_city" ng-model="s_city" ng-style="cityStyle" ng-change="analyzeCity(s_city)" required names-dir>
+                </div>
+                <span style="color:red" id="s_city" ng-show="editForm.s_city.$dirty && editForm.s_city.$invalid">
+                  <span ng-show="editForm.s_city.$error.required">City is required</span>
+                  <span ng-show="!editForm.s_city.$error.required && editForm.s_city.$error.namesvalid">Enter only characters</span>
+                </span>
+              </div>
+              <div class="input-group mg-t-15">
+                <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-phone"></i></span>
+                <div class="nk-int-st">
+                  <input type="text" class="form-control" placeholder="Contact" name="s_contact" ng-model="s_contact" ng-required="true" contact-dir for="user" />
+                </div>
+                <span style="color:red" id="s_contact" ng-show="editForm.s_contact.$dirty && editForm.s_contact.$invalid">
+                  <span ng-show="editForm.s_contact.$error.required">Contact is required.</span>
+                  <span ng-show="!editForm.s_contact.$error.required && editForm.s_contact.$error.contactValid">Contact is invalid.</span>
+                  <span ng-show="!editForm.s_contact.$error.required && editForm.s_contact.$error.contactExists">Contact is already exists.</span>
+                </span>
+              </div>
+              <div style="padding:10px;">
+                <button class="btn btn-login btn-success" ng-click="editDetails()" ng-disabled="(editForm.s_email.$invalid || editForm.s_name.$invalid || editForm.s_address.$invalid || editForm.s_city.$invalid || editForm.s_contact.$invalid) || (editForm.s_name.$pristine && editForm.s_city.$pristine && editForm.s_address.$pristine && editForm.s_contact.$pristine)"><i
+                    class="notika-icon notika-right-arrow right-arrow-ant"></i></button>
+              </div>
+            </div>
+            <div ng-show="s_status_0" class="alert alert-danger">Please fill details carefully!</div>
+            <div ng-show="s_status_1" class="alert alert-success">{{editStatus}}</div>
+          </form>
         </div>
       </div>
     </div>
   </div>
   <div id="change_password" class="tabcontent" align="center">
     <form name="passwordForm" novalidate>
-    			  <h3>Change Password</h3>
-    			  <div class="row">
-    		  			<table class="myTable">
-    			  			<div class="form-group">
-    						<tr>
-    						<td><label for="old_password">Old Password:</label><br></td>
-    						<td><input type="password" class="form-control" name="old_password" placeholder="Enter first name" ng-model="old_password" required/></td>
-    						<td>
-    						<span style="color:red" id="old_password" ng-show="passwordForm.old_password.$dirty && passwordForm.old_password.$invalid">
-    						<span ng-show="passwordForm.old_password.$error.required">Old Password is required</span>
-    						</span>
-    						</td>
-    						</tr>
-    						</div>
-    						<div class="form-group">
-    						<tr>
-    						<td><label for="new_password">New Password:</label><br></td>
-    						<td><input type="password" class="form-control" name="new_password" placeholder="Enter first name" ng-model="new_password"  ng-style="new_passwordStrength" ng-change="analyze_new(new_password)" required  password-dir/></td>
-    						<td><a class="badge my_badge" data-toggle="tooltip" data-placement="top" title="Password should contain at least one number and at least one character">?</a>
-    						<span style="color:red" id="new_password" ng-show="passwordForm.new_password.$dirty && passwordForm.new_password.$invalid">
-    						<span ng-show="passwordForm.new_password.$error.required">New Password is required</span>
-    						<span ng-show="!passwordForm.new_password.$error.required && passwordForm.new_password.$error.passvalid">read instructions</span>
-    						</span>
-    						</td>
-    						</tr>
-    						</div>
-    						<div class="form-group">
-    						<tr>
-    						<td><label for="confirm_new_password">Confirm New Password:</label><br></td>
-    						<td><input type="password" class="form-control" name="confirm_new_password" placeholder="Enter first name" ng-model="confirm_new_password" ng-disabled="!passwordForm.new_password.$valid" ng-style="cnew_passwordStrength" ng-change="analyze_cnew(new_password,confirm_new_password)" required  password-dir/></td>
-    						<td>
-    						<span style="color:red" id="confirm_new_password" ng-show="passwordForm.confirm_new_password.$dirty && passwordForm.confirm_new_password.$invalid">
-    						<span ng-show="passwordForm.confirm_new_password.$error.required">Password is required</span>
-    						<span ng-show="!passwordForm.confirm_new_password.$error.required && passwordForm.confirm_new_password.$error.passvalid">read instructions</span>
-    						</span>
-    						</td>
-    						</tr>
-    						</div>
-    						<div class="form-group">
-    							<tr>
-    								<td><input type="submit" ng-click="submit_password()" id="submit_btn" value="Submit" class="btn btn-primary" ng-disabled="passwordForm.old_password.$invalid || passwordForm.new_password.$invalid || passwordForm.confirm_new_password.$invalid" /></td>
-    								<td id="status_part2"><img src="images/small_loader.gif" ng-if="spinner_part2" id="spinner_part2" style="height:30px;width:30px;" alt="Loading" /></td>
-    								<td></td>
-    							</tr>
-    						</div>
-    					</table>
-    			  </div>
-    	</form>
+      <h3>Change Password</h3>
+      <div class="row">
+        <table class="myTable">
+          <div class="form-group">
+            <tr>
+              <td><label for="old_password">Old Password:</label><br></td>
+              <td><input type="password" class="form-control" name="old_password" placeholder="Enter first name" ng-model="old_password" required /></td>
+              <td>
+                <span style="color:red" id="old_password" ng-show="passwordForm.old_password.$dirty && passwordForm.old_password.$invalid">
+                  <span ng-show="passwordForm.old_password.$error.required">Old Password is required</span>
+                </span>
+              </td>
+            </tr>
+          </div>
+          <div class="form-group">
+            <tr>
+              <td><label for="new_password">New Password:</label><br></td>
+              <td><input type="password" class="form-control" name="new_password" placeholder="Enter first name" ng-model="new_password" ng-style="new_passwordStrength" ng-change="analyze_new(new_password)" required password-dir /></td>
+              <td><a class="badge my_badge" data-toggle="tooltip" data-placement="top" title="Password should contain at least one number and at least one character">?</a>
+                <span style="color:red" id="new_password" ng-show="passwordForm.new_password.$dirty && passwordForm.new_password.$invalid">
+                  <span ng-show="passwordForm.new_password.$error.required">New Password is required</span>
+                  <span ng-show="!passwordForm.new_password.$error.required && passwordForm.new_password.$error.passvalid">read instructions</span>
+                </span>
+              </td>
+            </tr>
+          </div>
+          <div class="form-group">
+            <tr>
+              <td><label for="confirm_new_password">Confirm New Password:</label><br></td>
+              <td><input type="password" class="form-control" name="confirm_new_password" placeholder="Enter first name" ng-model="confirm_new_password" ng-disabled="!passwordForm.new_password.$valid" ng-style="cnew_passwordStrength" ng-change="analyze_cnew(new_password,confirm_new_password)"
+                  required password-dir /></td>
+              <td>
+                <span style="color:red" id="confirm_new_password" ng-show="passwordForm.confirm_new_password.$dirty && passwordForm.confirm_new_password.$invalid">
+                  <span ng-show="passwordForm.confirm_new_password.$error.required">Password is required</span>
+                  <span ng-show="!passwordForm.confirm_new_password.$error.required && passwordForm.confirm_new_password.$error.passvalid">read instructions</span>
+                </span>
+              </td>
+            </tr>
+          </div>
+          <div class="form-group">
+            <tr>
+              <td><input type="submit" ng-click="submit_password()" id="submit_btn" value="Submit" class="btn btn-primary" ng-disabled="passwordForm.old_password.$invalid || passwordForm.new_password.$invalid || passwordForm.confirm_new_password.$invalid" /></td>
+              <td id="status_part2"><img src="images/small_loader.gif" ng-if="spinner_part2" id="spinner_part2" style="height:30px;width:30px;" alt="Loading" /></td>
+              <td></td>
+            </tr>
+          </div>
+        </table>
+      </div>
+    </form>
+  </div>
+  <div id="control_members" class="tabcontent" align="center">
+    <form name="memberForm" novalidate>
+      <h3>Control Members</h3>
+      <div class="form-group">
+        <div ng-repeat="memberInput in memberInputList">
+          <div style="padding:10px">
+            <div class="input-group">
+              <input class="form-control" name="{{memberInput}}" ng-model="memberModelList[$index]" type="text" placeholder="Member {{$index+1}}" ng-required="true" member-email-dir />
+              <span class="input-group-btn">
+                <button class="btn btn-danger" type="button" ng-click="removeMemberInput(memberInput)">&times;</button>
+              </span>
+            </div>
+            <span style="color:red" id="{{memberInput}}" ng-show="memberForm.{{memberInput}}.$dirty && memberForm.{{memberInput}}.$invalid">
+              <span ng-show="memberForm.{{memberInput}}.$error.required">Email is required.</span>
+              <span ng-show="!memberForm.{{memberInput}}.$error.required && memberForm.{{memberInput}}.$error.emailValid">Invalid email address.</span>
+              <span ng-show="!memberForm.{{memberInput}}.$error.required && memberForm.{{memberInput}}.$error.selfEmailValid">You can not enter your own email id</span>
+            </span>
+          </div>
+        </div>
+        <button class="btn btn-primary" ng-disabled="memberForm.$invalid" ng-click="incrementMemberInput()"><span class="glyphicon glyphicon-plus"></span> Add Member</button>
+      </div>
+    </form>
   </div>
 </div>
