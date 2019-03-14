@@ -65,10 +65,7 @@ function checkDevicePort($gotData){
   return $gotData;
 }
 function createDevice($gotData){
-  $u=getUserDataUsingEmail($gotData->con,$gotData->user->email);
-  if($u->error) return $u;
-  $userID=$u->id;
-  $gotData->user->userID=$userID;
+  $userID=$gotData->user->userID;
   $homeID=$gotData->user->device->homeID;
   $roomID=$gotData->user->device->roomID;
   $hwID=$gotData->user->device->hwID;
@@ -463,23 +460,26 @@ function deleteDeviceSlider($dvID,$con){
 }
 if(isset($_REQUEST['action'])){
   $action=$_REQUEST['action'];
-  if($action=="0" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName']) && isset($_REQUEST['userID']))
+  if($action=="0" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName']))
   {
     $email=$_REQUEST['email'];
     $hwName=ucfirst($_REQUEST['hwName']);
     $roomName=ucfirst($_REQUEST['roomName']);
     $homeName=ucfirst($_REQUEST['homeName']);
-    $userID=$_REQUEST['userID'];
     $gotData = (object) null;
     $gotData->error=false;
     $gotData->errorMessage="null";
     $gotData->user=(object) null;
     $gotData->con=$con;
     $gotData->user->email=$email;
+    $u=getUserDataUsingEmail($gotData->con,$gotData->user->email);
+    if($u->error) return $u;
+    $userID=$u->id;
     $gotData->user->homeName=$homeName;
     $gotData->user->roomName=$roomName;
     $gotData->user->hwName=$hwName;
     $gotData->user->action=$action;
+    $gotData->user->userID=$userID;
     $hw=getHardwareDataUsingName($gotData->con,$userID,$hwName,$roomName,$homeName);
     if($hw->error){
       echo json_encode($hw);

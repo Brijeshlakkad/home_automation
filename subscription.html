@@ -50,6 +50,7 @@
       <thead>
         <tr>
           <th>Subscription</th>
+          <th>Hardware Name</th>
           <th>Expiration Date</th>
           <th>State</th>
         </tr>
@@ -57,6 +58,9 @@
       <tbody id="subscription_details" ng-repeat="subscription in subscriptionArray">
         <tr>
           <td>{{$index+1}}</td>
+          <td>
+            {{subscription.hwName}}
+          </td>
           <td>{{subscription.leftTime}}</td>
           <td><span ng-if="subscription.state==1" style='color:green;'>Running</span><span ng-if="subscription.state!=1" style='color:red;'>Expired</span></td>
         </tr>

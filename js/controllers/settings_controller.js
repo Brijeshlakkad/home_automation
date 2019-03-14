@@ -1,11 +1,12 @@
 myApp.controller("SettingsController", function($rootScope, $scope, $http, $window, $sce, $timeout, $cookies, $ocLazyLoad) {
-  $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js', 'js/notification/bootstrap-growl.min.js', 'js/wow.min.js', 'js/main.js'], {
+  $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js', 'js/data-table/jquery.dataTables.min.js', 'js/data-table/data-table-act.js', 'js/notification/bootstrap-growl.min.js', 'js/wow.min.js', 'js/main.js'], {
     rerun: true,
     cache: false
   });
   $scope.user = $rootScope.$storage.user;
   $scope.userID = $rootScope.$storage.userID;
   $scope.editStatus = "";
+  $scope.memberList = [];
   $rootScope.userDetails = {};
   $scope.openTab = function(index, tabName) {
     var i, tabcontent, tablinks, content;
@@ -41,7 +42,7 @@ myApp.controller("SettingsController", function($rootScope, $scope, $http, $wind
         $rootScope.body.removeClass("loading");
         flag = response.data;
         // we should be using flag in only this block so logic in following
-        if (!flag.error) {
+        if (flag.error==false) {
           $scope.editStatus = "Details Updated!";
           $rootScope.userDetails = flag.userUpdated;
           $scope.s_status_0 = false;
@@ -81,7 +82,7 @@ myApp.controller("SettingsController", function($rootScope, $scope, $http, $wind
       }
     }).then(function mySuccess(response) {
       var data = response.data;
-      if (!data.error) {
+      if (data.error==false) {
         $scope.s_name = data.name;
         $scope.s_email = data.email;
         $scope.s_city = data.city;
@@ -154,7 +155,7 @@ myApp.controller("SettingsController", function($rootScope, $scope, $http, $wind
         }
       }).then(function mySuccess(response) {
         var data = response.data;
-        if (data.error) {
+        if (data.error==false) {
           $scope.showErrorDialog(data.errorMessage);
         } else {
           $scope.passwordForm.$setPristine();
@@ -195,22 +196,195 @@ myApp.controller("SettingsController", function($rootScope, $scope, $http, $wind
     $scope.memberModelList[i] = null;
     $scope.memberInputList = memberList;
   };
+  $scope.applyDuplicateValidation = function(duplicateSeries) {
+    var name, i, j;
+    for (i = 0; i < duplicateSeries.length; i++) {
+      for (j = 0; j < duplicateSeries[i].location.length; j++) {
+        name = $scope.memberInputList[duplicateSeries[i].location[j]];
+        $scope.memberForm[name + ""].$setValidity('duplicateExists', false);
+        var element = angular.element($("input[name='" + name + "']"));
+        element.css({
+          "border-bottom-width": "1.45px",
+          "border-bottom-color": 'red'
+        });
+      }
+    }
+    return true;
+  };
+  $scope.checkDuplicate = function(modelArray) {
+    var i = 0,
+      j = 0,
+      k = 0,
+      m, len, key, flag = 0,
+      flag1 = 0;
+    var duplicateSeries = [];
+    for (i = 0; i < modelArray.length; i++) {
+      for (j = 0; j < modelArray.length; j++) {
+        if (i != j && modelArray[i] == modelArray[j]) {
+          duplicateSeries[k] = {};
+          flag1 = -99;
+          len = duplicateSeries.length;
+          for (n = 0; n < len; n++) {
+            if (duplicateSeries[n]['name'] == modelArray[j]) {
+              flag1 = n;
+            }
+          }
+          if (flag1 == -99) {
+            duplicateSeries[k].name = modelArray[j];
+            duplicateSeries[k].location = [i, j];
+            k++;
+          } else {
+            flag = 0;
+            len = duplicateSeries[flag1]['location'].length;
+            for (m = 0; m < len; m++) {
+              if (duplicateSeries[flag1]['location'][m] == j) {
+                flag = 1;
+              }
+            }
+            if (flag == 0) {
+              duplicateSeries[flag1]['location'][len] = j;
+            }
+          }
+        }
+      }
+    }
+    if (duplicateSeries.length == 0) {
+      return false;
+    }
+    $scope.applyDuplicateValidation(duplicateSeries);
+  };
+  $scope.removeNullFromList = function(memberList) {
+    var newMemberList = [];
+    k = 0;
+    for (i = 0; i < memberList.length; i++) {
+      if (memberList[i] != null) {
+        newMemberList[k] = memberList[i];
+        k++;
+      }
+    }
+    return newMemberList;
+  };
+  $scope.submitMembers = function() {
+    var memberList = $scope.removeNullFromList($scope.memberModelList);
+    if ($scope.checkDuplicate($scope.memberModelList)) {
+      return;
+    }
+    $http({
+      method: "POST",
+      url: "customer_actions.php",
+      data: "action=2&userID=" + $scope.userID + "&memberModelList=" + JSON.stringify(memberList),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }).then(function mySuccess(response) {
+      var data = response.data;
+      if (data.error==false) {
+        if (data.user.failed.error) {
+          var errorMessage = "Email ID could not be saved: ";
+          for (i = 0; i < data.user.failedList.length; i++) {
+            if (i == data.user.failedList.length - 1) {
+              errorMessage += data.user.failedList[i] + ".";
+            } else {
+              errorMessage += data.user.failedList[i] + ", ";
+            }
+          }
+          $rootScope.showErrorDialog(errorMessage);
+        } else {
+          $scope.getMemberList();
+          $rootScope.showSuccessDialog(data.responseMessage)
+        }
+      } else {
+        $rootScope.showErrorDialog(data.errorMessage);
+      }
+    }, function myError(response) {
+      $rootScope.showErrorDialog("Server Load!");
+    });
+  };
+  $scope.getMemberList = function() {
+    $http({
+      method: "POST",
+      url: "customer_actions.php",
+      data: "action=0&userID=" + $scope.userID,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }).then(function mySuccess(response) {
+      var data = response.data;
+      if (data.error==false) {
+        $scope.memberList = data.user.memberList;
+      } else {
+        $rootScope.showErrorDialog(data.errorMessage);
+      }
+    }, function myError(response) {
+      $rootScope.showErrorDialog("Server Load!");
+    });
+  };
+  $scope.getMemberList();
+  $scope.removeMember = function(memberEmail){
+    $http({
+      method: "POST",
+      url: "customer_actions.php",
+      data: "action=3&userID=" + $scope.userID+"&memberEmail="+memberEmail,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }).then(function mySuccess(response) {
+      var data = response.data;
+      if (data.error==false) {
+        $rootScope.showSuccessDialog(data.responseMessage);
+        $scope.getMemberList();
+      } else {
+        $rootScope.showErrorDialog(data.errorMessage);
+      }
+    }, function myError(response) {
+      $rootScope.showErrorDialog("Server Load!");
+    });
+  };
 });
-myApp.directive('memberEmailDir', function($rootScope,$http) {
+myApp.directive('memberEmailDir', function($rootScope, $http) {
   return {
     require: 'ngModel',
     link: function(scope, element, attr, mCtrl) {
       function myValidation(value) {
+        mCtrl.$setValidity('duplicateExists', true);
+        mCtrl.$setValidity('memberEmailNotExists', true);
         var patt = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
         if (patt.test(value)) {
-          if(value!=$rootScope.$storage.user){
+          if (value != $rootScope.$storage.user) {
             mCtrl.$setValidity('emailValid', true);
             mCtrl.$setValidity('selfEmailValid', true);
-            element.css({
-              "border-bottom-width": "1.45px",
-              "border-bottom-color": 'green'
+            $http({
+              method: "POST",
+              url: "check_data_exists.php",
+              data: "email=" + value,
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+              }
+            }).then(function mySuccess(response) {
+
+              var data = response.data;
+              // we should be using flag in only this block so logic in following
+              if (data.error || (!data.user.emailExists)) {
+                mCtrl.$setValidity('memberEmailNotExists', false);
+                element.css({
+                  "border-bottom-width": "1.45px",
+                  "border-bottom-color": 'red'
+                });
+              } else {
+                mCtrl.$setValidity('memberEmailNotExists', true);
+                element.css({
+                  "border-bottom-width": "1.45px",
+                  "border-bottom-color": 'green'
+                });
+              }
+            }, function myError(response) {
+              mCtrl.$setValidity('memberEmailNotExists', false);
+              element.css({
+                "border-bottom-width": "1.45px",
+                "border-bottom-color": 'red'
+              });
             });
-          }else{
+          } else {
             mCtrl.$setValidity('selfEmailValid', false);
             mCtrl.$setValidity('emailValid', true);
             element.css({

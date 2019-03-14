@@ -11,7 +11,7 @@ myApp.controller("SubscriptionController", function($rootScope, $scope, $http, $
     $rootScope.body.addClass("loading");
     $http({
       method: "POST",
-      url: "user_actions.php",
+      url: "customer_actions.php",
       data: "action=1&userID=" + id,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'

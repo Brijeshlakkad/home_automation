@@ -184,11 +184,64 @@
               <span ng-show="memberForm.{{memberInput}}.$error.required">Email is required.</span>
               <span ng-show="!memberForm.{{memberInput}}.$error.required && memberForm.{{memberInput}}.$error.emailValid">Invalid email address.</span>
               <span ng-show="!memberForm.{{memberInput}}.$error.required && memberForm.{{memberInput}}.$error.selfEmailValid">You can not enter your own email id</span>
+              <span ng-show="!memberForm.{{memberInput}}.$error.required && memberForm.{{memberInput}}.$error.memberEmailNotExists">Email does not exists</span>
+              <span ng-show="!memberForm.{{memberInput}}.$error.required && memberForm.{{memberInput}}.$error.duplicateExists">Duplicate series exists</span>
             </span>
           </div>
         </div>
-        <button class="btn btn-primary" ng-disabled="memberForm.$invalid" ng-click="incrementMemberInput()"><span class="glyphicon glyphicon-plus"></span> Add Member</button>
+        <button class="btn btn-primary" ng-disabled="memberForm.$invalid" ng-click="incrementMemberInput()"><span class="glyphicon glyphicon-plus"></span> Member</button>
       </div>
+      <button class="btn btn-success" ng-disabled="memberForm.$invalid || memberInputList.length==0" ng-click="submitMembers()"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
     </form>
+    <div class="row" style="margin-top:30px">
+      <div ng-if="memberList.length==0">
+        <show-nothing stringb="noMember"></show-nothing>
+      </div>
+      <div ng-if="memberList.length>0">
+        <div class="data-table-area">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                <div class="data-table-list">
+                  <div class="basic-tb-hd">
+                    <h2>Products</h2>
+                  </div>
+                  <div class="table-responsive">
+                    <table id="data-table-basic" class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>Index</th>
+                          <th>Member Email</th>
+                          <th>Member Name</th>
+                          <th>Remove</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr ng-repeat="member in memberList">
+                          <td>{{$index+1}}</td>
+                          <td>{{member.email}}</td>
+                          <td>{{member.name}}</td>
+                          <td>
+                            <button class="btn btn-danger" ng-click="removeMember(member.email)">Remove</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <th>Index</th>
+                          <th>Member Email</th>
+                          <th>Member Name</th>
+                          <th>Remove</th>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

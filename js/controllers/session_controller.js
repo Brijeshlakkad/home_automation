@@ -45,8 +45,9 @@ myApp.controller("userController", function($rootScope, $scope, $localStorage, $
   $rootScope.inputNotValid=$sce.trustAsHtml("<span style='color:red;'><i class='glyphicon glyphicon-remove'></i></span>");
   $rootScope.inputValid=$sce.trustAsHtml("<span style='color:green;'><i class='glyphicon glyphicon-ok'></i></span>");
   $scope.noProduct="No Products";
-  $scope.noProductSerial="No Product Serial";
+  $scope.noProductSerial="No Product Serials";
   $scope.noSubscription="You do not have any subscription yet. Please register product using product serial in hardware.";
+  $scope.noMember="No Members";
 });
 myApp.directive('showNothing', function() {
   return {
