@@ -348,6 +348,9 @@
       }).when('/dealer_distributor/home', {
         templateUrl: 'dealer_distributor/dealer_home.html',
         controller: 'DealerHomeController'
+      }).when('/dealer_distributor/customer', {
+        templateUrl: 'dealer_distributor/sell_to_customer.html',
+        controller: 'DistributorCustomerController'
       }).when('/dealer_distributor/home/:productName', {
         templateUrl: 'dealer_distributor/assigned_product_serials.html',
         controller: 'DealerProductSerialsController'
@@ -396,6 +399,7 @@
   <script src="js/controllers/dealer_distributor/dealer_home_controller.js"></script>
   <script src="js/controllers/dealer_distributor/dealer_product_serials_controller.js"></script>
   <script src="js/controllers/dealer_distributor/assign_distributor_controller.js"></script>
+  <script src="js/controllers/dealer_distributor/distributor_customer_controller.js"></script>
   <script src="js/controllers/admin/admin_login_controller.js"></script>
   <script src="js/controllers/admin/admin_home_controller.js"></script>
   <script src="js/controllers/admin/create_product_controller.js"></script>
