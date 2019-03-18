@@ -134,12 +134,35 @@ function getMemberList($gotData){
   $gotData->errorMessage="Please, try again after few minutes!";
   return $gotData;
 }
+function removeChildUserHardware($con,$userID,$memberID){
+  $gotData=(object) null;
+  $gotData->error=false;
+  $u=getUserDataUsingID($con,$userID);
+  $userEmail=$u->email;
+  $sql="SELECT * FROM product_serial WHERE customer_email='$userEmail'";
+  $result=mysqli_query($con,$sql);
+  if($result){
+    while($row=mysqli_fetch_array($result)){
+      $hwSeries=$row['serial_no'];
+      $sql="DELETE FROM hardware WHERE uid='$memberID' AND series='$hwSeries'";
+      $check=mysqli_query($con,$sql);
+      if($check){
+      }
+    }
+    return $gotData;
+  }
+  $gotData->error=true;
+  $gotData->errorMessage="Please, try again after few minutes!";
+  return $gotData;
+}
 function removeMember($gotData){
   $userID=$gotData->user->userID;
   $memberEmail=$gotData->user->memberEmail;
   $member=getUserDataUsingEmail($gotData->con,$memberEmail);
   if(!$member->error){
     $memberID=$member->id;
+    $got=removeChildUserHardware($gotData->con,$userID,$memberID);
+    if($got->error) return $got;
     $sql="DELETE FROM allowed_user WHERE uid='$userID' AND member_id='$memberID'";
     $result=mysqli_query($gotData->con,$sql);
     if($result){
