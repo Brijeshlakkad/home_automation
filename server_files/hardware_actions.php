@@ -20,8 +20,13 @@ function createHardware($gotData){
   $hwName=$gotData->user->hw->hwName;
   $hwSeries=$gotData->user->hw->hwSeries;
   $hwIP=$gotData->user->hw->hwIP;
+  $u=getUserDataUsingEmail($gotData->con,$gotData->user->email);
+  if($u->error) return $u;
+  $userID=$u->id;
   $got=(object) null;
   $got->user=(object) null;
+  $got->user->email=$gotData->user->email;
+  $got->user->userID=$userID;
   $got->user->hwSeries=$hwSeries;
   $got->con=$gotData->con;
   $got->isModifying=false;
@@ -75,8 +80,13 @@ function renameHardware($gotData){
   $hwSeries=$gotData->user->hw->hwSeries;
   $hwIP=$gotData->user->hw->hwIP;
   $id=$gotData->user->hw->id;
+  $u=getUserDataUsingEmail($gotData->con,$gotData->user->email);
+  if($u->error) return $u;
+  $userID=$u->id;
   $got=(object) null;
   $got->user=(object) null;
+  $got->user->email=$gotData->user->email;
+  $got->user->userID=$userID;
   $got->user->hwSeries=$hwSeries;
   $got->isModifying=true;
   $got->user->id=$id;
@@ -130,15 +140,51 @@ function getHardwareData($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
+function checkAlreadyAdded($con,$hwSeries,$userID){
+    $sql="SELECT * FROM hardware WHERE uid='$userID' AND series='$hwSeries'";
+    $result=mysqli_query($con,$sql);
+    if($result){
+      if(mysqli_num_rows($result)>0){
+        return false;
+      }
+    }
+    return true;
+}
+function checkAllowedUser($con,$hwSeries,$email,$userID){
+  $sql="SELECT * FROM allowed_user WHERE member_id='$userID'";
+  $result=mysqli_query($con,$sql);
+  if($result){
+    while($row=mysqli_fetch_array($result)){
+      $parentID=$row['uid'];
+      $u=getUserDataUsingID($con,$parentID);
+      if($u->error) return $u;
+      $parentEmail=$u->email;
+      $sql="SELECT * FROM product_serial WHERE serial_no='$hwSeries' AND customer_email='$parentEmail'";
+      $check=mysqli_query($con,$sql);
+      if($check){
+        if(mysqli_num_rows($check)==1){
+          return checkAlreadyAdded($con,$hwSeries,$userID);
+        }
+      }
+    }
+  }
+  return false;
+}
 function checkHardwareSeries($gotData){
   $hwSeries = $gotData->user->hwSeries;
-  $sql="SELECT * FROM product_serial WHERE serial_no='$hwSeries' AND dealer_id!='-99' AND distributor_id!=''";
+  $email = $gotData->user->email;
+  $userID = $gotData->user->userID;
+  $sql="SELECT * FROM product_serial WHERE serial_no='$hwSeries' AND customer_email='$email'";
   $check=mysqli_query($gotData->con,$sql);
   if($check){
     if(mysqli_num_rows($check)==0){
-        $gotData->error=true;
-        $gotData->errorMessage="Hardware series doesn't exist with our record.";
-        return $gotData;
+        if(checkAllowedUser($gotData->con,$hwSeries,$email,$userID)){
+          return $gotData;
+        }else{
+          $gotData->error=true;
+          $gotData->errorMessage="Hardware series can not be used.";
+          return $gotData;
+        }
     }
     if($gotData->isModifying){
       $id=$gotData->user->id;

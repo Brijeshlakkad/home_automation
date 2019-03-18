@@ -3,6 +3,7 @@ require_once("config.php");
 require_once("home_data.php");
 require_once("room_data.php");
 require_once("hardware_data.php");
+require_once("user_data.php");
 function getUserID($gotData)
 {
   $email=$gotData->user->email;
@@ -44,6 +45,8 @@ function createSubscription($gotData){
   return $gotData;
 }
 function createHardware($gotData){
+  $gotData=getUserID($gotData);
+  if($gotData->error) return $gotData;
   $homeID=$gotData->user->hw->homeID;
   $roomID=$gotData->user->hw->roomID;
   $hwName=$gotData->user->hw->hwName;
@@ -51,14 +54,14 @@ function createHardware($gotData){
   $hwIP=$gotData->user->hw->hwIP;
   $got=(object) null;
   $got->user=(object) null;
+  $got->user->email=$gotData->user->email;
+  $got->user->userID=$gotData->user->userID;
   $got->user->hwSeries=$hwSeries;
   $got->con=$gotData->con;
   $got->isModifying=false;
   $got->error=false;
   $got=checkHardwareSeries($got);
   if($got->error) return $got;
-  $gotData=getUserID($gotData);
-  if($gotData->error) return $gotData;
   $userID=$gotData->user->userID;
   $sql="INSERT INTO hardware(uid,hid,rid,name,series,ip_value) VALUES('$userID','$homeID','$roomID','$hwName','$hwSeries','$hwIP')";
   $result=mysqli_query($gotData->con,$sql);
@@ -111,6 +114,8 @@ function renameHardware($gotData){
   $id=$gotData->user->hw->id;
   $got=(object) null;
   $got->user=(object) null;
+  $got->user->email=$gotData->user->email;
+  $got->user->userID=$gotData->user->userID;
   $got->user->hwSeries=$hwSeries;
   $got->isModifying=true;
   $got->user->id=$id;
@@ -207,15 +212,51 @@ function getHardwareList($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
+function checkAlreadyAdded($con,$hwSeries,$userID){
+    $sql="SELECT * FROM hardware WHERE uid='$userID' AND series='$hwSeries'";
+    $result=mysqli_query($con,$sql);
+    if($result){
+      if(mysqli_num_rows($result)>0){
+        return false;
+      }
+    }
+    return true;
+}
+function checkAllowedUser($con,$hwSeries,$email,$userID){
+  $sql="SELECT * FROM allowed_user WHERE member_id='$userID'";
+  $result=mysqli_query($con,$sql);
+  if($result){
+    while($row=mysqli_fetch_array($result)){
+      $parentID=$row['uid'];
+      $u=getUserDataUsingID($con,$parentID);
+      if($u->error) return $u;
+      $parentEmail=$u->email;
+      $sql="SELECT * FROM product_serial WHERE serial_no='$hwSeries' AND customer_email='$parentEmail'";
+      $check=mysqli_query($con,$sql);
+      if($check){
+        if(mysqli_num_rows($check)==1){
+          return checkAlreadyAdded($con,$hwSeries,$userID);
+        }
+      }
+    }
+  }
+  return false;
+}
 function checkHardwareSeries($gotData){
   $hwSeries = $gotData->user->hwSeries;
-  $sql="SELECT * FROM product_serial WHERE serial_no='$hwSeries' AND dealer_id!='-99' AND distributor_id!=''";
+  $email = $gotData->user->email;
+  $userID = $gotData->user->userID;
+  $sql="SELECT * FROM product_serial WHERE serial_no='$hwSeries' AND customer_email='$email'";
   $check=mysqli_query($gotData->con,$sql);
   if($check){
     if(mysqli_num_rows($check)==0){
-        $gotData->error=true;
-        $gotData->errorMessage="Hardware series doesn't exist with our record.";
-        return $gotData;
+        if(checkAllowedUser($gotData->con,$hwSeries,$email,$userID)){
+          return $gotData;
+        }else{
+          $gotData->error=true;
+          $gotData->errorMessage="Hardware series can not be used.";
+          return $gotData;
+        }
     }
     if($gotData->isModifying){
       $id=$gotData->user->id;
@@ -288,14 +329,18 @@ if(isset($_REQUEST['action'])){
     $gotData->user->hw->hwIP=$hwIP;
     $r=getRoomDataUsingName($gotData->con,$userID,$roomName,$homeName);
     if($r->error){
+      $gotData->con=(object) null;
       echo json_encode($r);
+      exit();
     }else{
       $roomID=$r->roomID;
       $gotData->user->hw->roomID=$roomID;
       $homeID=$r->homeID;
       $gotData->user->hw->homeID=$homeID;
       $gotData=createHardware($gotData);
+      $gotData->con=(object) null;
       echo json_encode($gotData);
+      exit();
     }
   }
   else if($action=="2" && isset($_REQUEST['email']) && isset($_REQUEST['id'])){
@@ -311,7 +356,9 @@ if(isset($_REQUEST['action'])){
     $gotData->user->hw->id=$id;
     $gotData->user->hw->email=$email;
     $gotData=deleteHardware($gotData);
+    $gotData->con=(object) null;
     echo json_encode($gotData);
+    exit();
   }
   else if($action=="3" && isset($_REQUEST['email']) && isset($_REQUEST['hwName']) && isset($_REQUEST['hwSeries']) && isset($_REQUEST['hwIP']) && isset($_REQUEST['id'])){
     $email=$_REQUEST['email'];
@@ -333,7 +380,9 @@ if(isset($_REQUEST['action'])){
     $gotData->user->hw->hwSeries=$hwSeries;
     $gotData->user->hw->hwIP=$hwIP;
     $gotData=renameHardware($gotData);
+    $gotData->con=(object) null;
     echo json_encode($gotData);
+    exit();
   }else if($action=="4" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['userID']))
   {
     $email=$_REQUEST['email'];
@@ -351,14 +400,18 @@ if(isset($_REQUEST['action'])){
     $gotData->user->action=$action;
     $r=getRoomDataUsingName($gotData->con,$userID,$roomName,$homeName);
     if($r->error){
+      $gotData->con=(object) null;
       echo json_encode($r);
+      exit();
     }else{
       $roomID=$r->roomID;
       $gotData->user->roomID=$roomID;
       $homeID=$r->homeID;
       $gotData->user->homeID=$homeID;
       $gotData=getHardwareList($gotData);
+      $gotData->con=(object) null;
       echo json_encode($gotData);
+      exit();
     }
   }else if($action=="5" && isset($_REQUEST['hwSeries'])){
     $hwSeries=$_REQUEST['hwSeries'];
@@ -371,11 +424,13 @@ if(isset($_REQUEST['action'])){
     $gotData=checkHardwareSeries($gotData);
     $gotData->con=(object) null;
     echo json_encode($gotData);
+    exit();
   }else{
     $gotData = (object) null;
     $gotData->error=true;
     $gotData->errorMessage="Please, try again after few minutes!";
     echo json_encode($gotData);
+    exit();
   }
 }else{
   $gotData = (object) null;
