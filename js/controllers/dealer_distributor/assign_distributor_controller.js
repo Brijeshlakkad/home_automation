@@ -105,6 +105,31 @@ myApp.controller("AssignDistributorController", function($rootScope, $scope, $ht
       $rootScope.body.removeClass("loading")
     });
   };
+  $scope.assignProductSerialUsingSerial = function(distributorEmail, selectedProductID, productSerial) {
+    $rootScope.body.addClass("loading");
+    $http({
+      method: "POST",
+      url: "dealer_distributor/dealer_distributor_interface.php",
+      data: "action=11&soldToEmail=" + distributorEmail + "&productID=" + selectedProductID + "&productSerial=" + productSerial + "&userID=" + $scope.userID + "&userType=" + $scope.userType,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }).then(function mySuccess(response) {
+      var data = response.data;
+      $rootScope.body.removeClass("loading");
+      if (!data.error) {
+        var message = data.responseMessage;
+        $rootScope.body.removeClass("loading");
+        $window.location.href = data.user.location;
+        $rootScope.showSuccessDialog(message);
+      } else {
+        $rootScope.body.removeClass("loading");
+        $rootScope.showErrorDialog(data.errorMessage);
+      }
+    }, function myError(response) {
+      $rootScope.body.removeClass("loading")
+    });
+  };
 });
 myApp.directive("distributorEmailExistsDir", function($rootScope, $http) {
   return {

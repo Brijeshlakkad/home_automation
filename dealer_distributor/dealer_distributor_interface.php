@@ -269,7 +269,7 @@ function checkProductSerialExists($gotData){
   $productSerial=$gotData->user->productSerial;
   $productID=$gotData->user->productID;
   if($userType=="dealer"){
-    $sql="SELECT * FROM product_serial WHERE product_id='$productID' AND dealer_id='$userID' AND serial_no='$productSerial' AND customer_email IS NULL";
+    $sql="SELECT * FROM product_serial WHERE product_id='$productID' AND dealer_id='$userID' AND serial_no='$productSerial' AND distributor_id IS NULL AND customer_email IS NULL";
   }else{
     $sql="SELECT * FROM product_serial WHERE product_id='$productID' AND dealer_id!='-99' AND distributor_id='$userID' AND serial_no='$productSerial' AND customer_email IS NULL";
   }
