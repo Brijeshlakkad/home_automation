@@ -7,8 +7,10 @@
           <nav id="dropdown">
             <ul class="mobile-menu-nav">
               <li><a href="#!dealer_distributor/home">Home</a></li>
+              <li ng-if="userType=='dealer'"><a href="#!dealer_distributor/distributor" data-toggle="tab">Assign Distributor</a>
+              </li>
               <li ng-if="userType=='distributor'"><a href="#!dealer_distributor/customer">Assign Customer</a></li>
-              <li ng-if="userType=='distributor'"><a href="#!dealer_distributor/productsold">Product Sold</a></li>
+              <li><a href="#!dealer_distributor/productsold">Product Sold</a></li>
             </ul>
           </nav>
         </div>
@@ -25,9 +27,11 @@
         <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
           <li><a href="#!dealer_distributor/home" data-toggle="tab"><i class="notika-icon notika-house"></i> Home</a>
           </li>
+          <li ng-if="userType=='dealer'"><a href="#!dealer_distributor/distributor" data-toggle="tab">Assign Distributor</a>
+          </li>
           <li ng-if="userType=='distributor'"><a href="#!dealer_distributor/customer">Customer</a>
           </li>
-          <li class="active" ng-if="userType=='distributor'"><a href="#!dealer_distributor/productsold">Product Sold</a>
+          <li class="active"><a href="#!dealer_distributor/productsold">Product Sold</a>
           </li>
         </ul>
       </div>
@@ -71,12 +75,12 @@
                         <td>
                           {{product.serialNo}}
                         </td>
-                        <td>
+                        <td ng-if="userType=='distributor'">
                           <span ng-show="showTextFieldArray[$index]">
                             <div class="row">
                               <form class="changeCustomerEmailForm{{$index}}" novalidate>
                                 <div class="col-lg-8 col-md-7 col-sm-7 col-xs-6">
-                                  <input type="email" class="form-control input-sm" name="changeCustomerEmail" ng-model="changeCustomerEmailModel" ng-required="true" customer-email-dir/>
+                                  <input type="email" class="form-control input-sm" name="changeCustomerEmail" ng-model="changeCustomerEmailModel" ng-required="true" customer-email-dir />
                                   <span style="color:red;" ng-show="changeCustomerEmailForm{{$index}}.changeCustomerEmail.$dirty && changeCustomerEmailForm{{$index}}.changeCustomerEmail.$invalid">
                                     <span ng-show="changeCustomerEmailForm{{$index}}.changeCustomerEmail.$error.required">Customer Email ID is required</span>
                                     <span ng-show="!changeCustomerEmailForm{{$index}}.changeCustomerEmail.$error.required && changeCustomerEmailForm{{$index}}.changeCustomerEmail.$error.emailValid">Customer Email ID is not correct</span>
@@ -89,6 +93,9 @@
                             </div>
                           </span>
                           <span ng-show="!showTextFieldArray[$index]" ng-click="changeToTextField(product,$index)">{{product.soldToEmail}}</span>
+                        </td>
+                        <td ng-if="userType=='dealer'">
+                          {{product.soldToEmail}}
                         </td>
                       </tr>
                     </tbody>

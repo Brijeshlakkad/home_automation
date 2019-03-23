@@ -268,6 +268,13 @@ function changeSerialCustomerEmail($gotData){
   $serialNo=$gotData->user->serialNo;
   $customerEmail=$gotData->user->customerEmail;
   $oldCustomerEmail=$gotData->user->oldCustomerEmail;
+  $dis=getDealerDataUsingEmail($gotData->con,$userID);
+  if($dis->error) return $dis;
+  if($dis->type!='distributor'){
+    $gotData->error=true;
+    $gotData->errorMessage="You don't have the rigths to modify.";
+    return $gotData;
+  }
   $gotData=checkCustomerEmail($gotData);
   if($gotData->error) return $gotData;
   if($gotData->user->customerEmailExists){
