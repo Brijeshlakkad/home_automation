@@ -229,6 +229,62 @@ function sellProduct($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
+function getProductSoldList($gotData){
+  $id=$gotData->user->id;
+  $type=$gotData->user->type;
+  if($type=="dealer"){
+    $sql="SELECT * FROM product_serial WHERE dealer_id='$id' AND distributor_id!=''";
+  }else{
+    $sql="SELECT * FROM product_serial WHERE dealer_id!='-99' AND distributor_id='$id' AND customer_email!=''";
+  }
+  $result=mysqli_query($gotData->con,$sql);
+  if($result){
+    $gotData->user->totalRows=mysqli_num_rows($result);
+    if($gotData->user->totalRows>0){
+      $i=0;
+      while($row=mysqli_fetch_array($result)){
+        $p=getProductDataUsingID($gotData->con,$row['product_id']);
+        $gotData->user->productSold[$i]=(object) null;
+        $gotData->user->productSold[$i]->productName=$p->name;
+        $gotData->user->productSold[$i]->serialNo=$row['serial_no'];
+        if($type=="dealer"){
+          $d=getDealerDataUsingID($gotData->con,$row['distributor_id']);
+          $distributorEmail=$d->email;
+          $gotData->user->productSold[$i]->soldToEmail=$distributorEmail;
+        }else{
+          $gotData->user->productSold[$i]->soldToEmail=$row['customer_email'];
+        }
+        $i++;
+      }
+    }
+    return $gotData;
+  }
+  $gotData->error=true;
+  $gotData->errorMessage="Try again!";
+  return $gotData;
+}
+function changeSerialCustomerEmail($gotData){
+  $userID=$gotData->user->userID;
+  $serialNo=$gotData->user->serialNo;
+  $customerEmail=$gotData->user->customerEmail;
+  $oldCustomerEmail=$gotData->user->oldCustomerEmail;
+  $gotData=checkCustomerEmail($gotData);
+  if($gotData->error) return $gotData;
+  if($gotData->user->customerEmailExists){
+    $sql="UPDATE product_serial SET customer_email='$customerEmail' WHERE serial_no='$serialNo' AND customer_email='$oldCustomerEmail' AND distributor_id='$userID'";
+    $result=mysqli_query($gotData->con,$sql);
+    if($result){
+      $gotData->responseMessage="Customer email has been changed!";
+      return $gotData;
+    }
+    $gotData->error=true;
+    $gotData->errorMessage="Something went wrong!";
+    return $gotData;
+  }
+  $gotData->error=true;
+  $gotData->errorMessage=$customerEmail." email is not exists with records";
+  return $gotData;
+}
 $gotData=(object) null;
 $gotData->error=false;
 $gotData->errorMessage=null;
@@ -309,6 +365,26 @@ if(isset($_REQUEST['action'])){
     $gotData->user->numProductSerials=$_REQUEST['numProductSerials'];
     $gotData->user->distributorID=$_REQUEST['distributorID'];
     $gotData=sellProduct($gotData);
+    $gotData->con=(object) null;
+    echo json_encode($gotData);
+    exit();
+  }else if($action==8 && isset($_REQUEST['id']) && isset($_REQUEST['type'])){
+    $gotData->con=$con;
+    $gotData->user=(object) null;
+    $gotData->user->id=$_REQUEST['id'];
+    $gotData->user->type=$_REQUEST['type'];
+    $gotData=getProductSoldList($gotData);
+    $gotData->con=(object) null;
+    echo json_encode($gotData);
+    exit();
+  }else if($action==9 && isset($_REQUEST['userID']) && isset($_REQUEST['serialNo']) && isset($_REQUEST['customerEmail']) && isset($_REQUEST['oldCustomerEmail'])){
+    $gotData->con=$con;
+    $gotData->user=(object) null;
+    $gotData->user->userID=$_REQUEST['userID'];
+    $gotData->user->serialNo=$_REQUEST['serialNo'];
+    $gotData->user->customerEmail=$_REQUEST['customerEmail'];
+    $gotData->user->oldCustomerEmail=$_REQUEST['oldCustomerEmail'];
+    $gotData=changeSerialCustomerEmail($gotData);
     $gotData->con=(object) null;
     echo json_encode($gotData);
     exit();

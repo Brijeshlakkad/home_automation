@@ -7,7 +7,6 @@
           <nav id="dropdown">
             <ul class="mobile-menu-nav">
               <li><a href="#!dealer_distributor/home">Home</a></li>
-              <li ng-if="userType=='dealer'"><a href="#!dealer_distributor/distributor">Assign Distributor</a></li>
               <li ng-if="userType=='distributor'"><a href="#!dealer_distributor/customer">Assign Customer</a></li>
               <li ng-if="userType=='distributor'"><a href="#!dealer_distributor/productsold">Product Sold</a></li>
             </ul>
@@ -24,13 +23,11 @@
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
-          <li class="active"><a href="#!dealer_distributor/home" data-toggle="tab"><i class="notika-icon notika-house"></i> Home</a>
-          </li>
-          <li ng-if="userType=='dealer'"><a href="#!dealer_distributor/distributor" data-toggle="tab">Assign Distributor</a>
+          <li><a href="#!dealer_distributor/home" data-toggle="tab"><i class="notika-icon notika-house"></i> Home</a>
           </li>
           <li ng-if="userType=='distributor'"><a href="#!dealer_distributor/customer">Customer</a>
           </li>
-          <li ng-if="userType=='distributor'"><a href="#!dealer_distributor/productsold">Product Sold</a>
+          <li class="active" ng-if="userType=='distributor'"><a href="#!dealer_distributor/productsold">Product Sold</a>
           </li>
         </ul>
       </div>
@@ -38,12 +35,13 @@
   </div>
 </div>
 <!-- Main Menu area End-->
-<div class="container">
+
+<div class="container" style="margin-top:20px;">
   <div class="row">
-    <div ng-if="productArray.length==0">
+    <div ng-if="productSoldList.length==0">
       <show-nothing stringb="noProduct"></show-nothing>
     </div>
-    <div ng-if="productArray.length>0">
+    <div ng-if="productSoldList.length>0">
       <div class="data-table-area">
         <div class="container">
           <div class="row">
@@ -58,39 +56,39 @@
                       <tr>
                         <th>index</th>
                         <th>Product Name</th>
-                        <th>Selling Rate</th>
-                        <th>Purchase Rate</th>
-                        <th>Product code</th>
-                        <th>Taxation</th>
-                        <th>Hashcode</th>
-                        <th>Qty Name</th>
+                        <th>Serial No</th>
+                        <th>Customer Email</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr ng-repeat="product in productArray track by $id(product)" ng-click="goToProduct(product.name)" style="cursor:pointer;">
+                      <tr ng-repeat="product in productSoldList track by $id(product)" style="cursor:pointer;">
                         <td>
                           {{$index+1}}
                         </td>
                         <td>
-                          {{product.name}}
+                          {{product.productName}}
                         </td>
                         <td>
-                          {{product.s_rate}}
+                          {{product.serialNo}}
                         </td>
                         <td>
-                          {{product.p_rate}}
-                        </td>
-                        <td>
-                          {{product.product_code}}
-                        </td>
-                        <td>
-                          {{product.taxation}}
-                        </td>
-                        <td>
-                          {{product.hsncode}}
-                        </td>
-                        <td>
-                          {{product.qty_name}}
+                          <span ng-show="showTextFieldArray[$index]">
+                            <div class="row">
+                              <form class="changeCustomerEmailForm{{$index}}" novalidate>
+                                <div class="col-lg-8 col-md-7 col-sm-7 col-xs-6">
+                                  <input type="email" class="form-control input-sm" name="changeCustomerEmail" ng-model="changeCustomerEmailModel" ng-required="true" customer-email-dir/>
+                                  <span style="color:red;" ng-show="changeCustomerEmailForm{{$index}}.changeCustomerEmail.$dirty && changeCustomerEmailForm{{$index}}.changeCustomerEmail.$invalid">
+                                    <span ng-show="changeCustomerEmailForm{{$index}}.changeCustomerEmail.$error.required">Customer Email ID is required</span>
+                                    <span ng-show="!changeCustomerEmailForm{{$index}}.changeCustomerEmail.$error.required && changeCustomerEmailForm{{$index}}.changeCustomerEmail.$error.emailValid">Customer Email ID is not correct</span>
+                                  </span>
+                                </div>
+                                <div class="col-lg-4 col-md-5 col-sm-5 col-xs-6">
+                                  <button type="submit" ng-disabled="changeCustomerEmailForm{{$index}}.$invalid" class="btn btn-sm btn-success" ng-click="backToLabel(product,$index,changeCustomerEmailModel)">Change</button>
+                                </div>
+                              </form>
+                            </div>
+                          </span>
+                          <span ng-show="!showTextFieldArray[$index]" ng-click="changeToTextField(product,$index)">{{product.soldToEmail}}</span>
                         </td>
                       </tr>
                     </tbody>
@@ -98,12 +96,8 @@
                       <tr>
                         <th>index</th>
                         <th>Product Name</th>
-                        <th>Selling Rate</th>
-                        <th>Purchase Rate</th>
-                        <th>Product code</th>
-                        <th>Taxation</th>
-                        <th>Hashcode</th>
-                        <th>Qty Name</th>
+                        <th>Serial No</th>
+                        <th>Customer Email</th>
                       </tr>
                     </tfoot>
                   </table>
