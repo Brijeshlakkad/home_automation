@@ -38,75 +38,156 @@
 
 <div class="container" style="margin-top:20px;">
   <div class="row">
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+      <label>Using Quantity</label>
+      <input type="radio" name="usingQuantity" value="0" ng-model="usingQuantity"/>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+      <label>Using Serial</label>
+      <input type="radio" name="usingQuantity" value="1" ng-model="usingQuantity"/>
+    </div>
+  </div>
+  <div class="row">
     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-0">
     </div>
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-      <form name="sellToCustomerForm" novalidate>
-        <div class="row">
-          <div class="input-group">
-            <div class="input-group-addon">
-              <span>Product: </span>
-            </div>
-            <select class="form-control" ng-model="selectedProduct" name="selectedProduct" ng-options="option.name for option in productList track by option.name" ng-change="changedProductSelected(selectedProduct)" ng-style="selectProductStyle"
-              ng-required="true"></select>
-            <div class="input-group-addon" ng-show="sellToCustomerForm.selectedProduct.$dirty && sellToCustomerForm.selectedProduct.$invalid" ng-bind-html="inputNotValid">
-            </div>
-            <div class="input-group-addon" ng-show="sellToCustomerForm.selectedProduct.$dirty && !sellToCustomerForm.selectedProduct.$invalid" ng-bind-html="inputValid">
-            </div>
-          </div>
-          <span style="color:red;" ng-show="assignDistributorForm.selectedProduct.$dirty && assignDistributorForm.selectedProduct.$invalid">
-            <span ng-show="assignDistributorForm.selectedProduct.$error.required">Product selection is required</span>
-          </span>
-        </div>
-        <br />
-        <div class="row" ng-show="maxNumProductSerials==0" style="color:rgba(236,95,26,1)">
-          All {{product.name}} has been selled.
-        </div>
-        <div class="row" ng-show="maxNumProductSerials!=0">
-          <div class="input-group">
-            <div class="input-group-addon">
-              <span>Quantity: </span>
-            </div>
-            <input class="form-control" type="number" name="quantity" min="{{minNumProductSerials}}" max="{{maxNumProductSerials}}" step="1" ng-model="quantity" ng-required="true" range-number-dir />
-            <div class="input-group-addon" ng-show="sellToCustomerForm.quantity.$dirty && sellToCustomerForm.quantity.$invalid" ng-bind-html="inputNotValid">
-            </div>
-            <div class="input-group-addon" ng-show="sellToCustomerForm.quantity.$dirty && !sellToCustomerForm.quantity.$invalid" ng-bind-html="inputValid">
-            </div>
-          </div>
-          <span style="color:red;" ng-show="sellToCustomerForm.quantity.$dirty && sellToCustomerForm.quantity.$invalid">
-            <span ng-show="sellToCustomerForm.quantity.$error.required">Please specify quantity of product</span>
-            <span ng-show="!sellToCustomerForm.quantity.$error.required && sellToCustomerForm.quantity.$error.rangeNumberValid">Please specify number between from {{minNumProductSerials-1}} to {{maxNumProductSerials}}</span>
-          </span>
-        </div>
-        <br />
-        <div class="row" ng-show="maxNumProductSerials!=0">
+      <div ng-show="usingQuantity==0">
+        <form name="sellToCustomerForm" novalidate>
           <div class="row">
-            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
-              <div class="input-group">
-                <div class="input-group-addon">
-                  <span>Customer Email: </span>
-                </div>
-                <input class="form-control" type="email" name="customerEmail" ng-model="customerEmail" ng-required="true" customer-email-exists-dir />
-                <div class="input-group-addon" ng-show="sellToCustomerForm.customerEmail.$dirty && sellToCustomerForm.customerEmail.$invalid" ng-bind-html="inputNotValid">
-                </div>
-                <div class="input-group-addon" ng-show="sellToCustomerForm.customerEmail.$dirty && !sellToCustomerForm.customerEmail.$invalid" ng-bind-html="inputValid">
-                </div>
+            <div class="input-group">
+              <div class="input-group-addon">
+                <span>Product: </span>
+              </div>
+              <select class="form-control" ng-model="selectedProduct" name="selectedProduct" ng-options="option.name for option in productList track by option.name" ng-change="changedProductSelected(selectedProduct)" ng-style="selectProductStyle"
+                ng-required="true"></select>
+              <div class="input-group-addon" ng-show="sellToCustomerForm.selectedProduct.$dirty && sellToCustomerForm.selectedProduct.$invalid" ng-bind-html="inputNotValid">
+              </div>
+              <div class="input-group-addon" ng-show="sellToCustomerForm.selectedProduct.$dirty && !sellToCustomerForm.selectedProduct.$invalid" ng-bind-html="inputValid">
               </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-              <span style="margin-top:10px;font-size:13px;" ng-show="sellToCustomerForm.customerEmail.$dirty && !sellToCustomerForm.customerEmail.$invalid">{{customerDetail}}</span>
-            </div>
+            <span style="color:red;" ng-show="sellToCustomerSerialForm.selectedProduct.$dirty && sellToCustomerSerialForm.selectedProduct.$invalid">
+              <span ng-show="sellToCustomerSerialForm.selectedProduct.$error.required">Product selection is required</span>
+            </span>
           </div>
-          <span style="color:red;" ng-show="sellToCustomerForm.customerEmail.$dirty && sellToCustomerForm.customerEmail.$invalid">
-            <span ng-show="sellToCustomerForm.customerEmail.$error.required">Customer Email ID is required</span>
-            <span ng-show="!sellToCustomerForm.customerEmail.$error.required && sellToCustomerForm.customerEmail.$error.emailValid">Customer Email ID is not correct</span>
-          </span>
-        </div>
-        <br />
-        <div class="row">
-          <button class="btn btn-primary" ng-show="maxNumProductSerials!=0" type="submit" ng-disabled="sellToCustomerForm.$invalid" ng-click="sellProduct(customerEmail,selectedProduct.id,quantity)">Sell Now!</button>
-        </div>
-      </form>
+          <br />
+          <div class="row" ng-show="maxNumProductSerials==0" style="color:rgba(236,95,26,1)">
+            All {{product.name}} has been selled.
+          </div>
+          <div class="row" ng-show="maxNumProductSerials!=0 && sellToCustomerForm.selectedProduct.$valid">
+            <div class="input-group">
+              <div class="input-group-addon">
+                <span>Quantity: </span>
+              </div>
+              <input class="form-control" type="number" name="quantity" min="{{minNumProductSerials}}" max="{{maxNumProductSerials}}" step="1" ng-model="quantity" ng-required="true" range-number-dir />
+              <div class="input-group-addon" ng-show="sellToCustomerForm.quantity.$dirty && sellToCustomerForm.quantity.$invalid" ng-bind-html="inputNotValid">
+              </div>
+              <div class="input-group-addon" ng-show="sellToCustomerForm.quantity.$dirty && !sellToCustomerForm.quantity.$invalid" ng-bind-html="inputValid">
+              </div>
+            </div>
+            <span style="color:red;" ng-show="sellToCustomerForm.quantity.$dirty && sellToCustomerForm.quantity.$invalid">
+              <span ng-show="sellToCustomerForm.quantity.$error.required">Please specify quantity of product</span>
+              <span ng-show="!sellToCustomerForm.quantity.$error.required && sellToCustomerForm.quantity.$error.rangeNumberValid">Please specify number between from {{minNumProductSerials-1}} to {{maxNumProductSerials}}</span>
+            </span>
+          </div>
+          <br />
+          <div class="row" ng-show="maxNumProductSerials!=0 && sellToCustomerForm.quantity.$valid">
+            <div class="row">
+              <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                <div class="input-group">
+                  <div class="input-group-addon">
+                    <span>Customer Email: </span>
+                  </div>
+                  <input class="form-control" type="email" name="customerEmail" ng-model="customerEmail" ng-required="true" customer-email-exists-dir />
+                  <div class="input-group-addon" ng-show="sellToCustomerForm.customerEmail.$dirty && sellToCustomerForm.customerEmail.$invalid" ng-bind-html="inputNotValid">
+                  </div>
+                  <div class="input-group-addon" ng-show="sellToCustomerForm.customerEmail.$dirty && !sellToCustomerForm.customerEmail.$invalid" ng-bind-html="inputValid">
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <span style="margin-top:10px;font-size:13px;" ng-show="sellToCustomerForm.customerEmail.$dirty && !sellToCustomerForm.customerEmail.$invalid">{{customerDetail}}</span>
+              </div>
+            </div>
+            <span style="color:red;" ng-show="sellToCustomerForm.customerEmail.$dirty && sellToCustomerForm.customerEmail.$invalid">
+              <span ng-show="sellToCustomerForm.customerEmail.$error.required">Customer Email ID is required</span>
+              <span ng-show="!sellToCustomerForm.customerEmail.$error.required && sellToCustomerForm.customerEmail.$error.emailValid">Customer Email ID is not correct</span>
+            </span>
+          </div>
+          <br />
+          <div class="row">
+            <button class="btn btn-primary" ng-show="maxNumProductSerials!=0" type="submit" ng-disabled="sellToCustomerForm.$invalid" ng-click="sellProduct(customerEmail,selectedProduct.id,quantity)">Sell Now!</button>
+          </div>
+        </form>
+      </div>
+      <div ng-show="usingQuantity==1">
+        <form name="sellToCustomerSerialForm" novalidate>
+          <div class="row">
+            <div class="input-group">
+              <div class="input-group-addon">
+                <span>Product: </span>
+              </div>
+              <select class="form-control" ng-model="selectedProduct" name="selectedProduct" ng-options="option.name for option in productList track by option.name" ng-change="changedProductSelected(selectedProduct)" ng-style="selectProductStyle"
+                ng-required="true"></select>
+              <div class="input-group-addon" ng-show="sellToCustomerSerialForm.selectedProduct.$dirty && sellToCustomerSerialForm.selectedProduct.$invalid" ng-bind-html="inputNotValid">
+              </div>
+              <div class="input-group-addon" ng-show="sellToCustomerSerialForm.selectedProduct.$dirty && !sellToCustomerSerialForm.selectedProduct.$invalid" ng-bind-html="inputValid">
+              </div>
+            </div>
+            <span style="color:red;" ng-show="sellToCustomerSerialForm.selectedProduct.$dirty && sellToCustomerSerialForm.selectedProduct.$invalid">
+              <span ng-show="sellToCustomerSerialForm.selectedProduct.$error.required">Product selection is required</span>
+            </span>
+          </div>
+          <br />
+          <div class="row" ng-show="maxNumProductSerials==0" style="color:rgba(236,95,26,1)">
+            All {{product.name}} has been selled.
+          </div>
+          <div class="row" ng-show="maxNumProductSerials!=0 && sellToCustomerSerialForm.selectedProduct.$valid">
+            <div class="input-group">
+              <div class="input-group-addon">
+                <span>Product Serial </span>
+              </div>
+              <input class="form-control" type="text" name="productSerial" ng-model="productSerial" ng-required="true" product-serial-exists-dir />
+              <div class="input-group-addon" ng-show="sellToCustomerSerialForm.productSerial.$dirty && sellToCustomerSerialForm.productSerial.$invalid" ng-bind-html="inputNotValid">
+              </div>
+              <div class="input-group-addon" ng-show="sellToCustomerSerialForm.productSerial.$dirty && !sellToCustomerSerialForm.productSerial.$invalid" ng-bind-html="inputValid">
+              </div>
+            </div>
+            <span style="color:red;" ng-show="sellToCustomerSerialForm.productSerial.$dirty && sellToCustomerSerialForm.productSerial.$invalid">
+              <span ng-show="sellToCustomerSerialForm.productSerial.$error.required">Please specify productSerial of product</span>
+              <span ng-show="!sellToCustomerSerialForm.productSerial.$error.required && sellToCustomerSerialForm.productSerial.$error.productSerialValid">Please specify valid product serial</span>
+              <span ng-show="!sellToCustomerSerialForm.productSerial.$error.required && sellToCustomerSerialForm.productSerial.$error.productSerialExists">Product Serial does not exists with product or record or it's been used</span>
+            </span>
+          </div>
+          <br />
+          <div class="row" ng-show="maxNumProductSerials!=0 && sellToCustomerSerialForm.productSerial.$valid">
+            <div class="row">
+              <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                <div class="input-group">
+                  <div class="input-group-addon">
+                    <span>Customer Email: </span>
+                  </div>
+                  <input class="form-control" type="email" name="customerEmail" ng-model="customerEmail" ng-required="true" customer-email-exists-dir />
+                  <div class="input-group-addon" ng-show="sellToCustomerSerialForm.customerEmail.$dirty && sellToCustomerSerialForm.customerEmail.$invalid" ng-bind-html="inputNotValid">
+                  </div>
+                  <div class="input-group-addon" ng-show="sellToCustomerSerialForm.customerEmail.$dirty && !sellToCustomerSerialForm.customerEmail.$invalid" ng-bind-html="inputValid">
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <span style="margin-top:10px;font-size:13px;" ng-show="sellToCustomerSerialForm.customerEmail.$dirty && !sellToCustomerSerialForm.customerEmail.$invalid">{{customerDetail}}</span>
+              </div>
+            </div>
+            <span style="color:red;" ng-show="sellToCustomerSerialForm.customerEmail.$dirty && sellToCustomerSerialForm.customerEmail.$invalid">
+              <span ng-show="sellToCustomerSerialForm.customerEmail.$error.required">Customer Email ID is required</span>
+              <span ng-show="!sellToCustomerSerialForm.customerEmail.$error.required && sellToCustomerSerialForm.customerEmail.$error.emailValid">Customer Email ID is not correct</span>
+            </span>
+          </div>
+          <br />
+          <div class="row">
+            <button class="btn btn-primary" ng-show="maxNumProductSerials!=0" type="submit" ng-disabled="sellToCustomerSerialForm.$invalid" ng-click="sellProductUsingSerial(customerEmail,selectedProduct.id,productSerial)">Sell Now!</button>
+          </div>
+        </form>
+      </div>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-0">
     </div>

@@ -11,6 +11,7 @@ myApp.controller("AssignDistributorController", function($rootScope, $scope, $ht
   $rootScope.minNumProductSerials = 1;
   $rootScope.showBlock2 = false;
   $rootScope.showBlock3 = false;
+  $rootScope.selectedProduct="";
   $scope.selectProductStyle = {
     "border-width": "1.45px",
     "border-color": "green"
@@ -40,9 +41,9 @@ myApp.controller("AssignDistributorController", function($rootScope, $scope, $ht
       var data = response.data;
       if (!data.error) {
         $scope.productList = data.d.product;
-        $scope.selectedProduct = $scope.productList[0];
+        $rootScope.selectedProduct = $scope.productList[0];
         $scope.numProductSerials = 0;
-        $scope.changedProductSelected($scope.productList[0], id);
+        $scope.changedProductSelected($scope.productList[0]);
         $rootScope.showBlock3 = true;
         $rootScope.body.removeClass("loading");
       } else {
@@ -53,13 +54,13 @@ myApp.controller("AssignDistributorController", function($rootScope, $scope, $ht
       $rootScope.body.removeClass("loading");
     });
   };
-  $scope.changedProductSelected = function(product, dealerID) {
-    var productID = product.id;
+  $scope.changedProductSelected = function(product) {
+    $rootScope.selectedProduct=product;
     $rootScope.body.addClass("loading");
     $http({
       method: "POST",
       url: "dealer_distributor/dealer_distributor_interface.php",
-      data: "action=3&productID=" + productID + "&id=" + dealerID,
+      data: "action=3&productID=" + $rootScope.selectedProduct.id+ "&id=" + $scope.userID,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
@@ -79,23 +80,23 @@ myApp.controller("AssignDistributorController", function($rootScope, $scope, $ht
     });
   };
   $scope.assignProductSerial = function(distributorEmail, selectedProductID, numProductSerials) {
-    var dealerID = $scope.userID;
     $rootScope.body.addClass("loading");
     $http({
       method: "POST",
       url: "dealer_distributor/dealer_distributor_interface.php",
-      data: "action=4&distributorEmail=" + distributorEmail + "&selectedProduct=" + selectedProductID + "&numProductSerials=" + numProductSerials + "&dealerID=" + dealerID,
+      data: "action=5&soldToEmail=" + distributorEmail + "&productID=" + selectedProductID + "&numProductSerials=" + numProductSerials + "&userID=" + $scope.userID+"&userType="+$scope.userType,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     }).then(function mySuccess(response) {
+      alert(JSON.stringify(response));
       var data = response.data;
+      $rootScope.body.removeClass("loading");
       if (!data.error) {
-        var distributorName = data.user.distributorName;
-        var numProductSerials = data.user.numProductSerials;
+        var message = data.responseMessage;
         $rootScope.body.removeClass("loading");
         $window.location.href = data.user.location;
-        $rootScope.openNotification($rootScope.dataFrom, $rootScope.dataAlign, $rootScope.dataIcon, $rootScope.dataType[0], $rootScope.dataAnimIn, $rootScope.dataAnimOut, "Assigned  ", distributorName + " has been assigned " + numProductSerials + " product serials.");
+        $rootScope.showSuccessDialog(message);
       } else {
         $rootScope.body.removeClass("loading");
         $rootScope.showErrorDialog(data.errorMessage);

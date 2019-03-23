@@ -51,7 +51,6 @@ myApp.controller("DealerLoginController", function($rootScope, $scope, $http, $w
             $scope.userID = $localStorage.userID;
             $scope.user = $localStorage.user;
         });*/
-        alert(""+flag.user.location);
         $window.location.href = flag.user.location;
         $rootScope.isLoggedIn = true;
       } else {

@@ -129,52 +129,6 @@ function getDealerProductSerialCount($gotData){
     $gotData->errorMessage="Try again!";
     return $gotData;
 }
-function assignProductSerial($gotData){
-  $dealerID=$gotData->user->dealerID;
-  $distributorEmail=$gotData->user->distributorEmail;
-  $selectedProduct=$gotData->user->selectedProduct;
-  $numProductSerials=$gotData->user->numProductSerials;
-  $d=getDealerDataUsingEmail($gotData->con,$distributorEmail);
-  if($d->error) return $d;
-  $distributorID=$d->id;
-  $gotData->user->distributorName=$d->name;
-  $sql="SELECT * FROM product_serial WHERE product_id='$selectedProduct' and dealer_id='$dealerID' AND distributor_id IS NULL LIMIT $numProductSerials";
-  $check=mysqli_query($gotData->con,$sql);
-  $serialIDs=[];
-  if($check){
-    if(mysqli_num_rows($check)==$numProductSerials){
-      $j=0;
-      while($row=mysqli_fetch_array($check)){
-        $serialIDs[$j]=$row['id'];
-        $j++;
-      }
-      $track=0;
-      $k=0;
-      $gotData->user->failed=(object) null;
-      while($track<$j){
-        $id=$serialIDs[$track];
-        $sql="UPDATE product_serial SET distributor_id='$distributorID' where id='$id'";
-        $check=mysqli_query($gotData->con,$sql);
-        if(!$check){
-          $gotData->user->failed->error=true;
-          $gotData->user->failed->productFailed[$k] = (object) null;
-          $gotData->user->failed->productFailed[$k] = $productSerial;
-          $gotData->user->failed->totalRows=$k;
-          $k++;
-        }
-        $track++;
-      }
-      $gotData->user->location="#!dealer_distributor/distributor";
-    }else{
-      $gotData->error=true;
-      $gotData->errorMessage=$numProductSerials." product serials can't be assigned.";
-    }
-    return $gotData;
-  }
-  $gotData->error=true;
-  $gotData->errorMessage="Try again!";
-  return $gotData;
-}
 function checkCustomerEmail($gotData){
   $customerEmail=$gotData->user->customerEmail;
   $gotData->user->customerEmailExists=false;
@@ -186,11 +140,20 @@ function checkCustomerEmail($gotData){
   return $gotData;
 }
 function sellProduct($gotData){
-  $customerEmail=$gotData->user->customerEmail;
+  $soldToEmail=$gotData->user->soldToEmail;
   $productID=$gotData->user->productID;
   $numProductSerials=$gotData->user->numProductSerials;
-  $distributorID=$gotData->user->distributorID;
-  $sql="SELECT * FROM product_serial WHERE product_id='$productID' AND distributor_id='$distributorID' AND customer_email IS NULL LIMIT $numProductSerials";
+  $userID=$gotData->user->userID;
+  $userType=$gotData->user->userType;
+  if($userType=="dealer"){
+    $d=getDealerDataUsingEmail($gotData->con,$soldToEmail);
+    if($d->error) return $d;
+    $distributorID=$d->id;
+    $gotData->user->distributorName=$d->name;
+    $sql="SELECT * FROM product_serial WHERE product_id='$productID' AND dealer_id='$userID' AND distributor_id IS NULL LIMIT $numProductSerials";
+  }else{
+    $sql="SELECT * FROM product_serial WHERE product_id='$productID' AND distributor_id='$userID' AND customer_email IS NULL LIMIT $numProductSerials";
+  }
   $check=mysqli_query($gotData->con,$sql);
   $serialIDs=[];
   if($check){
@@ -205,7 +168,11 @@ function sellProduct($gotData){
       $gotData->user->failed=(object) null;
       while($track<$j){
         $id=$serialIDs[$track];
-        $sql="UPDATE product_serial SET customer_email='$customerEmail' where id='$id'";
+        if($userType=="dealer"){
+          $sql="UPDATE product_serial SET distributor_id='$distributorID' where id='$id'";
+        }else{
+          $sql="UPDATE product_serial SET customer_email='$soldToEmail' where id='$id'";
+        }
         $check=mysqli_query($gotData->con,$sql);
         if(!$check){
           $gotData->user->failed->error=true;
@@ -217,8 +184,12 @@ function sellProduct($gotData){
         $track++;
       }
       $assigned=$numProductSerials-$k;
-      $gotData->user->location="#!dealer_distributor/customer";
-      $gotData->responseMessage=$assigned." Product Serials selled to ".$customerEmail;
+      if($userType=="dealer"){
+        $gotData->user->location="#!dealer_distributor/distributor";
+      }else{
+        $gotData->user->location="#!dealer_distributor/customer";
+      }
+      $gotData->responseMessage=$assigned." Product Serials selled to ".$soldToEmail;
     }else{
       $gotData->error=true;
       $gotData->errorMessage=$numProductSerials." product serials can't be assigned.";
@@ -292,6 +263,57 @@ function changeSerialCustomerEmail($gotData){
   $gotData->errorMessage=$customerEmail." email is not exists with records";
   return $gotData;
 }
+function checkProductSerialExists($gotData){
+  $userID=$gotData->user->userID;
+  $userType=$gotData->user->userType;
+  $productSerial=$gotData->user->productSerial;
+  $productID=$gotData->user->productID;
+  if($userType=="dealer"){
+    $sql="SELECT * FROM product_serial WHERE product_id='$productID' AND dealer_id='$userID' AND serial_no='$productSerial' AND customer_email IS NULL";
+  }else{
+    $sql="SELECT * FROM product_serial WHERE product_id='$productID' AND dealer_id!='-99' AND distributor_id='$userID' AND serial_no='$productSerial' AND customer_email IS NULL";
+  }
+  $result=mysqli_query($gotData->con,$sql);
+  if($result){
+    $gotData->user->productSerialExists=false;
+    if(mysqli_num_rows($result)==1){
+      $gotData->user->productSerialExists=true;
+    }
+    return $gotData;
+  }
+  $gotData->error=true;
+  $gotData->errorMessage="Try Again!";
+  return $gotData;
+}
+function sellProductUsingSerial($gotData){
+  $soldToEmail=$gotData->user->soldToEmail;
+  $productID=$gotData->user->productID;
+  $productSerial=$gotData->user->productSerial;
+  $userID=$gotData->user->userID;
+  $userType=$gotData->user->userType;
+  if($userType=="dealer"){
+    $d=getDealerDataUsingEmail($gotData->con,$soldToEmail);
+    if($d->error) return $d;
+    $distributorID=$d->id;
+    $gotData->user->distributorName=$d->name;
+    $sql="UPDATE product_serial SET distributor_id='$distributorID' WHERE product_id='$productID' AND dealer_id='$userID' AND serial_no='$productSerial' AND distributor_id IS NULL";
+  }else{
+    $sql="UPDATE product_serial SET customer_email='$soldToEmail' WHERE product_id='$productID' AND distributor_id='$userID' AND serial_no='$productSerial' AND customer_email IS NULL";
+  }
+  $check=mysqli_query($gotData->con,$sql);
+  if($check){
+    if($userType=="dealer"){
+      $gotData->user->location="#!dealer_distributor/distributor";
+    }else{
+      $gotData->user->location="#!dealer_distributor/customer";
+    }
+    $gotData->responseMessage=$productSerial." product serial selled!";
+    return $gotData;
+  }
+  $gotData->error=true;
+  $gotData->errorMessage="Try again!";
+  return $gotData;
+}
 $gotData=(object) null;
 $gotData->error=false;
 $gotData->errorMessage=null;
@@ -334,29 +356,7 @@ if(isset($_REQUEST['action'])){
     $gotData->con=(object) null;
     echo json_encode($gotData);
     exit();
-  }else if($action==4 && isset($_REQUEST['distributorEmail']) && isset($_REQUEST['selectedProduct']) && isset($_REQUEST['numProductSerials']) && isset($_REQUEST['dealerID'])){
-    $gotData->con=$con;
-    $gotData->user=(object) null;
-    $gotData->user->distributorEmail=$_REQUEST['distributorEmail'];
-    $gotData->user->selectedProduct=$_REQUEST['selectedProduct'];
-    $gotData->user->numProductSerials=$_REQUEST['numProductSerials'];
-    $gotData->user->dealerID=$_REQUEST['dealerID'];
-    $gotData=assignProductSerial($gotData);
-    $gotData->con=(object) null;
-    echo json_encode($gotData);
-    exit();
-  }else if($action==5 && isset($_REQUEST['distributorEmail']) && isset($_REQUEST['selectedProduct']) && isset($_REQUEST['numProductSerials']) && isset($_REQUEST['dealerID'])){
-    $gotData->con=$con;
-    $gotData->user=(object) null;
-    $gotData->user->distributorEmail=$_REQUEST['distributorEmail'];
-    $gotData->user->selectedProduct=$_REQUEST['selectedProduct'];
-    $gotData->user->numProductSerials=$_REQUEST['numProductSerials'];
-    $gotData->user->dealerID=$_REQUEST['dealerID'];
-    $gotData=assignProductSerial($gotData);
-    $gotData->con=(object) null;
-    echo json_encode($gotData);
-    exit();
-  }else if($action==6 && isset($_REQUEST['customerEmail'])){
+  }else if($action==4 && isset($_REQUEST['customerEmail'])){
     $gotData->con=$con;
     $gotData->user=(object) null;
     $gotData->user->customerEmail=$_REQUEST['customerEmail'];
@@ -364,13 +364,14 @@ if(isset($_REQUEST['action'])){
     $gotData->con=(object) null;
     echo json_encode($gotData);
     exit();
-  }else if($action==7 && isset($_REQUEST['customerEmail']) && isset($_REQUEST['productID']) && isset($_REQUEST['numProductSerials']) && isset($_REQUEST['distributorID'])){
+  }else if($action==5 && isset($_REQUEST['soldToEmail']) && isset($_REQUEST['productID']) && isset($_REQUEST['numProductSerials']) && isset($_REQUEST['userID']) && isset($_REQUEST['userType'])){
     $gotData->con=$con;
     $gotData->user=(object) null;
-    $gotData->user->customerEmail=$_REQUEST['customerEmail'];
+    $gotData->user->soldToEmail=$_REQUEST['soldToEmail'];
     $gotData->user->productID=$_REQUEST['productID'];
     $gotData->user->numProductSerials=$_REQUEST['numProductSerials'];
-    $gotData->user->distributorID=$_REQUEST['distributorID'];
+    $gotData->user->userID=$_REQUEST['userID'];
+    $gotData->user->userType=$_REQUEST['userType'];
     $gotData=sellProduct($gotData);
     $gotData->con=(object) null;
     echo json_encode($gotData);
@@ -392,6 +393,29 @@ if(isset($_REQUEST['action'])){
     $gotData->user->customerEmail=$_REQUEST['customerEmail'];
     $gotData->user->oldCustomerEmail=$_REQUEST['oldCustomerEmail'];
     $gotData=changeSerialCustomerEmail($gotData);
+    $gotData->con=(object) null;
+    echo json_encode($gotData);
+    exit();
+  }else if($action==10 && isset($_REQUEST['userID']) && isset($_REQUEST['userType']) && isset($_REQUEST['productID']) && isset($_REQUEST['productSerial'])){
+    $gotData->con=$con;
+    $gotData->user=(object) null;
+    $gotData->user->userID=$_REQUEST['userID'];
+    $gotData->user->userType=$_REQUEST['userType'];
+    $gotData->user->productSerial=$_REQUEST['productSerial'];
+    $gotData->user->productID=$_REQUEST['productID'];
+    $gotData=checkProductSerialExists($gotData);
+    $gotData->con=(object) null;
+    echo json_encode($gotData);
+    exit();
+  }else if($action==11 && isset($_REQUEST['soldToEmail']) && isset($_REQUEST['productID']) && isset($_REQUEST['productSerial']) && isset($_REQUEST['userID']) && isset($_REQUEST['userType'])){
+    $gotData->con=$con;
+    $gotData->user=(object) null;
+    $gotData->user->soldToEmail=$_REQUEST['soldToEmail'];
+    $gotData->user->productID=$_REQUEST['productID'];
+    $gotData->user->productSerial=$_REQUEST['productSerial'];
+    $gotData->user->userID=$_REQUEST['userID'];
+    $gotData->user->userType=$_REQUEST['userType'];
+    $gotData=sellProductUsingSerial($gotData);
     $gotData->con=(object) null;
     echo json_encode($gotData);
     exit();
