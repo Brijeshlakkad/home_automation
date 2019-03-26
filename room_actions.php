@@ -2,6 +2,7 @@
 require_once("config.php");
 require_once("user_data.php");
 require_once("home_data.php");
+require_once("room_data.php");
 function getUserID($gotData)
 {
   $email=$gotData->user->email;
@@ -239,6 +240,7 @@ if(isset($_REQUEST['action'])){
         $homeID=$h->homeID;
         $gotData->user->room->homeID=$homeID;
         $gotData=createRoom($gotData);
+        $gotData->con=(object) null;
         echo json_encode($gotData);
       }
     }else if($action=="2" && isset($_REQUEST['email']) && isset($_REQUEST['id'])){
@@ -255,6 +257,7 @@ if(isset($_REQUEST['action'])){
       $gotData->user->room->email=$email;
       $gotData->user->room->action=$action;
       $gotData=deleteRoom($gotData);
+      $gotData->con=(object) null;
       echo json_encode($gotData);
     }else if($action=="3" && isset($_REQUEST['email']) && isset($_REQUEST['id']) && isset($_REQUEST['roomName'])){
       $email=$_REQUEST['email'];
@@ -272,6 +275,7 @@ if(isset($_REQUEST['action'])){
       $gotData->user->room->roomName=ucfirst($roomName);
       $gotData->user->room->action=$action;
       $gotData=renameRoom($gotData);
+      $gotData->con=(object) null;
       echo json_encode($gotData);
     }else if($action=="4" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['userID']))
     {
@@ -292,6 +296,7 @@ if(isset($_REQUEST['action'])){
         $homeID=$h->homeID;
         $gotData->user->homeID=$homeID;
         $gotData=getRoomList($gotData);
+        $gotData->con=(object) null;
         echo json_encode($gotData);
       }
     }else{

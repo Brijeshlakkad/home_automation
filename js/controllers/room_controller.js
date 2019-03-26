@@ -24,7 +24,7 @@ myApp.controller("RoomController", function($rootScope, $scope, $http, $window, 
       var data = response.data;
       $scope.roomNameForm.$setPristine();
       $scope.roomName = "";
-      if (!data.error) {
+      if (data.error==false) {
         $rootScope.showSuccessDialog("Room Created");
         $scope.getAllRoom();
         $rootScope.body.removeClass("loading");
@@ -46,7 +46,7 @@ myApp.controller("RoomController", function($rootScope, $scope, $http, $window, 
       }
     }).then(function mySuccess(response) {
       var data = response.data;
-      if (!data.error) {
+      if (data.error==false) {
         if (typeof data.user.room == 'undefined') {
           $rootScope.roomList = [];
         } else {
@@ -69,7 +69,7 @@ myApp.controller("RoomController", function($rootScope, $scope, $http, $window, 
       }
     }).then(function mySuccess(response) {
       var data = response.data;
-      if (!data.error) {
+      if (data.error==false) {
         var showAllRoom = data.user.allRoom;
         $scope.showAllRoom = $sce.trustAsHtml(showAllRoom);
         $scope.getRoomList();
@@ -105,7 +105,7 @@ myApp.controller("RoomController", function($rootScope, $scope, $http, $window, 
       }).then(function mySuccess(response) {
         $rootScope.body.removeClass("loading");
         var data = response.data;
-        if (!data.error) {
+        if (data.error==false) {
           swal("Deleted!", "Your room has been deleted.", "success");
           $scope.getAllRoom();
         } else {

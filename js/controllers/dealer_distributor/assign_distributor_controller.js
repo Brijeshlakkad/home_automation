@@ -89,7 +89,6 @@ myApp.controller("AssignDistributorController", function($rootScope, $scope, $ht
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     }).then(function mySuccess(response) {
-      alert(JSON.stringify(response));
       var data = response.data;
       $rootScope.body.removeClass("loading");
       if (!data.error) {
