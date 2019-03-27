@@ -231,7 +231,7 @@ function checkAllowedUser($con,$hwSeries,$email,$userID){
       $u=getUserDataUsingID($con,$parentID);
       if($u->error) return $u;
       $parentEmail=$u->email;
-      $sql="SELECT * FROM product_serial WHERE serial_no='$hwSeries' AND customer_email='$parentEmail'";
+      $sql="SELECT product_serial.id FROM product_serial INNER JOIN sold_product ON sold_product.id=product_serial.sold_product_id WHERE product_serial.serial_no='$hwSeries' AND sold_product.customer_email='$parentEmail'";
       $check=mysqli_query($con,$sql);
       if($check){
         if(mysqli_num_rows($check)==1){
@@ -246,7 +246,7 @@ function checkHardwareSeries($gotData){
   $hwSeries = $gotData->user->hwSeries;
   $email = $gotData->user->email;
   $userID = $gotData->user->userID;
-  $sql="SELECT * FROM product_serial WHERE serial_no='$hwSeries' AND customer_email='$email'";
+  $sql="SELECT product_serial.id FROM product_serial INNER JOIN sold_product ON sold_product.id=product_serial.sold_product_id WHERE product_serial.serial_no='$hwSeries' AND sold_product.customer_email='$email'";
   $check=mysqli_query($gotData->con,$sql);
   if($check){
     if(mysqli_num_rows($check)==0){

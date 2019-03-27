@@ -139,7 +139,7 @@ function removeChildUserHardware($con,$userID,$memberID){
   $gotData->error=false;
   $u=getUserDataUsingID($con,$userID);
   $userEmail=$u->email;
-  $sql="SELECT * FROM product_serial WHERE customer_email='$userEmail'";
+  $sql="SELECT product_serial.serial_no as `serial_no` FROM product_serial INNER JOIN sold_product ON product_serial.id=sold_product.serial_id WHERE sold_product.customer_email='$userEmail'";
   $result=mysqli_query($con,$sql);
   if($result){
     while($row=mysqli_fetch_array($result)){

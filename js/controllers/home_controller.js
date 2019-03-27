@@ -1,5 +1,5 @@
 myApp.controller("HomeController", function($rootScope, $scope, $http, $window, $sce, $timeout, $cookies, $ocLazyLoad) {
-  $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js','js/notification/bootstrap-growl.min.js','js/wow.min.js','js/main.js'], {
+  $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js', 'js/notification/bootstrap-growl.min.js', 'js/wow.min.js', 'js/main.js'], {
     rerun: true,
     cache: false
   });
@@ -48,8 +48,14 @@ myApp.controller("HomeController", function($rootScope, $scope, $http, $window, 
     }).then(function mySuccess(response) {
       var data = response.data;
       if (!data.error) {
-        $rootScope.homeList = data.user.home;
-      } else {}
+        if (data.total > 1) {
+          $rootScope.homeList = data.user.home;
+        } else {
+          $rootScope.homeList = [];
+        }
+      } else {
+        $rootScope.homeList = [];
+      }
     }, function myError(response) {
 
     });
@@ -183,6 +189,7 @@ myApp.directive("homeNameDir", function($rootScope, $http) {
         if (pattHome.test(value) && (value.length > 2 || value.length <= 8)) {
           mCtrl.$setValidity('homeNameValid', true);
           mCtrl.$setValidity('homeNameLenValid', true);
+          flag = 0;
           for (i = 0; i < len; i++) {
             if ($rootScope.homeList[i].homeName == value) {
               flag = 1;
