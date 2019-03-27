@@ -8,8 +8,8 @@
             <ul class="mobile-menu-nav">
               <li><a href="#!dealer_distributor/home">Home</a></li>
               <li ng-if="userType=='dealer'"><a href="#!dealer_distributor/distributor">Assign Distributor</a></li>
-              <li><a href="#!dealer_distributor/productsold">Product Sold</a>
-              </li>
+              <li ng-if="userType=='distributor'"><a href="#!dealer_distributor/customer">Customer</a></li>
+              <li><a href="#!dealer_distributor/productsold">Product Sold</a></li>
             </ul>
           </nav>
         </div>
@@ -24,12 +24,10 @@
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
-          <li><a href="#!dealer_distributor/home" data-toggle="tab"><i class="notika-icon notika-house"></i> Home</a>
-          </li>
-          <li ng-if="userType=='dealer'" class="active"><a href="#!dealer_distributor/distributor" data-toggle="tab">Assign Distributor</a>
-          </li>
-          <li><a href="#!dealer_distributor/productsold">Product Sold</a>
-          </li>
+          <li><a href="#!dealer_distributor/home"><i class="notika-icon notika-house"></i> Home</a>
+          <li ng-if="userType=='dealer'" class="active"><a href="#!dealer_distributor/distributor">Assign Distributor</a></li>
+          <li ng-if="userType=='distributor'"><a href="#!dealer_distributor/customer">Customer</a></li>
+          <li><a href="#!dealer_distributor/productsold">Product Sold</a></li>
         </ul>
       </div>
     </div>

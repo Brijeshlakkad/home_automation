@@ -2,6 +2,8 @@
 include_once('../config.php');
 include_once('../dealer_distributor/dealer_data.php');
 include_once('../assigned_user_data.php');
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 function getAllProducts($gotData){
   $sql="SELECT * FROM product";
   $check=mysqli_query($gotData->con,$sql);
@@ -135,7 +137,11 @@ function deleteProduct($gotData){
 }
 function getAllProductSerials($gotData){
   $productID=$gotData->user->productID;
-  $sql="SELECT * FROM product_serial WHERE product_id='$productID'";
+  $sql="SELECT product_serial.id as `id`, product_serial.product_id as `product_id`, product_serial.serial_no as `serial_no`,
+        assigned_user.user_id as `dealer_id`, product_serial.date as `creationDate`,
+        assigned_user.date as `assignmentDate`
+        FROM product_serial LEFT JOIN assigned_user ON product_serial.id=assigned_user.serial_id
+        WHERE product_serial.product_id='$productID'";
   $check=mysqli_query($gotData->con,$sql);
   if($check){
     $i=0;
@@ -156,11 +162,14 @@ function getAllProductSerials($gotData){
       $gotData->user->productSerial[$i]->product_id=$row['product_id'];
       $gotData->user->productSerial[$i]->serial_no=$row['serial_no'];
       $gotData->user->productSerial[$i]->dealer_id=$row['dealer_id'];
+      $gotData->user->productSerial[$i]->creationDate=Date('d-m-Y h:i A',strtotime($row['creationDate']));
+      $gotData->user->productSerial[$i]->assignmentDate='Not Available!';
       $dealer_name="Not Assigned Yet!";
-      if($row['dealer_id']!=-99){
+      if($row['dealer_id']!=''){
         $assigned++;
         $d=getDealerDataUsingID($gotData->con,$row['dealer_id']);
         $dealer_name=$d->name." ( ".$d->email." )";
+        $gotData->user->productSerial[$i]->assignmentDate=Date('d-m-Y h:i A',strtotime($row['assignmentDate']));
       }else{
         $notAssigned++;
       }
@@ -211,7 +220,7 @@ function addProductSerials($gotData){
     $got=checkProductSerial($got);
     if($got->error) return $got;
     if(!$got->product->productSerialExists){
-      $sql="INSERT INTO product_serial(product_id,serial_no,dealer_id) VALUES('$productID','$productSerial','-99')";
+      $sql="INSERT INTO product_serial(product_id,serial_no) VALUES('$productID','$productSerial')";
       $check=mysqli_query($gotData->con,$sql);
       if(!$check){
         $gotData->product->failed->error=true;
@@ -240,7 +249,7 @@ function addProductSerials($gotData){
 }
 function searchProductSerial($gotData){
   $sProductSerial=$gotData->user->sProductSerial;
-  $sql="SELECT * FROM product_serial WHERE serial_no='$sProductSerial'";
+  $sql="SELECT product_serial.id as `id`, product_serial.serial_no as `serial_no`, assigned_user.user_id as `dealer_id`, assigned_user.date as `assignmentDate` FROM product_serial INNER JOIN assigned_user ON product_serial.id=assigned_user.serial_id WHERE product_serial.serial_no='$sProductSerial'";
   $check = mysqli_query($gotData->con,$sql);
   if($check){
     $i=0;
@@ -249,10 +258,10 @@ function searchProductSerial($gotData){
       $row=mysqli_fetch_array($check);
       $serial_no=$row['serial_no'];
       $dealer_name="Not Assigned Yet!";
-      if($row['dealer_id']!=-99){
-        $dealer_name=getDealerDataUsingID($gotData->con,$row['dealer_id']);
+      if($row['dealer_id']!=''){
+        $dealer=getDealerDataUsingID($gotData->con,$row['dealer_id']);
       }
-      $dealer_name=$dealer_name;
+      $dealer_name=$dealer->name;
       $gotData->user->searchProductSerial="<div class='data-table-list' style='margin:20px;'>
         <div class='basic-tb-hd'>
           <h2>Matched Product Serials</h2>
@@ -262,6 +271,8 @@ function searchProductSerial($gotData){
           <tr>
             <th>Product Serial number</th>
             <th>Dealer</th>
+            <th>Dealer Email ID</th>
+            <th>Assignment Date</th>
           </tr>
         </thead>
         <tbody>
@@ -270,6 +281,12 @@ function searchProductSerial($gotData){
               ".$serial_no."
             </td>
             <td>".$dealer_name."</td>
+            <td>
+            ".$dealer->email."
+            </td>
+            <td>
+            ".$row['assignmentDate']."
+            </td>
           </tr>
         </tbody>
       </table>

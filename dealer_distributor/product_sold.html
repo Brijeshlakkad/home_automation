@@ -61,7 +61,10 @@
                         <th>index</th>
                         <th>Product Name</th>
                         <th>Serial No</th>
-                        <th>Customer Email</th>
+                        <th ng-if="userType=='dealer'">Distributor Email</th>
+                        <th ng-if="userType=='dealer'">Assigned Date</th>
+                        <th ng-if="userType=='distributor'">Customer Email</th>
+                        <th ng-if="userType=='distributor'">Sold Date</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -97,6 +100,9 @@
                         <td ng-if="userType=='dealer'">
                           {{product.soldToEmail}}
                         </td>
+                        <td>
+                          {{product.assignedDate}}
+                        </td>
                       </tr>
                     </tbody>
                     <tfoot>
@@ -104,7 +110,10 @@
                         <th>index</th>
                         <th>Product Name</th>
                         <th>Serial No</th>
-                        <th>Customer Email</th>
+                        <th ng-if="userType=='dealer'">Distributor Email</th>
+                        <th ng-if="userType=='dealer'">Assigned Date</th>
+                        <th ng-if="userType=='distributor'">Customer Email</th>
+                        <th ng-if="userType=='distributor'">Sold Date</th>
                       </tr>
                     </tfoot>
                   </table>

@@ -39,7 +39,10 @@ function getProducts($gotData){
   $d=getDealerDataUsingID($gotData->con,$id);
   if($d->error) return $d;
   $userType=$d->type;
-  $gotData->sql="SELECT product_serial.serial_no as serial_no, product_serial.product_id as product_id, assigned_user.user_id as dealer_id  FROM product_serial INNER JOIN assigned_user ON assigned_user.serial_id=product_serial.id WHERE assigned_user.user_id='$id'";
+  $gotData->sql="SELECT product_serial.serial_no as serial_no, product_serial.product_id as product_id, assigned_user.user_id as dealer_id,
+                assigned_user.date as `assignedDate`
+                FROM product_serial INNER JOIN assigned_user ON assigned_user.serial_id=product_serial.id
+                WHERE assigned_user.user_id='$id'";
   $got=getProductSerialUsingSQL($gotData);
   if($got->error) return $got;
   $k=0;
@@ -77,6 +80,7 @@ function getProductSerialUsingSQL($gotData){
         $gotData->d->productSerial[$i]->serialNo=$row['serial_no'];
         $gotData->d->productSerial[$i]->productID=$row['product_id'];
         $gotData->d->productSerial[$i]->dealerID=$row['dealer_id'];
+        $gotData->d->productSerial[$i]->assignedDate=Date("d-m-Y h:i A",strtotime($row['assignedDate']));
         $i++;
       }
     }
@@ -95,7 +99,10 @@ function getProductSerialsUsingIDAndName($gotData){
   $d=getDealerDataUsingID($gotData->con,$id);
   if($d->error) return $d;
   $userType=$d->type;
-  $gotData->sql="SELECT product_serial.serial_no as serial_no, product_serial.product_id as product_id, assigned_user.user_id as dealer_id  FROM product_serial INNER JOIN assigned_user ON assigned_user.serial_id=product_serial.id WHERE assigned_user.user_id='$id' AND product_serial.product_id='$productID'";
+  $gotData->sql="SELECT product_serial.serial_no as serial_no, product_serial.product_id as product_id, assigned_user.user_id as dealer_id,
+                assigned_user.date as `assignedDate`
+                FROM product_serial INNER JOIN assigned_user ON assigned_user.serial_id=product_serial.id
+                WHERE assigned_user.user_id='$id' AND product_serial.product_id='$productID'";
   $got=getProductSerialUsingSQL($gotData);
   if($got->error) return $got;
   $gotData->d=$got->d;
@@ -217,9 +224,9 @@ function getProductSoldList($gotData){
   $id=$gotData->user->id;
   $type=$gotData->user->type;
   if($type=="dealer"){
-    $sql="SELECT product_serial.product_id as `product_id`, product_serial.serial_no as `serial_no`, distributor.user_id as `distributor_id` FROM product_serial INNER JOIN assigned_user as dealer ON dealer.id=product_serial.assigned_dealer INNER JOIN assigned_user as distributor ON product_serial.assigned_distributor=distributor.id WHERE dealer.user_id='$id' AND product_serial.assigned_distributor!=''";
+    $sql="SELECT product_serial.product_id as `product_id`, product_serial.serial_no as `serial_no`, distributor.user_id as `distributor_id`, distributor.date as `assignedDate` FROM product_serial INNER JOIN assigned_user as dealer ON dealer.id=product_serial.assigned_dealer INNER JOIN assigned_user as distributor ON product_serial.assigned_distributor=distributor.id WHERE dealer.user_id='$id' AND product_serial.assigned_distributor!=''";
   }else{
-    $sql="SELECT product_serial.product_id as `product_id`, product_serial.serial_no as `serial_no`, sold_product.customer_email as `customer_email` FROM product_serial INNER JOIN assigned_user as distributor ON distributor.id=product_serial.assigned_distributor INNER JOIN sold_product ON product_serial.sold_product_id=sold_product.id WHERE distributor.user_id='$id' AND product_serial.assigned_distributor!=''";
+    $sql="SELECT product_serial.product_id as `product_id`, product_serial.serial_no as `serial_no`, sold_product.customer_email as `customer_email`, sold_product.date as `assignedDate` FROM product_serial INNER JOIN assigned_user as distributor ON distributor.id=product_serial.assigned_distributor INNER JOIN sold_product ON product_serial.sold_product_id=sold_product.id WHERE distributor.user_id='$id' AND product_serial.assigned_distributor!=''";
   }
   $result=mysqli_query($gotData->con,$sql);
   if($result){
@@ -231,6 +238,7 @@ function getProductSoldList($gotData){
         $gotData->user->productSold[$i]=(object) null;
         $gotData->user->productSold[$i]->productName=$p->name;
         $gotData->user->productSold[$i]->serialNo=$row['serial_no'];
+        $gotData->user->productSold[$i]->assignedDate=Date('d-m-Y h:i A',strtotime($row['assignedDate']));
         if($type=="dealer"){
           $d=getDealerDataUsingID($gotData->con,$row['distributor_id']);
           $distributorEmail=$d->email;

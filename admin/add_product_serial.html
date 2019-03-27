@@ -1,5 +1,5 @@
 <style>
-#suggest_container { position:relative; overflow:visible;}
+  #suggest_container { position:relative; overflow:visible;}
 #autosuggest { position:absolute; top:<height-of-search-form>; left:0px; }
 </style>
 <!-- Mobile Menu start -->
@@ -136,7 +136,9 @@
                       <tr>
                         <th>index</th>
                         <th>Product Serial number</th>
+                        <th>Creation Date</th>
                         <th>Dealer</th>
+                        <th>Assignment Date</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -147,14 +149,22 @@
                         <td>
                           {{productSerial.serial_no}}
                         </td>
+                        <td>
+                          {{productSerial.creationDate}}
+                        </td>
                         <td>{{productSerial.dealer_name}}</td>
+                        <td>
+                          {{productSerial.assignmentDate}}
+                        </td>
                       </tr>
                     </tbody>
                     <tfoot>
                       <tr>
                         <th>index</th>
                         <th>Product Serial number</th>
+                        <th>Creation Date</th>
                         <th>Dealer</th>
+                        <th>Assignment Date</th>
                       </tr>
                     </tfoot>
                   </table>
