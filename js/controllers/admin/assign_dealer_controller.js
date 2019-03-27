@@ -52,6 +52,7 @@ myApp.controller("AssignDealerController", function($rootScope, $scope, $http, $
   };
   $scope.changedProductSelected = function(product) {
     var productID = product.id;
+    $scope.selectedProduct=product;
     $rootScope.body.addClass("loading");
     $http({
       method: "POST",

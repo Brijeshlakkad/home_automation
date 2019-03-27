@@ -20,7 +20,7 @@ class Product{
     }
     else{
       $this->error=true;
-      $this->errorMessage="Product doesn't exists.";
+      $this->errorMessage="Product Serial doesn't exists.";
     }
   }
 }

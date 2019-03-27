@@ -3,6 +3,8 @@ require_once('../config.php');
 require_once('../product_data.php');
 require_once('../user_data.php');
 require_once('dealer_data.php');
+require_once('../assigned_user_data.php');
+require_once('../product_serial_data.php');
 function getUniqueProductIDs($productSerial){
   $newArr=[];
   $k=0;
@@ -14,16 +16,30 @@ function getUniqueProductIDs($productSerial){
   }
   return $newArr;
 }
+function createAssignedUser($con,$serialID,$userID,$userType){
+  $sql="INSERT INTO `assigned_user`(`serial_id`,`user_id`,`user_type`) VALUES('$serialID','$userID','$userType')";
+  $result=mysqli_query($con,$sql);
+  if($result){
+    $a=getAssignedUserDataUsingUserID($con,$serialID,$userID);
+    return $a->id;
+  }
+  return -99;
+}
+function createSoldProduct($con,$serialID,$soldEmail){
+  $sql="INSERT INTO `sold_product`(`serial_id`,`customer_email`) VALUES('$serialID','$soldEmail')";
+  $result=mysqli_query($con,$sql);
+  if($result){
+    $a=getSoldUserDataUsingUserID($con,$serialID,$soldEmail);
+    return $a->id;
+  }
+  return -99;
+}
 function getProducts($gotData){
   $id=$gotData->d->id;
   $d=getDealerDataUsingID($gotData->con,$id);
   if($d->error) return $d;
   $userType=$d->type;
-  if($userType=="dealer"){
-    $gotData->sql="SELECT * FROM product_serial WHERE dealer_id='$id'";
-  }else{
-    $gotData->sql="SELECT * FROM product_serial WHERE distributor_id='$id'";
-  }
+  $gotData->sql="SELECT product_serial.serial_no as serial_no, product_serial.product_id as product_id, assigned_user.user_id as dealer_id  FROM product_serial INNER JOIN assigned_user ON assigned_user.serial_id=product_serial.id WHERE assigned_user.user_id='$id'";
   $got=getProductSerialUsingSQL($gotData);
   if($got->error) return $got;
   $k=0;
@@ -79,12 +95,7 @@ function getProductSerialsUsingIDAndName($gotData){
   $d=getDealerDataUsingID($gotData->con,$id);
   if($d->error) return $d;
   $userType=$d->type;
-  if($userType=="dealer"){
-    $gotData->sql="SELECT * FROM product_serial WHERE dealer_id='$id' AND product_id='$productID'";
-  }else{
-    $gotData->sql="SELECT * FROM product_serial WHERE distributor_id='$id' AND product_id='$productID'";
-  }
-
+  $gotData->sql="SELECT product_serial.serial_no as serial_no, product_serial.product_id as product_id, assigned_user.user_id as dealer_id  FROM product_serial INNER JOIN assigned_user ON assigned_user.serial_id=product_serial.id WHERE assigned_user.user_id='$id' AND product_serial.product_id='$productID'";
   $got=getProductSerialUsingSQL($gotData);
   if($got->error) return $got;
   $gotData->d=$got->d;
@@ -92,7 +103,7 @@ function getProductSerialsUsingIDAndName($gotData){
 }
 function checkDistributorEmail($gotData){
   $distributorEmail=$gotData->user->distributorEmail;
-  $sql="SELECT * FROM dealer WHERE email='$distributorEmail'";
+  $sql="SELECT * FROM dealer WHERE email='$distributorEmail' AND type='distributor'";
   $check=mysqli_query($gotData->con,$sql);
   if($check){
     if(mysqli_num_rows($check)==1){
@@ -116,9 +127,9 @@ function getDealerProductSerialCount($gotData){
     if($d->error) return $d;
     $userType=$d->type;
     if($userType=="dealer"){
-      $sql="SELECT * FROM product_serial WHERE product_id='$productID' AND dealer_id='$id' AND distributor_id IS NULL";
+      $sql="SELECT product_serial.id FROM product_serial INNER JOIN assigned_user ON assigned_user.serial_id=product_serial.id WHERE product_serial.product_id='$productID' AND assigned_user.user_id='$id' AND assigned_user.user_type='$userType' AND product_serial.assigned_distributor IS NULL";
     }else{
-      $sql="SELECT * FROM product_serial WHERE product_id='$productID' AND distributor_id='$id' AND customer_email IS NULL";
+      $sql="SELECT product_serial.id FROM product_serial INNER JOIN assigned_user ON assigned_user.serial_id=product_serial.id WHERE product_serial.product_id='$productID' AND product_serial.assigned_dealer!='' AND assigned_user.user_id='$id' AND assigned_user.user_type='$userType' AND product_serial.sold_product_id IS NULL";
     }
     $check=mysqli_query($gotData->con,$sql);
     if($check){
@@ -150,9 +161,9 @@ function sellProduct($gotData){
     if($d->error) return $d;
     $distributorID=$d->id;
     $gotData->user->distributorName=$d->name;
-    $sql="SELECT * FROM product_serial WHERE product_id='$productID' AND dealer_id='$userID' AND distributor_id IS NULL LIMIT $numProductSerials";
+    $sql="SELECT product_serial.id as `id` FROM product_serial INNER JOIN assigned_user ON product_serial.id=assigned_user.serial_id WHERE product_serial.product_id='$productID' AND assigned_user.user_id='$userID' AND assigned_user.user_type='$userType' AND product_serial.assigned_distributor IS NULL LIMIT $numProductSerials";
   }else{
-    $sql="SELECT * FROM product_serial WHERE product_id='$productID' AND distributor_id='$userID' AND customer_email IS NULL LIMIT $numProductSerials";
+    $sql="SELECT product_serial.id as `id` FROM product_serial INNER JOIN assigned_user ON product_serial.id=assigned_user.serial_id WHERE product_serial.product_id='$productID' AND assigned_user.user_id='$userID' AND assigned_user.user_type='$userType' AND product_serial.assigned_dealer!='' AND product_serial.sold_product_id IS NULL LIMIT $numProductSerials";
   }
   $check=mysqli_query($gotData->con,$sql);
   $serialIDs=[];
@@ -169,9 +180,11 @@ function sellProduct($gotData){
       while($track<$j){
         $id=$serialIDs[$track];
         if($userType=="dealer"){
-          $sql="UPDATE product_serial SET distributor_id='$distributorID' where id='$id'";
+          $assignedID=createAssignedUser($gotData->con,$id,$distributorID,'distributor');
+          $sql="UPDATE product_serial SET assigned_distributor='$assignedID' where id='$id'";
         }else{
-          $sql="UPDATE product_serial SET customer_email='$soldToEmail' where id='$id'";
+          $assignedID=createSoldProduct($gotData->con,$id,$soldToEmail);
+          $sql="UPDATE product_serial SET sold_product_id='$assignedID' where id='$id'";
         }
         $check=mysqli_query($gotData->con,$sql);
         if(!$check){
@@ -204,9 +217,9 @@ function getProductSoldList($gotData){
   $id=$gotData->user->id;
   $type=$gotData->user->type;
   if($type=="dealer"){
-    $sql="SELECT * FROM product_serial WHERE dealer_id='$id' AND distributor_id!=''";
+    $sql="SELECT product_serial.product_id as `product_id`, product_serial.serial_no as `serial_no`, distributor.user_id as `distributor_id` FROM product_serial INNER JOIN assigned_user as dealer ON dealer.id=product_serial.assigned_dealer INNER JOIN assigned_user as distributor ON product_serial.assigned_distributor=distributor.id WHERE dealer.user_id='$id' AND product_serial.assigned_distributor!=''";
   }else{
-    $sql="SELECT * FROM product_serial WHERE dealer_id!='-99' AND distributor_id='$id' AND customer_email!=''";
+    $sql="SELECT product_serial.product_id as `product_id`, product_serial.serial_no as `serial_no`, sold_product.customer_email as `customer_email` FROM product_serial INNER JOIN assigned_user as distributor ON distributor.id=product_serial.assigned_distributor INNER JOIN sold_product ON product_serial.sold_product_id=sold_product.id WHERE distributor.user_id='$id' AND product_serial.assigned_distributor!=''";
   }
   $result=mysqli_query($gotData->con,$sql);
   if($result){
@@ -269,9 +282,9 @@ function checkProductSerialExists($gotData){
   $productSerial=$gotData->user->productSerial;
   $productID=$gotData->user->productID;
   if($userType=="dealer"){
-    $sql="SELECT * FROM product_serial WHERE product_id='$productID' AND dealer_id='$userID' AND serial_no='$productSerial' AND distributor_id IS NULL AND customer_email IS NULL";
+    $sql="SELECT product_serial.id FROM product_serial INNER JOIN assigned_user ON assigned_user.id=product_serial.assigned_dealer WHERE product_serial.product_id='$productID' AND assigned_user.user_id='$userID' AND product_serial.serial_no='$productSerial' AND product_serial.assigned_distributor IS NULL AND product_serial.sold_product_id IS NULL";
   }else{
-    $sql="SELECT * FROM product_serial WHERE product_id='$productID' AND dealer_id!='-99' AND distributor_id='$userID' AND serial_no='$productSerial' AND customer_email IS NULL";
+    $sql="SELECT product_serial.id FROM product_serial INNER JOIN assigned_user ON assigned_user.id=product_serial.assigned_distributor WHERE product_serial.product_id='$productID' AND product_serial.assigned_dealer!='' AND assigned_user.user_id='$userID' AND product_serial.serial_no='$productSerial' AND product_serial.sold_product_id IS NULL";
   }
   $result=mysqli_query($gotData->con,$sql);
   if($result){
@@ -291,14 +304,19 @@ function sellProductUsingSerial($gotData){
   $productSerial=$gotData->user->productSerial;
   $userID=$gotData->user->userID;
   $userType=$gotData->user->userType;
+  $ps=getProductSerialDataUsingSerialNo($gotData->con,$productSerial);
+  if($ps->error) return $ps;
+  $serialID=$ps->id;
   if($userType=="dealer"){
     $d=getDealerDataUsingEmail($gotData->con,$soldToEmail);
     if($d->error) return $d;
     $distributorID=$d->id;
     $gotData->user->distributorName=$d->name;
-    $sql="UPDATE product_serial SET distributor_id='$distributorID' WHERE product_id='$productID' AND dealer_id='$userID' AND serial_no='$productSerial' AND distributor_id IS NULL";
+    $assignedID=createAssignedUser($gotData->con,$serialID,$distributorID,'distributor');
+    $sql="UPDATE product_serial SET assigned_distributor='$assignedID' WHERE product_id='$productID' AND serial_no='$productSerial' AND assigned_distributor IS NULL";
   }else{
-    $sql="UPDATE product_serial SET customer_email='$soldToEmail' WHERE product_id='$productID' AND distributor_id='$userID' AND serial_no='$productSerial' AND customer_email IS NULL";
+    $assignedID=createSoldProduct($gotData->con,$serialID,$soldToEmail);
+    $sql="UPDATE product_serial SET sold_product_id='$assignedID' WHERE product_id='$productID' AND serial_no='$productSerial' AND sold_product_id IS NULL";
   }
   $check=mysqli_query($gotData->con,$sql);
   if($check){

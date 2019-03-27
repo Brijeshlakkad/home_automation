@@ -1,6 +1,7 @@
 <?php
 include_once('../config.php');
 include_once('../dealer_distributor/dealer_data.php');
+include_once('../assigned_user_data.php');
 function getAllProducts($gotData){
   $sql="SELECT * FROM product";
   $check=mysqli_query($gotData->con,$sql);
@@ -294,7 +295,7 @@ function getProductSerialCount($gotData){
       $notAssigned=0;
       $assigned=0;
       while($row=mysqli_fetch_array($check)){
-        if($row['dealer_id']!=-99){
+        if($row['assigned_dealer']!=''){
           $assigned++;
         }else{
           $notAssigned++;
@@ -328,6 +329,15 @@ function checkDealerEmail($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
+function createAssignedUser($con,$serialID,$userID,$userType){
+  $sql="INSERT INTO `assigned_user`(`serial_id`,`user_id`,`user_type`) VALUES('$serialID','$userID','$userType')";
+  $result=mysqli_query($con,$sql);
+  if($result){
+    $a=getAssignedUserDataUsingUserID($con,$serialID,$userID);
+    return $a->id;
+  }
+  return -99;
+}
 function assignProductSerial($gotData){
   $dealerEmail=$gotData->user->dealerEmail;
   $selectedProduct=$gotData->user->selectedProduct;
@@ -335,8 +345,9 @@ function assignProductSerial($gotData){
   $d=getDealerDataUsingEmail($gotData->con,$dealerEmail);
   if($d->error) return $d;
   $dealer_id=$d->id;
+  $dealer_type=$d->type;
   $gotData->user->dealerName=$d->name;
-  $sql="SELECT * FROM product_serial WHERE product_id='$selectedProduct' and dealer_id='-99' LIMIT $numProductSerials";
+  $sql="SELECT * FROM product_serial WHERE product_id='$selectedProduct' AND assigned_dealer IS NULL LIMIT $numProductSerials";
   $check=mysqli_query($gotData->con,$sql);
   $serialIDs=[];
   if($check){
@@ -350,7 +361,8 @@ function assignProductSerial($gotData){
       $gotData->user->failed=(object) null;
       while($track<$j){
         $id=$serialIDs[$track];
-        $sql="UPDATE product_serial SET dealer_id='$dealer_id' where id='$id'";
+        $assignedID=createAssignedUser($gotData->con,$id,$dealer_id,$dealer_type);
+        $sql="UPDATE product_serial SET assigned_dealer='$assignedID' where id='$id'";
         $check=mysqli_query($gotData->con,$sql);
         if(!$check){
           $gotData->user->failed->error=true;
