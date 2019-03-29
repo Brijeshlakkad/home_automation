@@ -48,6 +48,7 @@ myApp.controller("userController", function($rootScope, $scope, $localStorage, $
   $scope.noProductSerial="No Product Serials";
   $scope.noSubscription="You do not have any subscription yet. Please register product using product serial in hardware.";
   $scope.noMember="No Members";
+  $scope.noHardwareList="No Hardware";
 });
 myApp.directive('showNothing', function() {
   return {

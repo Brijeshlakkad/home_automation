@@ -7,7 +7,9 @@ myApp.controller("SettingsController", function($rootScope, $scope, $http, $wind
   $scope.userID = $rootScope.$storage.userID;
   $scope.editStatus = "";
   $scope.memberList = [];
+  $scope.hwList = [];
   $rootScope.userDetails = {};
+  $scope.selectedHardware=undefined;
   $scope.openTab = function(index, tabName) {
     var i, tabcontent, tablinks, content;
 
@@ -42,7 +44,7 @@ myApp.controller("SettingsController", function($rootScope, $scope, $http, $wind
         $rootScope.body.removeClass("loading");
         flag = response.data;
         // we should be using flag in only this block so logic in following
-        if (flag.error==false) {
+        if (flag.error == false) {
           $scope.editStatus = "Details Updated!";
           $rootScope.userDetails = flag.userUpdated;
           $scope.s_status_0 = false;
@@ -82,7 +84,7 @@ myApp.controller("SettingsController", function($rootScope, $scope, $http, $wind
       }
     }).then(function mySuccess(response) {
       var data = response.data;
-      if (data.error==false) {
+      if (data.error == false) {
         $scope.s_name = data.name;
         $scope.s_email = data.email;
         $scope.s_city = data.city;
@@ -155,7 +157,7 @@ myApp.controller("SettingsController", function($rootScope, $scope, $http, $wind
         }
       }).then(function mySuccess(response) {
         var data = response.data;
-        if (data.error==false) {
+        if (data.error == false) {
           $scope.showErrorDialog(data.errorMessage);
         } else {
           $scope.passwordForm.$setPristine();
@@ -272,13 +274,13 @@ myApp.controller("SettingsController", function($rootScope, $scope, $http, $wind
     $http({
       method: "POST",
       url: "customer_actions.php",
-      data: "action=2&userID=" + $scope.userID + "&memberModelList=" + JSON.stringify(memberList),
+      data: "action=2&userID=" + $scope.userID + "&memberModelList=" + JSON.stringify(memberList)+"&hwSeries="+$scope.selectedHardware.hwSeries,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     }).then(function mySuccess(response) {
       var data = response.data;
-      if (data.error==false) {
+      if (data.error == false) {
         if (data.user.failed.error) {
           var errorMessage = "Email ID could not be saved: ";
           for (i = 0; i < data.user.failedList.length; i++) {
@@ -310,7 +312,7 @@ myApp.controller("SettingsController", function($rootScope, $scope, $http, $wind
       }
     }).then(function mySuccess(response) {
       var data = response.data;
-      if (data.error==false) {
+      if (data.error == false) {
         $scope.memberList = data.user.memberList;
       } else {
         $rootScope.showErrorDialog(data.errorMessage);
@@ -320,17 +322,17 @@ myApp.controller("SettingsController", function($rootScope, $scope, $http, $wind
     });
   };
   $scope.getMemberList();
-  $scope.removeMember = function(memberEmail){
+  $scope.removeMember = function(memberEmail,hwName) {
     $http({
       method: "POST",
       url: "customer_actions.php",
-      data: "action=3&userID=" + $scope.userID+"&memberEmail="+memberEmail,
+      data: "action=3&userID=" + $scope.userID + "&memberEmail=" + memberEmail+"&hwName="+hwName,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     }).then(function mySuccess(response) {
       var data = response.data;
-      if (data.error==false) {
+      if (data.error == false) {
         $rootScope.showSuccessDialog(data.responseMessage);
         $scope.getMemberList();
       } else {
@@ -340,6 +342,32 @@ myApp.controller("SettingsController", function($rootScope, $scope, $http, $wind
       $rootScope.showErrorDialog("Server Load!");
     });
   };
+  $scope.getHardwareList = function() {
+    $http({
+      method: "POST",
+      url: "customer_actions.php",
+      data: "action=4&email=" + $scope.user,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }).then(function mySuccess(response) {
+      var data = response.data;
+      if (!data.error) {
+        if (data.user.totalRows<=0) {
+          $scope.hwList = [];
+        } else {
+          $scope.hwList = data.user.hwList;
+          $scope.hwList[data.user.totalRows]= {"hwName":"Permission for all hardwares","hwSeries":"-99"};
+          $scope.selectedHardware=$scope.hwList[0];
+        }
+      } else {
+        $scope.hwList = [];
+      }
+    }, function myError(response) {
+      $scope.hwList = [];
+    });
+  };
+  $scope.getHardwareList();
 });
 myApp.directive('memberEmailDir', function($rootScope, $http) {
   return {

@@ -509,6 +509,10 @@ if(isset($_REQUEST['action'])){
     $gotData->errorMessage="null";
     $gotData->con=$con;
     $gotData->user->email=$email;
+    $u=getUserDataUsingEmail($gotData->con,$gotData->user->email);
+    if($u->error) return $u;
+    $userID=$u->id;
+    $gotData->user->userID=$userID;
     $gotData->user->device->email=$email;
     $gotData->user->device->homeName=$homeName;
     $gotData->user->device->roomName=$roomName;

@@ -168,10 +168,24 @@
       </div>
     </form>
   </div>
-  <div id="control_members" class="tabcontent" align="center">
+  <div ng-if="hwList.length==0">
+    <show-nothing stringb="noHardwareList"></show-nothing>
+  </div>
+  <div id="control_members" class="tabcontent" align="center" ng-show="hwList.length>0">
     <form name="memberForm" novalidate>
       <h3>Control Members</h3>
       <div class="form-group">
+        <div class="row">
+          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <select ng-model="selectedHardware" ng-options="hw.hwName for hw in hwList" class="form-control" ng-required="true">
+            </select>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+          </div>
+        </div>
+        <br />
         <div ng-repeat="memberInput in memberInputList">
           <div style="padding:10px">
             <div class="input-group">
@@ -204,7 +218,7 @@
               <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                 <div class="data-table-list">
                   <div class="basic-tb-hd">
-                    <h2>Products</h2>
+                    <h2>Members</h2>
                   </div>
                   <div class="table-responsive">
                     <table id="data-table-basic" class="table table-striped">
@@ -213,6 +227,7 @@
                           <th>Index</th>
                           <th>Member Email</th>
                           <th>Member Name</th>
+                          <th>Allowed Hardware</th>
                           <th>Remove</th>
                         </tr>
                       </thead>
@@ -220,9 +235,10 @@
                         <tr ng-repeat="member in memberList">
                           <td>{{$index+1}}</td>
                           <td>{{member.email}}</td>
+                          <th>{{member.hwName}}</th>
                           <td>{{member.name}}</td>
                           <td>
-                            <button class="btn btn-danger" ng-click="removeMember(member.email)">Remove</button>
+                            <button class="btn btn-danger" ng-click="removeMember(member.email,member.hwName)">Remove</button>
                           </td>
                         </tr>
                       </tbody>
@@ -231,6 +247,7 @@
                           <th>Index</th>
                           <th>Member Email</th>
                           <th>Member Name</th>
+                          <th>Allowed Hardware</th>
                           <th>Remove</th>
                         </tr>
                       </tfoot>

@@ -223,21 +223,11 @@ function checkAlreadyAdded($con,$hwSeries,$userID){
     return true;
 }
 function checkAllowedUser($con,$hwSeries,$email,$userID){
-  $sql="SELECT * FROM allowed_user WHERE member_id='$userID'";
+  $sql="SELECT allowed_user.id as `allowedID`, hardware.id as `hwID` FROM allowed_user INNER JOIN hardware ON hardware.uid=allowed_user.uid WHERE allowed_user.member_id='$userID' AND hardware.series='$hwSeries' AND allowed_user.serial_no='$hwSeries'";
   $result=mysqli_query($con,$sql);
   if($result){
-    while($row=mysqli_fetch_array($result)){
-      $parentID=$row['uid'];
-      $u=getUserDataUsingID($con,$parentID);
-      if($u->error) return $u;
-      $parentEmail=$u->email;
-      $sql="SELECT product_serial.id FROM product_serial INNER JOIN sold_product ON sold_product.id=product_serial.sold_product_id WHERE product_serial.serial_no='$hwSeries' AND sold_product.customer_email='$parentEmail'";
-      $check=mysqli_query($con,$sql);
-      if($check){
-        if(mysqli_num_rows($check)==1){
-          return checkAlreadyAdded($con,$hwSeries,$userID);
-        }
-      }
+    if(mysqli_num_rows($result)==1){
+      return checkAlreadyAdded($con,$hwSeries,$userID);
     }
   }
   return false;
@@ -280,7 +270,7 @@ function checkHardwareSeries($gotData){
 
 if(isset($_REQUEST['action'])){
   $action=$_REQUEST['action'];
-  if($action=="0" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['userID']))
+  if($action=="0" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']))
   {
     $email=$_REQUEST['email'];
     $homeName=ucfirst($_REQUEST['homeName']);
@@ -293,6 +283,9 @@ if(isset($_REQUEST['action'])){
     $gotData->con=$con;
     $gotData->user->homeName=$homeName;
     $gotData->user->email=$email;
+    $user=getUserDataUsingEmail($gotData->con,$email);
+    $userID=$user->id;
+    $gotData->user->user=$userID;
     $gotData->user->roomName=$roomName;
     $gotData->user->action=$action;
     $r=getRoomDataUsingName($gotData->con,$userID,$roomName,$homeName);
@@ -306,7 +299,7 @@ if(isset($_REQUEST['action'])){
       $gotData=getHardwareData($gotData);
       echo json_encode($gotData);
     }
-  }else if($action=="1" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName']) && isset($_REQUEST['hwSeries']) && isset($_REQUEST['hwIP']) && isset($_REQUEST['userID'])){
+  }else if($action=="1" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName']) && isset($_REQUEST['hwSeries']) && isset($_REQUEST['hwIP'])){
     $email=$_REQUEST['email'];
     $homeName=ucfirst($_REQUEST['homeName']);
     $roomName=ucfirst($_REQUEST['roomName']);
@@ -321,6 +314,9 @@ if(isset($_REQUEST['action'])){
     $gotData->errorMessage="null";
     $gotData->con=$con;
     $gotData->user->email=$email;
+    $user=getUserDataUsingEmail($gotData->con,$email);
+    $userID=$user->id;
+    $gotData->user->user=$userID;
     $gotData->user->hw->email=$email;
     $gotData->user->hw->homeName=$homeName;
     $gotData->user->hw->roomName=$roomName;

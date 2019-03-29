@@ -73,7 +73,7 @@ myApp.controller("HardwareController", function($rootScope, $scope, $http, $wind
     }).then(function mySuccess(response) {
       var data = response.data;
       if (!data.error) {
-        if (typeof data.user.hw == 'undefined') {
+        if (typeof data.user.hwList == 'undefined') {
           $rootScope.hwList = [];
         } else {
           $rootScope.hwList = data.user.hw;
