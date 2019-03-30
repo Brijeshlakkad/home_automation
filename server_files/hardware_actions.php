@@ -151,21 +151,11 @@ function checkAlreadyAdded($con,$hwSeries,$userID){
     return true;
 }
 function checkAllowedUser($con,$hwSeries,$email,$userID){
-  $sql="SELECT * FROM allowed_user WHERE member_id='$userID'";
+  $sql="SELECT allowed_user.id as `allowedID`, hardware.id as `hwID` FROM allowed_user INNER JOIN hardware ON hardware.uid=allowed_user.uid WHERE allowed_user.member_id='$userID' AND hardware.series='$hwSeries' AND allowed_user.serial_no='$hwSeries'";
   $result=mysqli_query($con,$sql);
   if($result){
-    while($row=mysqli_fetch_array($result)){
-      $parentID=$row['uid'];
-      $u=getUserDataUsingID($con,$parentID);
-      if($u->error) return $u;
-      $parentEmail=$u->email;
-      $sql="SELECT * FROM product_serial WHERE serial_no='$hwSeries' AND customer_email='$parentEmail'";
-      $check=mysqli_query($con,$sql);
-      if($check){
-        if(mysqli_num_rows($check)==1){
-          return checkAlreadyAdded($con,$hwSeries,$userID);
-        }
-      }
+    if(mysqli_num_rows($result)==1){
+      return checkAlreadyAdded($con,$hwSeries,$userID);
     }
   }
   return false;

@@ -64,9 +64,12 @@ function checkMemberEmail($con,$memberEmail){
 function getHwSeriesList($gotData){
   $userID=$gotData->user->userID;
   $hwSeries=$gotData->user->hwSeries;
+  $user=getUserDataUsingID($gotData->con,$userID);
+  if($user->error) return $user;
+  $email=$user->email;
   $hwSeriesList=[];
   if($hwSeries==-99){
-    $sql="SELECT series FROM hardware WHERE uid='$userID'";
+    $sql="SELECT product_serial.serial_no as 'hwSeries' FROM hardware INNER JOIN product_serial ON product_serial.serial_no=hardware.series INNER JOIN sold_product ON sold_product.serial_id=product_serial.id WHERE sold_product.customer_email='$email' AND hardware.uid='$userID'";
     $result=mysqli_query($gotData->con,$sql);
     if($result){
       $i=0;
