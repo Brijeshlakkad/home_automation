@@ -49,6 +49,7 @@ myApp.controller("userController", function($rootScope, $scope, $localStorage, $
   $scope.noSubscription="You do not have any subscription yet. Please register product using product serial in hardware.";
   $scope.noMember="No Members";
   $scope.noHardwareList="No Hardware";
+  $scope.noScheduledDevice="Devices are not scheduled yet";
 });
 myApp.directive('showNothing', function() {
   return {

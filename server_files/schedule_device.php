@@ -252,6 +252,7 @@ function getScheduling($gotData){
   if($result){
     if(mysqli_num_rows($result)>0){
       $i=0;
+      $gotData->totalRows=mysqli_num_rows($result);
       while($row=mysqli_fetch_array($result)){
         $nowDate=strtotime(Date("Y-m-d H:i:s"));
         $date1=strtotime($row['startTime']);
@@ -269,7 +270,6 @@ function getScheduling($gotData){
         $gotData->scheduledDevice[$i]->afterStatus=$row['afterStatus'];
         $i++;
       }
-      $gotData->totalRows=$i;
       return $gotData;
     }
   }

@@ -1,0 +1,107 @@
+<!-- Mobile Menu start -->
+<div class="mobile-menu-area">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="mobile-menu">
+          <nav id="dropdown">
+            <ul class="mobile-menu-nav">
+              <li><a href="#!customer/home">Home</a>
+              </li>
+              <li><a href="#!customer/subscription">Subscription</a>
+              </li>
+              <li><a href="#!customer/settings">Settings</a>
+              </li>
+              <li><a href="#!customer/scheduled_devices">Scheduled Devices</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Mobile Menu end -->
+<!-- Main Menu area start-->
+<div class="main-menu-area mg-tb-40">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
+          <li><a href="#!customer/home"><i class="notika-icon notika-house"></i> Home</a>
+          </li>
+          <li><a href="#!customer/subscription"><i class="notika-icon notika-form"></i> Subscription</a>
+          </li>
+          <li><a href="#!customer/settings"><i class="notika-icon notika-settings"></i> Settings</a>
+          </li>
+          <li class="active"><a href="#!customer/scheduled_devices"><i class="notika-icon notika-star"></i> Scheduled Devices</a>
+          </li>
+        </ul>
+        <div class="tab-content custom-menu-content">
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Main Menu area End-->
+<div class="container">
+  <div class="row">
+    <div ng-if="scheduledDeviceList.length==0">
+      <show-nothing stringb="noScheduledDevice"></show-nothing>
+    </div>
+    <div ng-if="scheduledDeviceList.length>0">
+      <div class="data-table-area">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="data-table-list">
+                <div class="basic-tb-hd">
+                  <h2>Products</h2>
+                </div>
+                <div class="table-responsive">
+                  <table id="data-table-basic" class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>index</th>
+                        <th>Device Name</th>
+                        <th>Room Name</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Repetition</th>
+                        <th>After Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="scheduledDevice in scheduledDeviceList">
+                        <td>{{$index+1}}</td>
+                        <td>{{scheduledDevice.deviceName}}</td>
+                        <td>{{scheduledDevice.roomName}}</td>
+                        <td>{{scheduledDevice.startTime}}</td>
+                        <td>{{scheduledDevice.endTime}}</td>
+                        <td>{{scheduledDevice.repetition}}</td>
+                        <td ng-if="scheduledDevice.afterStatus=='1'" style="color:green;">ON</td>
+                        <td ng-if="scheduledDevice.afterStatus!='1'" style="color:red;">OFF</td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <th>index</th>
+                        <th>Device Name</th>
+                        <th>Room Name</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Repetition</th>
+                        <th>After Status</th>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

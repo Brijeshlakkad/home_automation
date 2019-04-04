@@ -221,8 +221,9 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
     }).then(function mySuccess(response) {
       var data = response.data;
       if (!data.error) {
-        $scope.getScheduleDevice();
+        alert(JSON.stringify(data));
         $rootScope.showSuccessDialog(data.data);
+        $scope.getScheduleDevice();
         $rootScope.body.removeClass("loading");
       } else {
         $rootScope.body.removeClass("loading");
