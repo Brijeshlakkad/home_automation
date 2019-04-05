@@ -31,19 +31,19 @@ myApp.controller("ScheduledDevicesController", function($rootScope, $scope, $htt
     });
   };
   $scope.getScheduleList();
-  $scope.deleteScheduleDevice = function() {
+  $scope.removeSchedule = function(scheduledDevice) {
+    $rootScope.body.addClass("loading");
     $http({
       method: "POST",
       url: "schedule_device.php",
-      data: "action=3&email=" + $scope.user + "&deviceName=" + $scope.dvID + "&roomName=" + $scope.roomID,
+      data: "action=3&email=" + $scope.user + "&deviceName=" + scheduledDevice.deviceName + "&roomName=" + scheduledDevice.roomName,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     }).then(function mySuccess(response) {
       var data = response.data;
-      alert(JSON.stringify(data));
       if (!data.error) {
-        $scope.getScheduleDevice();
+        $scope.getScheduleList();
         $rootScope.showSuccessDialog(data.data);
         $rootScope.body.removeClass("loading");
       } else {

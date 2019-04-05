@@ -122,35 +122,37 @@
           </div>
         </form>
       </div>
-      <br/>
-      <div class="row" ng-if="isScheduled">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>From Scheduled Time</th>
-              <th>To Scheduled Time</th>
-              <th>After Status</th>
-              <th>Repetition</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{{scheduleInfo.startTime}}</td>
-              <td>{{scheduleInfo.endTime}}</td>
-              <td ng-if="scheduleInfo.afterStatus==1">ON</td>
-              <td ng-if="scheduleInfo.afterStatus==0">OFF</td>
-              <td>{{scheduleInfo.repetition}}</td>
-              <td>
-                <button class="btn btn-danger" ng-click="deleteScheduleDevice()">Remove</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="row" ng-if="!isScheduled">
-        {{device.dvName}} has not been scheduled yet!
-      </div>
+      <br />
     </div>
+  </div>
+  <div class="row" ng-if="isScheduled">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>From Scheduled Time</th>
+          <th>To Scheduled Time</th>
+          <th>After Status</th>
+          <th>Repetition</th>
+          <th>Created Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{scheduleInfo.startTime}}</td>
+          <td>{{scheduleInfo.endTime}}</td>
+          <td ng-if="scheduleInfo.afterStatus==1">ON</td>
+          <td ng-if="scheduleInfo.afterStatus==0">OFF</td>
+          <td>{{scheduleInfo.repetition}}</td>
+          <th>{{scheduleInfo.createdDate}}</th>
+          <td>
+            <button class="btn btn-danger" ng-click="deleteScheduleDevice()">Remove</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="row" ng-if="!isScheduled">
+    {{device.dvName}} has not been scheduled yet!
   </div>
 </div>

@@ -23,6 +23,22 @@ function processFrequency($gotData){
   }
   return $gotData;
 }
+function shouldRun($nowDate,$date,$frequency){
+  $today = Date("D",$nowDate);
+  $now = Date("d-m-Y",$nowDate);
+  $startTime = Date("d-m-Y",$date);
+  if($frequency=='0'){
+    return false;
+  }
+  if($frequency=="ONCE"){
+    if($today==$frequency){
+      if($startTime==$now){
+        return false;
+      }
+    }
+  }
+  return true;
+}
 function setFrequency($gotData){
   $gotData=processFrequency($gotData);
   if($gotData->error) return $gotData;
@@ -178,6 +194,11 @@ function setSchedule($gotData){
     $gotData->errorMessage="End Time should not be before start time.";
     return $gotData;
   }
+  else if(($date2-$date1)<60){
+    $gotData->error=true;
+    $gotData->errorMessage="Period should be more than 60 seconds.";
+    return $gotData;
+  }
   $sql="UPDATE room_device SET from_scheduled_time='$startTime', to_scheduled_time='$endTime', frequency='$frequency', after_status='$afterStatus' WHERE device_name='$deviceName' AND room_id='$roomID' AND uid='$userID'";
   $result=mysqli_query($gotData->con,$sql);
   if($result){
@@ -201,20 +222,22 @@ function getSchedulingForDevice($gotData){
       $row=mysqli_fetch_array($result);
       $nowDate=strtotime("now");
       $date1=strtotime($row['from_scheduled_time']);
-      $date2=strtotime($row['from_scheduled_time']);
+      $date2=strtotime($row['to_scheduled_time']);
       $gotData->scheduleInfo=(object) null;
-      if($date1<$nowDate){
+      if(!shouldRun($nowDate,$date1,$row['frequency'])){
         $gotData->isScheduled=false;
         return $gotData;
-      }else{
+      }
+      else{
         $gotData->isScheduled=true;
-        $startTime=Date("d-m-Y h:i:s A",$date1);
+        $startTime=Date("h:i:s A",$date1);
         $gotData->scheduleInfo->startTime=$startTime;
-        $endTime=Date("d-m-Y h:i:s A",$date2);
+        $endTime=Date("h:i:s A",$date2);
         $gotData->scheduleInfo->deviceID=$row['id'];
         $gotData->scheduleInfo->roomName=$roomName;
         $gotData->scheduleInfo->deviceName=$deviceName;
         $gotData->scheduleInfo->endTime=$endTime;
+        $gotData->scheduleInfo->createdDate=Date("d-m-Y h:i:s A",strtotime($row['date']));
         $gotData->scheduleInfo->repetition=strtoupper(Date("l",strtotime($row['frequency'])));
         $gotData->scheduleInfo->afterStatus=$row['after_status'];
         return $gotData;
@@ -232,7 +255,7 @@ function deleteSchedulingForDevice($gotData){
   $userID=$gotData->userID;
   $roomID=$gotData->roomID;
   $scheduledTime=Date("Y-m-d H:i:s",strtotime("22 June 1998"));
-  $sql="UPDATE room_device SET from_scheduled_time='$scheduledTime', to_scheduled_time='$scheduledTime' WHERE device_name='$deviceName' AND room_id='$roomID' AND uid='$userID'";
+  $sql="UPDATE room_device SET from_scheduled_time='$scheduledTime', to_scheduled_time='$scheduledTime', frequency='0' WHERE device_name='$deviceName' AND room_id='$roomID' AND uid='$userID'";
   $result=mysqli_query($gotData->con,$sql);
   if($result){
     $gotData->data=$deviceName." has been off from scheduling.";
@@ -246,7 +269,7 @@ function getScheduling($gotData){
   $email=$gotData->email;
   $userID=$gotData->userID;
    // GROUP BY room.name
-  $sql="SELECT room_device.id as `deviceID`, room_device.device_name as `deviceName`, room_device.from_scheduled_time as `startTime`, room_device.to_scheduled_time as `endTime`, room_device.frequency as `repetition`, room_device.after_status as `afterStatus`, room.roomname as `roomName`
+  $sql="SELECT room_device.id as `deviceID`, room_device.device_name as `deviceName`, room_device.from_scheduled_time as `startTime`, room_device.to_scheduled_time as `endTime`, room_device.frequency as `repetition`, room_device.after_status as `afterStatus`, `room_device`.`date` as `createdDate`, room.roomname as `roomName`
         FROM room_device LEFT JOIN room ON room.id=room_device.room_id WHERE room_device.uid='$userID'";
   $result=mysqli_query($gotData->con,$sql);
   if($result){
@@ -256,13 +279,14 @@ function getScheduling($gotData){
         $nowDate=strtotime(Date("Y-m-d H:i:s"));
         $date1=strtotime($row['startTime']);
         $date2=strtotime($row['endTime']);
-        if($date1<$nowDate){
+        if(!shouldRun($nowDate,$date1,$row['repetition'])){
           continue;
         }
         $gotData->scheduledDevice[$i]=(object) null;
         $gotData->scheduledDevice[$i]->deviceID=$row['deviceID'];
-        $gotData->scheduledDevice[$i]->startTime=Date("d-m-Y h:i:s A",$date1);
-        $gotData->scheduledDevice[$i]->endTime=Date("d-m-Y h:i:s A",$date2);
+        $gotData->scheduledDevice[$i]->startTime=Date("h:i:s A",$date1);
+        $gotData->scheduledDevice[$i]->endTime=Date("h:i:s A",$date2);
+        $gotData->scheduledDevice[$i]->createdDate=Date("d-m-Y h:i:s A",strtotime($row['createdDate']));
         $gotData->scheduledDevice[$i]->repetition=strtoupper(Date("l",strtotime($row['repetition'])));
         $gotData->scheduledDevice[$i]->deviceName=ucfirst($row['deviceName']);
         $gotData->scheduledDevice[$i]->roomName=$row['roomName'];
