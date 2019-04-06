@@ -199,7 +199,8 @@ function setSchedule($gotData){
     $gotData->errorMessage="Period should be more than 60 seconds.";
     return $gotData;
   }
-  $sql="UPDATE room_device SET from_scheduled_time='$startTime', to_scheduled_time='$endTime', frequency='$frequency', after_status='$afterStatus' WHERE device_name='$deviceName' AND room_id='$roomID' AND uid='$userID'";
+  $updatedTime = Date("Y-m-d H:i:s",strtotime("now"));
+  $sql="UPDATE room_device SET from_scheduled_time='$startTime', to_scheduled_time='$endTime', frequency='$frequency', after_status='$afterStatus', `date`='$updatedTime' WHERE device_name='$deviceName' AND room_id='$roomID' AND uid='$userID'";
   $result=mysqli_query($gotData->con,$sql);
   if($result){
     $gotData->data="Ok";
@@ -255,7 +256,8 @@ function deleteSchedulingForDevice($gotData){
   $userID=$gotData->userID;
   $roomID=$gotData->roomID;
   $scheduledTime=Date("Y-m-d H:i:s",strtotime("22 June 1998"));
-  $sql="UPDATE room_device SET from_scheduled_time='$scheduledTime', to_scheduled_time='$scheduledTime', frequency='0' WHERE device_name='$deviceName' AND room_id='$roomID' AND uid='$userID'";
+  $updatedTime = Date("Y-m-d H:i:s",strtotime("now"));
+  $sql="UPDATE room_device SET from_scheduled_time='$scheduledTime', to_scheduled_time='$scheduledTime', frequency='0', `date`='$updatedTime' WHERE device_name='$deviceName' AND room_id='$roomID' AND uid='$userID'";
   $result=mysqli_query($gotData->con,$sql);
   if($result){
     $gotData->data=$deviceName." has been off from scheduling.";
