@@ -1,10 +1,13 @@
 <?php
 include_once('config.php');
 include_once('user_data.php');
+require_once('check_user.php');
 function getAccountDetails($gotData){
   return getUserDataUsingID($gotData->con,$gotData->userID);
 }
 function updateUser($gotData){
+  $got=checkMobileExists($gotData->con,$gotData->user->mobile,true,$gotData->user->email);
+  if($got->error) return $got;
   $name=$gotData->user->name;
   $email=$gotData->user->email;
   $address=$gotData->user->address;

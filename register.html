@@ -81,8 +81,8 @@
         <button class="btn btn-login btn-success btn-float" ng-click="signup_status()" ng-disabled="signupForm.s_email.$invalid || signupForm.s_password.$invalid || signupForm.s_name.$invalid || signupForm.s_address.$invalid || signupForm.s_city.$invalid || signupForm.s_contact.$invalid"><i
             class="notika-icon notika-right-arrow right-arrow-ant"></i></button>
       </div>
-      <div ng-show="s_status_0" class="alert alert-danger">Please fill details carefully!</div>
-      <div ng-show="s_status_1" class="alert alert-success">{{signupStatus}}</div>
+      <div ng-show="s_status_0" class="alert alert-danger">{{signupError}}</div>
+      <div ng-show="s_status_1" class="alert alert-success">{{signupSuccess}}</div>
     </form>
     <div class="nk-navigation rg-ic-stl">
       <a href="#!customer/login" data-ma-action="nk-login-switch" data-ma-block="#l-login"><i class="notika-icon notika-right-arrow"></i> <span>Sign in</span></a>

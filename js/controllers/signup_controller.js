@@ -9,7 +9,7 @@ myApp.controller("SignupController", function($rootScope, $scope, $http, $window
     $http({
       method: "POST",
       url: "signup_data.php",
-      data: "email=" + $scope.s_email + "&password=" + $scope.s_password + "&name=" + $scope.s_name + "&address=" + $scope.s_address + "&city=" + $scope.s_city + "&contact=" + $scope.s_contact,
+      data: "action=1&email=" + $scope.s_email + "&password=" + $scope.s_password + "&name=" + $scope.s_name + "&address=" + $scope.s_address + "&city=" + $scope.s_city + "&mobile=" + $scope.s_contact,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
@@ -17,11 +17,11 @@ myApp.controller("SignupController", function($rootScope, $scope, $http, $window
       flag = response.data;
       // we should be using flag in only this block so logic in following
       if (!flag.error) {
-        $scope.signupStatus = flag.message;
+        $scope.signupSuccess = flag.errorMessage;
         $scope.s_status_0 = false;
         $scope.s_status_1 = true;
       } else {
-        $scope.signupStatus = "";
+        $scope.signupError = flag.errorMessage;
         $scope.s_status_1 = false;
         $scope.s_status_0 = true;
       }

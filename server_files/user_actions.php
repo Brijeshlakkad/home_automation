@@ -11,6 +11,8 @@ function getUserDetails($gotData){
   return $gotData;
 }
 function updateUserDetails($gotData){
+  $got=checkMobileExists($gotData->con,$gotData->user->mobile,true,$gotData->user->email);
+  if($got->error) return $got;
   $email=$gotData->user->email;
   $name=$gotData->user->name;
   $city=$gotData->user->city;
@@ -33,9 +35,15 @@ function changePassword($gotData){
   $newPassword= $gotData->user->newPassword;
   $u=getUserDataUsingEmail($gotData->con,$email);
   if($u->error) return $u;
+  $gotData->passwordB=$u->password;
   if($oldPassword!=$u->password){
       $gotData->error=true;
       $gotData->errorMessage="Old Password is not correct.";
+      return $gotData;
+  }
+  else if($newPassword==$u->password){
+      $gotData->error=true;
+      $gotData->errorMessage="New Password is same as old password.";
       return $gotData;
   }
   $sql="UPDATE user SET password='$newPassword' WHERE email='$email'";
