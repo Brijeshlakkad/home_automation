@@ -1,40 +1,38 @@
 <div class="login-content">
-  <div>
-    Customer
-  </div>
-    <!-- Login -->
-    <div class="nk-block toggled" id="l-login">
-      <!-- Start my code -->
-        <div><b><h3>Login</h3></b></div>
-        <hr/>
-
-      <!-- End my code -->
-      <form name="loginForm" method="post" novalidate>
-        <div class="nk-form">
-            <div class="input-group">
-                <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-envelope"></i></span>
-                <div class="nk-int-st">
-                    <input type="text" class="form-control" name="l_email" ng-model="l_email" placeholder="Email Address" required email-dir>
-                </div>
-                <span style="color:red"  id="l_email" ng-show="loginForm.l_email.$dirty && loginForm.l_email.$invalid"><span ng-show="loginForm.l_email.$error.required">Email is required.</span><span ng-show="!loginForm.l_email.$error.required && loginForm.l_email.$error.emailValid">Invalid email address.</span></span>
-            </div>
-            <div class="input-group mg-t-15">
-                <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-edit"></i></span>
-                <div class="nk-int-st">
-                    <input type="password" class="form-control" name="l_password" ng-model="l_password" placeholder="Password" ng-style="passwordStyle" ng-change="analyzePassword(l_password)" required>
-                </div>
-                <span style="color:red"  id="l_password" ng-show="loginForm.l_password.$dirty && loginForm.l_password.$invalid"><span ng-show="loginForm.l_password.$error.required">Password is required.</span></span>
-            </div>
-            <div class="fm-checkbox">
-              <!--  <label><input type="checkbox" class="i-checks"> <i></i> Keep me signed in</label> -->
-            </div>
-            <button class="btn btn-login btn-success btn-float" ng-click="login_status()" ng-disabled="loginForm.l_email.$invalid || loginForm.l_password.$invalid"><i class="notika-icon notika-right-arrow right-arrow-ant"></i></button>
+  <!-- Login -->
+  <div class="nk-block toggled" id="l-login">
+    <!-- Start my code -->
+    <div><b><h3>Customer Login</h3></b></div>
+    <hr />
+    <!-- End my code -->
+    <form name="loginForm" method="post" novalidate>
+      <div class="nk-form">
+        <div class="input-group">
+          <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-envelope"></i></span>
+          <div class="nk-int-st">
+            <input type="text" class="form-control" name="l_email" ng-model="l_email" placeholder="Email Address" required email-dir>
+          </div>
+          <span style="color:red" id="l_email" ng-show="loginForm.l_email.$dirty && loginForm.l_email.$invalid"><span ng-show="loginForm.l_email.$error.required">Email is required.</span><span ng-show="!loginForm.l_email.$error.required && loginForm.l_email.$error.emailValid">Invalid
+              email address.</span></span>
         </div>
-        <div ng-show="l_status_0" class="alert alert-danger">Email or password is wrong</div><div ng-show="l_status_1" class="alert alert-success">Login in..</div>
-      </form>
-        <div class="nk-navigation nk-lg-ic">
-            <a href="#!customer/register" data-ma-action="nk-login-switch" data-ma-block="#l-register"><i class="notika-icon notika-plus-symbol"></i> <span>Register</span></a>
-            <a href="#!customer/forget_password" data-ma-action="nk-login-switch" data-ma-block="#l-forget-password"><i>?</i> <span>Forgot Password</span></a>
+        <div class="input-group mg-t-15">
+          <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-edit"></i></span>
+          <div class="nk-int-st">
+            <input type="password" class="form-control" name="l_password" ng-model="l_password" placeholder="Password" ng-style="passwordStyle" ng-change="analyzePassword(l_password)" required>
+          </div>
+          <span style="color:red" id="l_password" ng-show="loginForm.l_password.$dirty && loginForm.l_password.$invalid"><span ng-show="loginForm.l_password.$error.required">Password is required.</span></span>
         </div>
+        <div class="fm-checkbox">
+          <!--  <label><input type="checkbox" class="i-checks"> <i></i> Keep me signed in</label> -->
+        </div>
+        <button class="btn btn-login btn-success btn-float" ng-click="login_status()" ng-disabled="loginForm.l_email.$invalid || loginForm.l_password.$invalid"><i class="notika-icon notika-right-arrow right-arrow-ant"></i></button>
+      </div>
+      <div ng-show="l_status_0" class="alert alert-danger">Email or password is wrong</div>
+      <div ng-show="l_status_1" class="alert alert-success">Login in..</div>
+    </form>
+    <div class="nk-navigation nk-lg-ic">
+      <a href="#!customer/register" data-ma-action="nk-login-switch" data-ma-block="#l-register"><i class="notika-icon notika-plus-symbol"></i> <span>Register</span></a>
+      <a href="#!customer/forget_password" data-ma-action="nk-login-switch" data-ma-block="#l-forget-password"><i>?</i> <span>Forgot Password</span></a>
     </div>
+  </div>
 </div>

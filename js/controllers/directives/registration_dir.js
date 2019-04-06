@@ -95,7 +95,7 @@ myApp.directive('emailDir', function($http) {
           if(typeof attr.for != 'undefined'){
             var url="check_data_exists.php";
             if(attr.for=="dealer"){
-              url="dealer/check_data_exists.php";
+              url="dealer_distributor/check_data_exists.php";
             }
             $http({
         			method : "POST",
@@ -103,7 +103,6 @@ myApp.directive('emailDir', function($http) {
         			data: "email="+value,
         			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         		}).then(function mySuccess(response) {
-
         			var flag = response.data;
         			// we should be using flag in only this block so logic in following
         			if(flag.error || flag.user.emailExists)
@@ -150,7 +149,7 @@ myApp.directive('contactDir', function($rootScope,$http,$location) {
             if(typeof attr.for != 'undefined'){
               var url="check_data_exists.php";
               if(attr.for=="dealer"){
-                url="dealer/check_data_exists.php";
+                url="dealer_distributor/check_data_exists.php";
               }
               $http({
           			method : "POST",

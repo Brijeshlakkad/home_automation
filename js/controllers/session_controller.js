@@ -13,15 +13,17 @@ myApp.controller("userController", function($rootScope, $scope, $localStorage, $
   };
   $rootScope.checkSessionData = function(){
     if ($localStorage.userID != null && $localStorage.user != null && $localStorage.userType != null) {
-      if($localStorage.userType=="customer"){
-        $rootScope.isLoggedIn = true;
-        $window.location.href = "#!customer/home";
-        $rootScope.isLoggedIn = true;
-      }else if($localStorage.userType=="dealer"){
-        $window.location.href = "#!dealer_distributor/home";
-      }else if($localStorage.userType=="admin"){
-        $rootScope.isLoggedIn = true;
-        $window.location.href = "#!admin/home";
+      if(!$rootScope.checkPathIndex()){
+        if($localStorage.userType=="customer"){
+          $rootScope.isLoggedIn = true;
+          $window.location.href = "#!/customer/home";
+        }else if($localStorage.userType=="dealer"){
+          $rootScope.isLoggedIn = true;
+          $window.location.href = "#!/dealer_distributor/home";
+        }else if($localStorage.userType=="admin"){
+          $rootScope.isLoggedIn = true;
+          $window.location.href = "#!/admin/home";
+        }
       }
     }else{
       $localStorage.$reset({
