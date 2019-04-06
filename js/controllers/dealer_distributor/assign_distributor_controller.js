@@ -3,6 +3,7 @@ myApp.controller("AssignDistributorController", function($rootScope, $scope, $ht
     rerun: true,
     cache: false
   });
+  $rootScope.checkSessionData();
   $scope.user = $rootScope.$storage.user;
   $scope.userID = $rootScope.$storage.userID;
   $scope.userType = $rootScope.$storage.userType;

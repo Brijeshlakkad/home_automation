@@ -3,6 +3,7 @@ myApp.controller("DeviceController", function($rootScope, $scope, $http, $window
     rerun: true,
     cache: false
   });
+  $rootScope.checkSessionData();
   $scope.user = $rootScope.$storage.user;
   $scope.userID = $rootScope.$storage.userID;
   $scope.showAddDevice = false;

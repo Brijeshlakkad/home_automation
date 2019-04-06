@@ -1,87 +1,95 @@
 <div class="login-content">
-    <!-- Register -->
-    <div class="nk-block toggled" id="l-register">
-      <!-- Start my code -->
-        <div><b><h3>Registration</h3></b></div>
-        <hr/>
+  <div>
+    Customer
+  </div>
+  <!-- Register -->
+  <div class="nk-block toggled" id="l-register">
+    <!-- Start my code -->
+    <div><b>
+        <h3>Registration</h3>
+      </b></div>
+    <hr />
 
-      <!-- End my code -->
-      <form name="signupForm" method="post" novalidate>
-        <div class="nk-form">
-            <div class="input-group">
-                <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-user"></i></span>
-                <div class="nk-int-st">
-                    <input type="text" class="form-control" placeholder="Name" ng-model="s_name" name="s_name" required  names-dir nameslen-dir>
-                </div>
-                <span style="color:red" id="s_name" ng-show="signupForm.s_name.$dirty && signupForm.s_name.$invalid">
-                <span ng-show="signupForm.s_name.$error.required">First name is required</span>
-                <span ng-show="!signupForm.s_name.$error.required && signupForm.s_name.$error.namesvalid">Enter only characters</span>
-                <span ng-show="!signupForm.s_name.$error.required && signupForm.s_name.$error.nameslenvalid">Enter more than three characters</span>
-                </span>
-            </div>
-
-            <div class="input-group mg-t-15">
-                <span class="input-group-addon nk-ic-st-pro"><i class="	glyphicon glyphicon-envelope"></i></span>
-                <div class="nk-int-st">
-                    <input type="text" class="form-control" placeholder="Email Address" name="s_email" ng-model="s_email" required email-dir for="user"/>
-                </div>
-                <span style="color:red"  id="s_email" ng-show="signupForm.s_email.$dirty && signupForm.s_email.$invalid"><span ng-show="signupForm.s_email.$error.required">Email is required.</span><span ng-show="!signupForm.s_email.$error.required && signupForm.s_email.$error.emailValid">Invalid email address.</span>
-                <span ng-show="!(signupForm.s_email.$error.required || signupForm.s_email.$error.emailValid) && signupForm.s_email.$error.emailExists">Email address already exists</span>
-                </span>
-            </div>
-
-            <div class="input-group mg-t-15">
-                <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-edit"></i></span>
-                <div class="nk-int-st">
-                    <input type="password" class="form-control" placeholder="Password" name="s_password" ng-model="s_password" required pass-dir>
-                </div>
-                <span style="color:red" id="s_password" ng-show="signupForm.s_password.$dirty && signupForm.s_password.$invalid">
-                <span ng-show="signupForm.s_password.$error.required">Password is required</span>
-                <span ng-show="!signupForm.s_password.$error.required && signupForm.s_password.$error.passvalid">Password should contain at least one number and at least one character. Its length should be of 6 characters</span>
-                </span>
-            </div>
-
-            <div class="input-group mg-t-15">
-                <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-book"></i></span>
-                <div class="nk-int-st">
-                    <input type="text" class="form-control" placeholder="Address" name="s_address" ng-model="s_address"  required address-dir>
-                    </div><span style="color:red" id="s_address" ng-show="signupForm.s_address.$dirty && signupForm.s_address.$invalid">
-                    <span ng-show="signupForm.s_address.$error.required">Address is required</span>
-                    <span ng-show="!signupForm.s_address.$error.required && signupForm.s_address.$error.addressvalid">Do not use unused character.</span>
-                    <span ng-show="!signupForm.s_address.$error.required && signupForm.s_address.$error.addresslengthvalid">Enter more details so we can understand</span>
-                    </span>
-            </div>
-
-            <div class="input-group mg-t-15">
-                <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-home"></i></span>
-                <div class="nk-int-st">
-                    <input type="text" class="form-control" placeholder="City" name="s_city" ng-model="s_city" required  names-dir>
-                </div>
-                <span style="color:red" id="s_city" ng-show="signupForm.s_city.$dirty && signupForm.s_city.$invalid">
-                <span ng-show="signupForm.s_city.$error.required">City is required</span>
-                <span ng-show="!signupForm.s_city.$error.required && signupForm.s_city.$error.namesvalid">Enter only characters</span>
-                </span>
-            </div>
-
-            <div class="input-group mg-t-15">
-                <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-phone"></i></span>
-                <div class="nk-int-st">
-                  <input type="text" class="form-control" placeholder="Contact" name="s_contact" ng-model="s_contact" ng-required="true" contact-dir for="user"/>
-                </div>
-                <span style="color:red"  id="s_contact" ng-show="signupForm.s_contact.$dirty && signupForm.s_contact.$invalid">
-                <span ng-show="signupForm.s_contact.$error.required">Contact is required.</span>
-                <span ng-show="!signupForm.s_contact.$error.required && signupForm.s_contact.$error.contactValid">Contact is invalid.</span>
-                <span ng-show="!signupForm.s_contact.$error.required && signupForm.s_contact.$error.contactExists">Contact is already exists.</span>
-                </span>
-            </div>
-
-            <button class="btn btn-login btn-success btn-float" ng-click="signup_status()" ng-disabled="signupForm.s_email.$invalid || signupForm.s_password.$invalid || signupForm.s_name.$invalid || signupForm.s_address.$invalid || signupForm.s_city.$invalid || signupForm.s_contact.$invalid"><i class="notika-icon notika-right-arrow right-arrow-ant"></i></button>
+    <!-- End my code -->
+    <form name="signupForm" method="post" novalidate>
+      <div class="nk-form">
+        <div class="input-group">
+          <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-user"></i></span>
+          <div class="nk-int-st">
+            <input type="text" class="form-control" placeholder="Name" ng-model="s_name" name="s_name" required names-dir nameslen-dir>
+          </div>
+          <span style="color:red" id="s_name" ng-show="signupForm.s_name.$dirty && signupForm.s_name.$invalid">
+            <span ng-show="signupForm.s_name.$error.required">First name is required</span>
+            <span ng-show="!signupForm.s_name.$error.required && signupForm.s_name.$error.namesvalid">Enter only characters</span>
+            <span ng-show="!signupForm.s_name.$error.required && signupForm.s_name.$error.nameslenvalid">Enter more than three characters</span>
+          </span>
         </div>
-        <div ng-show="s_status_0" class="alert alert-danger">Please fill details carefully!</div><div ng-show="s_status_1" class="alert alert-success">{{signupStatus}}</div>
-      </form>
-        <div class="nk-navigation rg-ic-stl">
-            <a href="#!customer/login" data-ma-action="nk-login-switch" data-ma-block="#l-login"><i class="notika-icon notika-right-arrow"></i> <span>Sign in</span></a>
-            <a href="#!customer/forget_password" data-ma-action="nk-login-switch" data-ma-block="#l-forget-password"><i>?</i> <span>Forgot Password</span></a>
+
+        <div class="input-group mg-t-15">
+          <span class="input-group-addon nk-ic-st-pro"><i class="	glyphicon glyphicon-envelope"></i></span>
+          <div class="nk-int-st">
+            <input type="text" class="form-control" placeholder="Email Address" name="s_email" ng-model="s_email" required email-dir for="user" />
+          </div>
+          <span style="color:red" id="s_email" ng-show="signupForm.s_email.$dirty && signupForm.s_email.$invalid"><span ng-show="signupForm.s_email.$error.required">Email is required.</span><span ng-show="!signupForm.s_email.$error.required && signupForm.s_email.$error.emailValid">Invalid
+              email address.</span>
+            <span ng-show="!(signupForm.s_email.$error.required || signupForm.s_email.$error.emailValid) && signupForm.s_email.$error.emailExists">Email address already exists</span>
+          </span>
         </div>
+
+        <div class="input-group mg-t-15">
+          <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-edit"></i></span>
+          <div class="nk-int-st">
+            <input type="password" class="form-control" placeholder="Password" name="s_password" ng-model="s_password" required pass-dir>
+          </div>
+          <span style="color:red" id="s_password" ng-show="signupForm.s_password.$dirty && signupForm.s_password.$invalid">
+            <span ng-show="signupForm.s_password.$error.required">Password is required</span>
+            <span ng-show="!signupForm.s_password.$error.required && signupForm.s_password.$error.passvalid">Password should contain at least one number and at least one character. Its length should be of 6 characters</span>
+          </span>
+        </div>
+
+        <div class="input-group mg-t-15">
+          <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-book"></i></span>
+          <div class="nk-int-st">
+            <input type="text" class="form-control" placeholder="Address" name="s_address" ng-model="s_address" required address-dir>
+          </div><span style="color:red" id="s_address" ng-show="signupForm.s_address.$dirty && signupForm.s_address.$invalid">
+            <span ng-show="signupForm.s_address.$error.required">Address is required</span>
+            <span ng-show="!signupForm.s_address.$error.required && signupForm.s_address.$error.addressvalid">Do not use unused character.</span>
+            <span ng-show="!signupForm.s_address.$error.required && signupForm.s_address.$error.addresslengthvalid">Enter more details so we can understand</span>
+          </span>
+        </div>
+
+        <div class="input-group mg-t-15">
+          <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-home"></i></span>
+          <div class="nk-int-st">
+            <input type="text" class="form-control" placeholder="City" name="s_city" ng-model="s_city" required names-dir>
+          </div>
+          <span style="color:red" id="s_city" ng-show="signupForm.s_city.$dirty && signupForm.s_city.$invalid">
+            <span ng-show="signupForm.s_city.$error.required">City is required</span>
+            <span ng-show="!signupForm.s_city.$error.required && signupForm.s_city.$error.namesvalid">Enter only characters</span>
+          </span>
+        </div>
+
+        <div class="input-group mg-t-15">
+          <span class="input-group-addon nk-ic-st-pro"><i class="glyphicon glyphicon-phone"></i></span>
+          <div class="nk-int-st">
+            <input type="text" class="form-control" placeholder="Contact" name="s_contact" ng-model="s_contact" ng-required="true" contact-dir for="user" />
+          </div>
+          <span style="color:red" id="s_contact" ng-show="signupForm.s_contact.$dirty && signupForm.s_contact.$invalid">
+            <span ng-show="signupForm.s_contact.$error.required">Contact is required.</span>
+            <span ng-show="!signupForm.s_contact.$error.required && signupForm.s_contact.$error.contactValid">Contact is invalid.</span>
+            <span ng-show="!signupForm.s_contact.$error.required && signupForm.s_contact.$error.contactExists">Contact is already exists.</span>
+          </span>
+        </div>
+
+        <button class="btn btn-login btn-success btn-float" ng-click="signup_status()" ng-disabled="signupForm.s_email.$invalid || signupForm.s_password.$invalid || signupForm.s_name.$invalid || signupForm.s_address.$invalid || signupForm.s_city.$invalid || signupForm.s_contact.$invalid"><i
+            class="notika-icon notika-right-arrow right-arrow-ant"></i></button>
+      </div>
+      <div ng-show="s_status_0" class="alert alert-danger">Please fill details carefully!</div>
+      <div ng-show="s_status_1" class="alert alert-success">{{signupStatus}}</div>
+    </form>
+    <div class="nk-navigation rg-ic-stl">
+      <a href="#!customer/login" data-ma-action="nk-login-switch" data-ma-block="#l-login"><i class="notika-icon notika-right-arrow"></i> <span>Sign in</span></a>
+      <a href="#!customer/forget_password" data-ma-action="nk-login-switch" data-ma-block="#l-forget-password"><i>?</i> <span>Forgot Password</span></a>
     </div>
+  </div>
 </div>

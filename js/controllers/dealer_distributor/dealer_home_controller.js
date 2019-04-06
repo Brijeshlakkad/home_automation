@@ -3,6 +3,7 @@ myApp.controller("DealerHomeController", function($rootScope, $scope, $http, $wi
     rerun: true,
     cache: false
   });
+  $rootScope.checkSessionData();
   $scope.user = $rootScope.$storage.user;
   $scope.userID = $rootScope.$storage.userID;
   $scope.userType = $rootScope.$storage.userType;

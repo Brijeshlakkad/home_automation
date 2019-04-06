@@ -3,6 +3,7 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
     rerun: true,
     cache: false
   });
+  $rootScope.checkSessionData();
   $scope.user = $rootScope.$storage.user;
   $scope.userID = $rootScope.$storage.userID;
   $scope.homeID = $routeParams.homeID;

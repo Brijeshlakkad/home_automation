@@ -1,4 +1,5 @@
 myApp.controller("SubscriptionController", function($rootScope, $scope, $http, $window, $localStorage, $sessionStorage, $ocLazyLoad) {
+  $rootScope.checkSessionData();
   $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js','js/notification/bootstrap-growl.min.js','js/wow.min.js','js/main.js'], {
     rerun: true,
     cache: false
