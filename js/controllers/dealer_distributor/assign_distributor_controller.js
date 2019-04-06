@@ -41,11 +41,16 @@ myApp.controller("AssignDistributorController", function($rootScope, $scope, $ht
     }).then(function mySuccess(response) {
       var data = response.data;
       if (!data.error) {
-        $scope.productList = data.d.product;
-        $rootScope.selectedProduct = $scope.productList[0];
-        $scope.numProductSerials = 0;
-        $scope.changedProductSelected($scope.productList[0]);
-        $rootScope.showBlock3 = true;
+        if(data.d.productRows==0){
+          $scope.productList=[];
+        }
+        else{
+          $scope.productList = data.d.product;
+          $rootScope.selectedProduct = $scope.productList[0];
+          $scope.numProductSerials = 0;
+          $scope.changedProductSelected($scope.productList[0]);
+          $rootScope.showBlock3 = true;
+        }
         $rootScope.body.removeClass("loading");
       } else {
         $rootScope.body.removeClass("loading");

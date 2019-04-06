@@ -32,10 +32,14 @@ myApp.controller("ProductSerialController", function($rootScope, $scope, $http, 
     }).then(function mySuccess(response) {
       var data = response.data;
       if (!data.error) {
-        $scope.product = data.product;
-        $rootScope.copyProduct = angular.copy($scope.product);
-        $rootScope.body.removeClass("loading");
-        $scope.getAllProductSerials($scope.product.id);
+        if(data.totalRows==1){
+          $scope.product = data.product;
+          $rootScope.copyProduct = angular.copy($scope.product);
+          $rootScope.body.removeClass("loading");
+          $scope.getAllProductSerials($scope.product.id);
+        }else{
+          $scope.showNothing = $sce.trustAsHtml(data.showNothing);
+        }
       } else {
         $rootScope.body.removeClass("loading");
         $rootScope.showErrorDialog(data.errorMessage);

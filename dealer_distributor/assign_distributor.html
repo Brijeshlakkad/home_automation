@@ -76,7 +76,10 @@
             </span>
           </div>
           <br />
-          <div class="row" ng-show="assignDistributorForm.distributorEmail.$valid">
+          <div class="row" ng-show="assignDistributorForm.distributorEmail.$valid && productList.length==0">
+            You do not have any products.
+          </div>
+          <div class="row" ng-show="assignDistributorForm.distributorEmail.$valid && productList.length!=0">
             <div class="input-group">
               <div class="input-group-addon">
                 <span>Select Prodcut: </span>
@@ -144,7 +147,10 @@
             </span>
           </div>
           <br />
-          <div class="row" ng-show="assignDistributorSerialForm.distributorEmail.$valid">
+          <div class="row" ng-show="assignDistributorSerialForm.distributorEmail.$valid && productList.length==0">
+            You do not have any products.
+          </div>
+          <div class="row" ng-show="assignDistributorSerialForm.distributorEmail.$valid && productList.length!=0">
             <div class="input-group">
               <div class="input-group-addon">
                 <span>Product: </span>

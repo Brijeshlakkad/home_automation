@@ -7,24 +7,28 @@ myApp.controller("ProductSoldController", function($rootScope, $scope, $http, $w
   $scope.user = $rootScope.$storage.user;
   $scope.userID = $rootScope.$storage.userID;
   $scope.userType = $rootScope.$storage.userType;
-  $scope.productSoldList=[];
-  $scope.showTextFieldArray=[];
-  $scope.getProductSoldList = function(id,type) {
+  $scope.productSoldList = [];
+  $scope.showTextFieldArray = [];
+  $scope.getProductSoldList = function(id, type) {
     $rootScope.body.addClass("loading");
     $http({
       method: "POST",
       url: "dealer_distributor/dealer_distributor_interface.php",
-      data: "action=8&id=" + id+"&type="+type,
+      data: "action=8&id=" + id + "&type=" + type,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     }).then(function mySuccess(response) {
       var data = response.data;
-      $scope.showTextFieldArray=[];
+      $scope.showTextFieldArray = [];
       if (!data.error) {
-        $scope.productSoldList = data.user.productSold;
-        for(i=0;i<$scope.productSoldList.length;i++){
-          $scope.showTextFieldArray[i]=false;
+        if (data.user.totalRows == 0) {
+          $scope.productSoldList = [];
+        } else {
+          $scope.productSoldList = data.user.productSold;
+          for (i = 0; i < $scope.productSoldList.length; i++) {
+            $scope.showTextFieldArray[i] = false;
+          }
         }
         $rootScope.body.removeClass("loading");
       } else {
@@ -35,52 +39,52 @@ myApp.controller("ProductSoldController", function($rootScope, $scope, $http, $w
       $rootScope.body.removeClass("loading");
     });
   };
-  $scope.getProductSoldList($scope.userID,$scope.userType);
-  $scope.getShowingTextFieldIndex = function(){
-    for(i=0;i<$scope.showTextFieldArray.length;i++){
-      if($scope.showTextFieldArray[i]==true){
+  $scope.getProductSoldList($scope.userID, $scope.userType);
+  $scope.getShowingTextFieldIndex = function() {
+    for (i = 0; i < $scope.showTextFieldArray.length; i++) {
+      if ($scope.showTextFieldArray[i] == true) {
         return i;
       }
     }
     return -99;
   }
-  $scope.changeToTextField=function(product,index){
-    var showingIndex=$scope.getShowingTextFieldIndex();
-    if(showingIndex==-99){
-      $scope.changeCustomerEmailModel=product.soldToEmail;
+  $scope.changeToTextField = function(product, index) {
+    var showingIndex = $scope.getShowingTextFieldIndex();
+    if (showingIndex == -99) {
+      $scope.changeCustomerEmailModel = product.soldToEmail;
       $scope.showTextFieldArray[index] = true;
-    }else{
+    } else {
       $scope.showTextFieldArray[showingIndex] = false;
-      $scope.changeCustomerEmailModel=product.soldToEmail;
+      $scope.changeCustomerEmailModel = product.soldToEmail;
       $scope.showTextFieldArray[index] = true;
     }
   };
-  $scope.backToLabel=function(product,index,customerEmail){
+  $scope.backToLabel = function(product, index, customerEmail) {
     $scope.showTextFieldArray[index] = false;
-    if(product.soldToEmail!=customerEmail){
+    if (product.soldToEmail != customerEmail) {
       $rootScope.body.addClass("loading");
       $http({
         method: "POST",
         url: "dealer_distributor/dealer_distributor_interface.php",
-        data: "action=9&serialNo=" + product.serialNo+"&customerEmail="+customerEmail+"&userID="+$scope.userID+"&oldCustomerEmail="+product.soldToEmail,
+        data: "action=9&serialNo=" + product.serialNo + "&customerEmail=" + customerEmail + "&userID=" + $scope.userID + "&oldCustomerEmail=" + product.soldToEmail,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       }).then(function mySuccess(response) {
         var data = response.data;
-        if(data.error==false){
-          $scope.getProductSoldList($scope.userID,$scope.userType);
+        if (data.error == false) {
+          $scope.getProductSoldList($scope.userID, $scope.userType);
           $rootScope.showSuccessDialog(data.responseMessage);
-        }else{
-          $scope.changeCustomerEmailModel=product.soldToEmail;
+        } else {
+          $scope.changeCustomerEmailModel = product.soldToEmail;
           $rootScope.showErrorDialog(data.errorMessage);
         }
         $rootScope.body.removeClass("loading");
       }, function myError(response) {
-        $scope.changeCustomerEmailModel=product.soldToEmail;
+        $scope.changeCustomerEmailModel = product.soldToEmail;
         $rootScope.body.removeClass("loading");
       });
-    }else{
+    } else {
       $rootScope.showSuccessDialog("Customer Email has been changed!");
     }
   }

@@ -40,11 +40,11 @@
   <div class="row">
     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
       <label>Using Quantity</label>
-      <input type="radio" name="usingQuantity" value="0" ng-model="usingQuantity"/>
+      <input type="radio" name="usingQuantity" value="0" ng-model="usingQuantity" />
     </div>
     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
       <label>Using Serial</label>
-      <input type="radio" name="usingQuantity" value="1" ng-model="usingQuantity"/>
+      <input type="radio" name="usingQuantity" value="1" ng-model="usingQuantity" />
     </div>
   </div>
   <div class="row">
@@ -53,7 +53,10 @@
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
       <div ng-show="usingQuantity==0">
         <form name="sellToCustomerForm" novalidate>
-          <div class="row">
+          <div class="row" ng-if="productList.length==0">
+            You do not have any products.
+          </div>
+          <div class="row" ng-if="productList.length!=0">
             <div class="input-group">
               <div class="input-group-addon">
                 <span>Product: </span>
@@ -65,12 +68,12 @@
               <div class="input-group-addon" ng-show="sellToCustomerForm.selectedProduct.$dirty && !sellToCustomerForm.selectedProduct.$invalid" ng-bind-html="inputValid">
               </div>
             </div>
-            <span style="color:red;" ng-show="sellToCustomerSerialForm.selectedProduct.$dirty && sellToCustomerSerialForm.selectedProduct.$invalid">
-              <span ng-show="sellToCustomerSerialForm.selectedProduct.$error.required">Product selection is required</span>
+            <span style="color:red;" ng-show="sellToCustomerForm.selectedProduct.$dirty && sellToCustomerForm.selectedProduct.$invalid">
+              <span ng-show="sellToCustomerForm.selectedProduct.$error.required">Product selection is required</span>
             </span>
           </div>
           <br />
-          <div class="row" ng-show="maxNumProductSerials==0" style="color:rgba(236,95,26,1)">
+          <div class="row" ng-show="sellToCustomerForm.selectedProduct.$valid && maxNumProductSerials==0" style="color:rgba(236,95,26,1)">
             All {{product.name}} has been selled.
           </div>
           <div class="row" ng-show="maxNumProductSerials!=0 && sellToCustomerForm.selectedProduct.$valid">
@@ -121,7 +124,10 @@
       </div>
       <div ng-show="usingQuantity==1">
         <form name="sellToCustomerSerialForm" novalidate>
-          <div class="row">
+          <div class="row" ng-if="productList.length==0">
+            You do not have any products.
+          </div>
+          <div class="row" ng-if="productList.length!=0">
             <div class="input-group">
               <div class="input-group-addon">
                 <span>Product: </span>
@@ -138,7 +144,7 @@
             </span>
           </div>
           <br />
-          <div class="row" ng-show="maxNumProductSerials==0" style="color:rgba(236,95,26,1)">
+          <div class="row" ng-show="sellToCustomerSerialForm.selectedProduct.$valid && maxNumProductSerials==0" style="color:rgba(236,95,26,1)">
             All {{product.name}} has been selled.
           </div>
           <div class="row" ng-show="maxNumProductSerials!=0 && sellToCustomerSerialForm.selectedProduct.$valid">

@@ -11,6 +11,12 @@ myApp.controller("userController", function($rootScope, $scope, $localStorage, $
     }
     return true;
   };
+  $rootScope.isLoggedInFunc = function(){
+    if ($localStorage.userID != null && $localStorage.user != null && $localStorage.userType != null) {
+      return true;
+    }
+    return false;
+  };
   $rootScope.checkSessionData = function(){
     if ($localStorage.userID != null && $localStorage.user != null && $localStorage.userType != null) {
       if(!$rootScope.checkPathIndex()){
@@ -67,6 +73,7 @@ myApp.controller("userController", function($rootScope, $scope, $localStorage, $
   $scope.noMember="No Members";
   $scope.noHardwareList="No Hardware";
   $scope.noScheduledDevice="Devices are not scheduled yet";
+  $scope.noProductSold="No Products Sold";
 });
 myApp.directive('showNothing', function() {
   return {
