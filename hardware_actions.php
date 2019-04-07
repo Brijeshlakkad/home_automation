@@ -77,11 +77,13 @@ function createHardware($gotData){
   if($result)
   {
     $gotData->error=false;
+    $hw=getHardwareDataUsingNameIDs($gotData->con,$userID,$hwName,$roomID,$homeID);
+    if($hw->error) return $hw;
+    $gotData->user->hw->id=$hw->hwID;
     if($gotData->ownedBy){
       $gotData=createSubscription($gotData);
       if($gotData->error){
         $got=deleteHardware($gotData);
-        return $gotData;
       }
     }
     return $gotData;
@@ -257,8 +259,8 @@ function checkHardwareSeries($gotData){
         }
     }
     if($gotData->isModifying){
-      $id=$gotData->user->id;
-      $sql="SELECT * FROM hardware WHERE series='$hwSeries' AND id!='$id'";
+      $userID=$gotData->user->id;
+      $sql="SELECT * FROM hardware WHERE series='$hwSeries' AND uid!='$userID'";
     }else{
         $sql="SELECT * FROM hardware WHERE series='$hwSeries'";
     }

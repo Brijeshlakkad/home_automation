@@ -47,11 +47,13 @@ function createHardware($gotData){
   if($result)
   {
     $gotData->error=false;
+    $hw=getHardwareDataUsingNameIDs($gotData->con,$userID,$hwName,$roomID,$homeID);
+    if($hw->error) return $hw;
+    $gotData->user->hw->id=$hw->hwID;
     if($gotData->ownedBy){
       $gotData=createSubscription($gotData);
       if($gotData->error){
         $got=deleteHardware($gotData);
-        return $gotData;
       }
     }
     return $gotData;
@@ -170,7 +172,7 @@ function checkHardwareSeries($gotData){
   $hwSeries = $gotData->user->hwSeries;
   $email = $gotData->user->email;
   $userID = $gotData->user->userID;
-  $sql="SELECT * FROM product_serial WHERE serial_no='$hwSeries' AND customer_email='$email'";
+  $sql="SELECT product_serial.id FROM product_serial INNER JOIN sold_product ON sold_product.id=product_serial.sold_product_id WHERE product_serial.serial_no='$hwSeries' AND sold_product.customer_email='$email'";
   $check=mysqli_query($gotData->con,$sql);
   if($check){
     if(mysqli_num_rows($check)==0){
@@ -183,8 +185,8 @@ function checkHardwareSeries($gotData){
         }
     }
     if($gotData->isModifying){
-      $id=$gotData->user->id;
-      $sql="SELECT * FROM hardware WHERE series='$hwSeries' AND id!='$id'";
+      $userID=$gotData->user->id;
+      $sql="SELECT * FROM hardware WHERE series='$hwSeries' AND uid!='$userID'";
     }else{
         $sql="SELECT * FROM hardware WHERE series='$hwSeries'";
     }
@@ -221,6 +223,7 @@ if(isset($_REQUEST['action'])){
     $gotData->user->roomID=$roomID;
     $gotData->user->action=$action;
     $gotData=getHardwareData($gotData);
+    $gotData->con=(object) null;
     echo json_encode($gotData);
   }else if($action=="1" && isset($_REQUEST['email']) && isset($_REQUEST['homeID']) && isset($_REQUEST['roomID']) && isset($_REQUEST['hwName']) && isset($_REQUEST['hwSeries']) && isset($_REQUEST['hwIP'])){
     $email=$_REQUEST['email'];
@@ -243,6 +246,7 @@ if(isset($_REQUEST['action'])){
     $gotData->user->hw->hwSeries=$hwSeries;
     $gotData->user->hw->hwIP=$hwIP;
     $gotData=createHardware($gotData);
+    $gotData->con=(object) null;
     echo json_encode($gotData);
   }
   else if($action=="2" && isset($_REQUEST['email']) && isset($_REQUEST['id'])){
@@ -258,6 +262,7 @@ if(isset($_REQUEST['action'])){
     $gotData->user->hw->id=$id;
     $gotData->user->hw->email=$email;
     $gotData=deleteHardware($gotData);
+    $gotData->con=(object) null;
     echo json_encode($gotData);
   }
   else if($action=="3" && isset($_REQUEST['email']) && isset($_REQUEST['hwName']) && isset($_REQUEST['hwSeries']) && isset($_REQUEST['hwIP']) && isset($_REQUEST['id'])){
@@ -280,6 +285,7 @@ if(isset($_REQUEST['action'])){
     $gotData->user->hw->hwSeries=$hwSeries;
     $gotData->user->hw->hwIP=$hwIP;
     $gotData=renameHardware($gotData);
+    $gotData->con=(object) null;
     echo json_encode($gotData);
   }else{
     $gotData = (object) null;
