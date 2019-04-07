@@ -33,15 +33,22 @@ function checkHomeID($gotData)
   return $gotData;
 }
 function createSubscription($gotData){
-  $hwID=$gotData->user->hw->id;
-  $sql="INSERT INTO amc(serial_no_id) VALUES('$hwID')";
+  $hwSeries=$gotData->user->hw->hwSeries;
+  $sql="SELECT * FROM amc WHERE serial_no='$hwSeries'";
   $result=mysqli_query($gotData->con,$sql);
-  if($result)
-  {
-    return $gotData;
+  if($result){
+    if(mysqli_num_rows($result)==0){
+      $sql="INSERT INTO amc(serial_no) VALUES('$hwSeries')";
+      $result=mysqli_query($gotData->con,$sql);
+      if($result)
+      {
+        return $gotData;
+      }
+      $gotData->error=true;
+      $gotData->errorMessage="Error in Subscription.";
+      return $gotData;
+    }
   }
-  $gotData->error=true;
-  $gotData->errorMessage="Error in Subscription.";
   return $gotData;
 }
 function createHardware($gotData){
@@ -60,21 +67,22 @@ function createHardware($gotData){
   $got->con=$gotData->con;
   $got->isModifying=false;
   $got->error=false;
+  $got->ownedBy=false;
   $got=checkHardwareSeries($got);
   if($got->error) return $got;
+  $gotData->ownedBy=$got->ownedBy;
   $userID=$gotData->user->userID;
   $sql="INSERT INTO hardware(uid,hid,rid,name,series,ip_value) VALUES('$userID','$homeID','$roomID','$hwName','$hwSeries','$hwIP')";
   $result=mysqli_query($gotData->con,$sql);
   if($result)
   {
     $gotData->error=false;
-    $hw=getHardwareDataUsingNameIDs($gotData->con,$userID,$hwName,$roomID,$homeID);
-    if($hw->error) return $hw;
-    $gotData->user->hw->id=$hw->hwID;
-    $gotData=createSubscription($gotData);
-    if($gotData->error){
-      $got=deleteHardware($gotData);
-      return $gotData;
+    if($gotData->ownedBy){
+      $gotData=createSubscription($gotData);
+      if($gotData->error){
+        $got=deleteHardware($gotData);
+        return $gotData;
+      }
     }
     return $gotData;
   }
@@ -259,7 +267,11 @@ function checkHardwareSeries($gotData){
         if(mysqli_num_rows($result)>0){
             $gotData->error=true;
             $gotData->errorMessage="Hardware series has been already used.";
+        }else{
+          $gotData->ownedBy=true;
         }
+        // $productSerialRow=mysqli_fetch_array($result);
+        // $gotData->productSerialID=$productSerialRow=['id'];
         return $gotData;
     }
   }

@@ -54,7 +54,7 @@
       <thead>
         <tr>
           <th>Subscription</th>
-          <th>Hardware Name</th>
+          <th>Hardware Serial No</th>
           <th>Expiration Date</th>
           <th>State</th>
         </tr>
@@ -63,7 +63,7 @@
         <tr>
           <td>{{$index+1}}</td>
           <td>
-            {{subscription.hwName}}
+            {{subscription.serialNo}}
           </td>
           <td>{{subscription.leftTime}}</td>
           <td><span ng-if="subscription.state==1" style='color:green;'>Running</span><span ng-if="subscription.state!=1" style='color:red;'>Expired</span></td>
