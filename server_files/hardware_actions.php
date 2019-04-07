@@ -62,8 +62,40 @@ function createHardware($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
+function deleteControlledMembers($gotData){
+  $hwID=$gotData->user->hw->id;
+  $email=$gotData->user->email;
+  $sql="DELETE allowed_user FROM allowed_user INNER JOIN hardware ON hardware.series=allowed_user.serial_no INNER JOIN product_serial ON product_serial.serial_no=hardware.series INNER JOIN sold_product ON sold_product.id=product_serial.sold_product_id WHERE hardware.id='$hwID' AND sold_product.customer_email='$email'";
+  $result=mysqli_query($gotData->con,$sql);
+  if($result){
+    return $gotData;
+  }
+  $gotData->error=true;
+  $gotData->errorMessage="Error in removing controlled members.";
+  return $gotData;
+}
+function deleteControlledHardwares($gotData){
+  $hwID=$gotData->user->hw->id;
+  $user=getUserDataUsingEmail($gotData->con,$gotData->user->email);
+  if($user->error) return $user;
+  $hw=getHardwareDataUsingID($gotData->con,$user->id,$hwID);
+  if($hw->error) return $hw;
+  $hwSeries=$hw->hwSeries;
+  $sql="DELETE FROM hardware WHERE series='$hwSeries'";
+  $result=mysqli_query($gotData->con,$sql);
+  if($result){
+    return $gotData;
+  }
+  $gotData->error=true;
+  $gotData->errorMessage="Error in removing controlled hardwares";
+  return $gotData;
+}
 function deleteHardware($gotData){
   $id=$gotData->user->hw->id;
+  $gotData=deleteControlledMembers($gotData);
+  if($gotData->error) return $gotData;
+  $gotData=deleteControlledHardwares($gotData);
+  if($gotData->error) return $gotData;
   $sql="DELETE FROM room_device where hw_id='$id'";
   $result=mysqli_query($gotData->con,$sql);
   if($result)
@@ -185,8 +217,8 @@ function checkHardwareSeries($gotData){
         }
     }
     if($gotData->isModifying){
-      $userID=$gotData->user->id;
-      $sql="SELECT * FROM hardware WHERE series='$hwSeries' AND uid!='$userID'";
+      $hwID=$gotData->user->id;
+      $sql="SELECT * FROM hardware WHERE series='$hwSeries' AND id!='$hwID'";
     }else{
         $sql="SELECT * FROM hardware WHERE series='$hwSeries'";
     }

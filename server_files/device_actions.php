@@ -382,6 +382,7 @@ if(isset($_REQUEST['action'])){
     $gotData->user->hwID=$hwID;
     $gotData->user->action=$action;
     $gotData=getDeviceData($gotData);
+    $gotData->con=(object) null;
     echo json_encode($gotData);
   }else if($action=="1" && isset($_REQUEST['email']) && isset($_REQUEST['homeID']) && isset($_REQUEST['roomID']) && isset($_REQUEST['hwID']) && isset($_REQUEST['dvName']) && isset($_REQUEST['dvPort']) && isset($_REQUEST['dvImg'])){
     $email=$_REQUEST['email'];
@@ -407,7 +408,9 @@ if(isset($_REQUEST['action'])){
     $gotData->user->device->dvImg=$dvImg;
     $gotData->user->device->dvStatus="0";
     $gotData=createDevice($gotData);
+    $gotData->con=(object) null;
     echo json_encode($gotData);
+    exit();
   }
   else if($action=="2" && isset($_REQUEST['email']) && isset($_REQUEST['id'])){
     $email=$_REQUEST['email'];
@@ -423,6 +426,7 @@ if(isset($_REQUEST['action'])){
     $gotData->user->device->id=$id;
     $gotData=deleteDevice($gotData);
     echo json_encode($gotData);
+    exit();
   }
   else if($action=="3" && isset($_REQUEST['email']) && isset($_REQUEST['dvName']) && isset($_REQUEST['dvPort']) && isset($_REQUEST['dvImg']) && isset($_REQUEST['id'])){
     $email=$_REQUEST['email'];
@@ -443,7 +447,9 @@ if(isset($_REQUEST['action'])){
     $gotData->user->device->dvPort=$dvPort;
     $gotData->user->device->dvImg=$dvImg;
     $gotData=renameDevice($gotData);
+    $gotData->con=(object) null;
     echo json_encode($gotData);
+    exit();
   }
   else if($action=="4"){
     $gotData = (object) null;
@@ -452,7 +458,9 @@ if(isset($_REQUEST['action'])){
     $gotData->user=(object) null;
     $gotData->con=$con;
     $gotData=getDeviceImgs($gotData);
+    $gotData->con=(object) null;
     echo json_encode($gotData);
+    exit();
   }
   else if($action=="5" && isset($_REQUEST['email']) && isset($_REQUEST['deviceID'])){
     $email=$_REQUEST['email'];
@@ -465,7 +473,9 @@ if(isset($_REQUEST['action'])){
     $gotData->user->email=$email;
     $gotData->user->deviceID=$deviceID;
     $gotData=getDevice($gotData);
+    $gotData->con=(object) null;
     echo json_encode($gotData);
+    exit();
   }
   else if($action=="6" && isset($_REQUEST['email']) && isset($_REQUEST['deviceID']) && isset($_REQUEST['status'])){
     $email=$_REQUEST['email'];
@@ -480,7 +490,9 @@ if(isset($_REQUEST['action'])){
     $gotData->user->deviceID=$deviceID;
     $gotData->user->status=$status;
     $gotData=changeDeviceStatus($gotData);
+    $gotData->con=(object) null;
     echo json_encode($gotData);
+    exit();
   }
   else if($action=="7" && isset($_REQUEST['email']) && isset($_REQUEST['deviceID']) & isset($_REQUEST['value'])){
     $email=$_REQUEST['email'];
@@ -497,7 +509,9 @@ if(isset($_REQUEST['action'])){
     $gotData->deviceSlider->dvID=$dvID;
     $gotData->deviceSlider->value=$value;
     $gotData=changeDeviceSlider($gotData);
+    $gotData->con=(object) null;
     echo json_encode($gotData);
+    exit();
   }else{
     $gotData = (object) null;
     $gotData->error=true;

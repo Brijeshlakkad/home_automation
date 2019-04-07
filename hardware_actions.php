@@ -92,7 +92,22 @@ function createHardware($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
+function deleteControlledHardwares($gotData){
+  $hwID=$gotData->user->hw->id;
+  $user=getUserDataUsingEmail($gotData->con,$gotData->user->email);
+  $sql="DELETE allowed_user FROM allowed_user INNER JOIN hardware ON hardware.series=allowed_user.serial_no WHERE hardware.id='$hwID'";
+  $result=mysqli_query($gotData->con,$sql);
+  if($result){
+    return $gotData;
+  }
+  $gotData->error=true;
+  $gotData->errorMessage="Error in removing control members.";
+  return $gotData;
+}
 function deleteHardware($gotData){
+  $id=$gotData->user->hw->id;
+  $gotData=deleteControlledHardwares($gotData);
+  if($gotData->error) return $gotData;
   $gotData=getUserID($gotData);
   if($gotData->error) return $gotData;
   $id=$gotData->user->hw->id;
@@ -259,8 +274,8 @@ function checkHardwareSeries($gotData){
         }
     }
     if($gotData->isModifying){
-      $userID=$gotData->user->id;
-      $sql="SELECT * FROM hardware WHERE series='$hwSeries' AND uid!='$userID'";
+      $hwID=$gotData->user->id;
+      $sql="SELECT * FROM hardware WHERE series='$hwSeries' AND id!='$hwID'";
     }else{
         $sql="SELECT * FROM hardware WHERE series='$hwSeries'";
     }
