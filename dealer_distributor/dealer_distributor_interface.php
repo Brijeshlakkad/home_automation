@@ -149,11 +149,12 @@ function getDealerProductSerialCount($gotData){
 }
 function checkCustomerEmail($gotData){
   $customerEmail=$gotData->user->customerEmail;
-  $gotData->user->customerEmailExists=false;
   $u=getUserDataUsingEmail($gotData->con,$customerEmail);
   if($u->error==false){
     $gotData->user->customerEmailExists=true;
     $gotData->user->customer=$u;
+  }else{
+    $gotData->user->customerEmailExists=false;
   }
   return $gotData;
 }
@@ -255,12 +256,28 @@ function getProductSoldList($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
+function checkCustomerHasAdded($gotData){
+  $oldCustomerEmail=$gotData->user->oldCustomerEmail;
+  $serialNo=$gotData->user->serialNo;
+  $sql="SELECT amc.id FROM amc INNER JOIN product_serial ON amc.serial_no=product_serial.serial_no INNER JOIN sold_product ON sold_product.id=product_serial.sold_product_id WHERE sold_product.customer_email='$oldCustomerEmail' AND amc.serial_no='$serialNo'";
+  $result=mysqli_query($gotData->con,$sql);
+  if($result){
+    if(mysqli_num_rows($result)>0){
+      $gotData->error=true;
+      $gotData->errorMessage="Customer has been subscribed already.";
+    }
+    return $gotData;
+  }
+  $gotData->error=true;
+  $gotData->errorMessage="An error occured!";
+  return $gotData;
+}
 function changeSerialCustomerEmail($gotData){
   $userID=$gotData->user->userID;
   $serialNo=$gotData->user->serialNo;
   $customerEmail=$gotData->user->customerEmail;
   $oldCustomerEmail=$gotData->user->oldCustomerEmail;
-  $dis=getDealerDataUsingEmail($gotData->con,$userID);
+  $dis=getDealerDataUsingID($gotData->con,$userID);
   if($dis->error) return $dis;
   if($dis->type!='distributor'){
     $gotData->error=true;
@@ -269,8 +286,10 @@ function changeSerialCustomerEmail($gotData){
   }
   $gotData=checkCustomerEmail($gotData);
   if($gotData->error) return $gotData;
+  $gotData=checkCustomerHasAdded($gotData);
+  if($gotData->error) return $gotData;
   if($gotData->user->customerEmailExists){
-    $sql="UPDATE product_serial SET customer_email='$customerEmail' WHERE serial_no='$serialNo' AND customer_email='$oldCustomerEmail' AND distributor_id='$userID'";
+    $sql="UPDATE sold_product INNER JOIN product_serial ON sold_product.id=product_serial.sold_product_id INNER JOIN assigned_user ON assigned_user.id=product_serial.assigned_distributor SET sold_product.customer_email='$customerEmail' WHERE product_serial.serial_no='$serialNo' AND sold_product.customer_email='$oldCustomerEmail' AND assigned_user.user_id='$userID'";
     $result=mysqli_query($gotData->con,$sql);
     if($result){
       $gotData->responseMessage="Customer email has been changed!";
