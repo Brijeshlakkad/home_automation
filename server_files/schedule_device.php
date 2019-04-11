@@ -12,6 +12,13 @@ function checkFrequencyExists($con,$userID){
   }
   return false;
 }
+function getNextDay($endTime){
+  $endTimeNext=strtotime("+1 day");
+  $endDate=Date("Y-m-d",$endTimeNext)." ".Date("H:i:s",strtotime($endTime));
+  $date2=strtotime($endDate);
+  $endTime=Date("Y-m-d H:i:s",$date2);
+  return $endTime;
+}
 function processFrequency($gotData){
   $frequency=$gotData->frequency;
   $frequencyArray=["weekly","all days","all","whole week","week"];
@@ -32,7 +39,7 @@ function shouldRun($nowDate,$date,$frequency){
   }
   if($frequency=="ONCE"){
     if($today==$frequency){
-      if($startTime==$now){
+      if($startTime<=$now){
         return false;
       }
     }
@@ -169,6 +176,7 @@ function processScheduledTime($scheduledTime){
   $gotData->errorMessage="Error in time.";
   return $gotData;
 }
+
 function setSchedule($gotData){
   $email=$gotData->email;
   $deviceName=$gotData->deviceName;
@@ -182,17 +190,22 @@ function setSchedule($gotData){
   $startTime=$gotData->startTime;
   $endTime=$gotData->endTime;
   $nowDate=strtotime("now");
-  $date1=strtotime($startTime);
-  $date2=strtotime($endTime);
+  $startTime=Date("H:i:s",strtotime($startTime));
+  $endTime=Date("H:i:s",strtotime($endTime));
+  $date1=strtotime(Date("Y-m-d",$nowDate)." ".$startTime);
+  $date2=strtotime(Date("Y-m-d",$nowDate)." ".$endTime);
+  $startTime=Date("Y-m-d H:i:s",$date1);
+  $endTime=Date("Y-m-d H:i:s",$date2);
   if($date1<$nowDate){
     $gotData->error=true;
     $gotData->errorMessage="Start time is not valid.";
     return $gotData;
   }
   else if($date1>$date2){
-    $gotData->error=true;
-    $gotData->errorMessage="End Time should not be before start time.";
-    return $gotData;
+    $endTime=getNextDay($endTime);
+    // $gotData->error=true;
+    // $gotData->errorMessage="End Time should not be before start time.";
+    // return $gotData;
   }
   else if(($date2-$date1)<60){
     $gotData->error=true;

@@ -3,6 +3,7 @@ require_once("config.php");
 require_once('user_data.php');
 require_once("device_data.php");
 require_once('device_slider_data.php');
+require_once('device_controller.php');
 function checkHomeID($gotData)
 {
   $homeID=$gotData->user->homeID;
@@ -163,10 +164,19 @@ function getDeviceData($gotData){
     $email=$gotData->user->email;
     while($row=mysqli_fetch_array($check)){
       $gotData->user->device[$i] = (object) null;
+      $dvID=$row['id'];
+      $got=getDeviceStatusUsingScheduling($gotData->con,$dvID);
+      if($got->error) return $got;
+      if($got->isScheduleRunning){
+        $dvStatus=$got->afterStatus;
+      }
+      else{
+        $dvStatus=$got->status;
+      }
       $dvName=$row['device_name'];
       $dvPort=$row['port'];
       $dvImg=$row['device_image'];
-      $dvStatus=$row['status'];
+      // $dvStatus=$row['status'];
       $id=$row['id'];
       $deviceImg=getDeviceImg($gotData->con,$dvImg);
       $gotData->user->device[$i]=(object) null;
@@ -209,10 +219,20 @@ function getDevice($gotData){
   if($check && ($gotData->total==1))
   {
     $row=mysqli_fetch_array($check);
+    $dvID=$row['id'];
     $dvName=$row['device_name'];
     $dvPort=$row['port'];
     $dvImg=$row['device_image'];
-    $dvStatus=$row['status'];
+    $got=getDeviceStatusUsingScheduling($gotData->con,$dvID);
+    if($got->error) return $got;
+    $isScheduleRunning=$got->isScheduleRunning;
+    if($got->isScheduleRunning){
+      $dvStatus=$got->afterStatus;
+    }
+    else{
+      $dvStatus=$got->status;
+    }
+    // $dvStatus=$row['status'];
     $homeID=$row['hid'];
     $roomID=$row['room_id'];
     $hwID=$row['hw_id'];
@@ -245,6 +265,14 @@ function getDevice($gotData){
 function changeDeviceStatus($gotData){
   $status=$gotData->user->status;
   $deviceID=$gotData->user->deviceID;
+  $got=getDeviceStatusUsingScheduling($gotData->con,$deviceID);
+  if($got->error) return $got;
+  $isScheduleRunning=$got->isScheduleRunning;
+  if($got->isScheduleRunning){
+    $gotData->error=true;
+    $gotData->errorMessage="Your Scheduling is running. Please remove scheduling to change status.";
+    return $gotData;
+  }
   $sql="UPDATE room_device SET status='$status' where id='$deviceID'";
   $result=mysqli_query($gotData->con,$sql);
   if($result && (mysqli_affected_rows($gotData->con)==1))

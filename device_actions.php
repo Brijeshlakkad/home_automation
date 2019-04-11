@@ -4,6 +4,7 @@ require_once('user_data.php');
 require_once("hardware_data.php");
 require_once("device_data.php");
 require_once('device_slider_data.php');
+require_once('device_controller.php');
 function getUserID($gotData)
 {
   $email=$gotData->user->email;
@@ -221,10 +222,19 @@ function getDeviceData($gotData){
     }
     $allDevice="<div class='grid-container' style='cursor:pointer;'>";
     while($row=mysqli_fetch_array($check)){
+      $dvID=$row['id'];
+      $got=getDeviceStatusUsingScheduling($gotData->con,$dvID);
+      if($got->error) return $got;
+      if($got->isScheduleRunning){
+        $dvStatus=$got->afterStatus;
+      }
+      else{
+        $dvStatus=$got->status;
+      }
       $dvName=$row['device_name'];
       $dvPort=$row['port'];
       $dvImg=$row['device_image'];
-      $dvStatus=$row['status'];
+      // $dvStatus=$row['status'];
       $id=$row['id'];
       $editFunc = "editDevice($id,'".$dvName."','".$dvPort."','".$dvImg."')";
       $dvImgValue=getDvImgValue($gotData->con,$dvImg);
@@ -308,10 +318,19 @@ function getDevice($gotData){
   if($check && ($gotData->total==1))
   {
     $row=mysqli_fetch_array($check);
+    $dvID=$row['id'];
     $dvName=$row['device_name'];
     $dvPort=$row['port'];
     $dvImg=$row['device_image'];
-    $dvStatus=$row['status'];
+    $got=getDeviceStatusUsingScheduling($gotData->con,$dvID);
+    if($got->error) return $got;
+    $isScheduleRunning=$got->isScheduleRunning;
+    if($got->isScheduleRunning){
+      $dvStatus=$got->afterStatus;
+    }
+    else{
+      $dvStatus=$got->status;
+    }
     $homeID=$row['hid'];
     $roomID=$row['room_id'];
     $hwID=$row['hw_id'];
@@ -325,6 +344,7 @@ function getDevice($gotData){
     $gotData->user->dvStatus=$dvStatus;
     $gotData->user->homeID=$homeID;
     $gotData->user->roomID=$roomID;
+    $gotData->user->isScheduleRunning=$isScheduleRunning;
     $gotData->user->hwID=$hwID;
     $gotData->user->id=$id;
     $gotData->user->deviceSlider="null";
@@ -346,9 +366,17 @@ function changeDeviceStatus($gotData){
   if($gotData->error==true) return $gotData;
   $status=$gotData->user->status;
   $deviceID=$gotData->user->deviceID;
+  $got=getDeviceStatusUsingScheduling($gotData->con,$deviceID);
+  if($got->error) return $got;
+  $isScheduleRunning=$got->isScheduleRunning;
+  if($got->isScheduleRunning){
+    $gotData->error=true;
+    $gotData->errorMessage="Your Scheduling is running. Please remove scheduling to change status.";
+    return $gotData;
+  }
   $sql="UPDATE room_device SET status='$status' where id='$deviceID'";
   $result=mysqli_query($gotData->con,$sql);
-  if($result && (mysqli_affected_rows($gotData->con)==1))
+  if($result)
   {
     return getDevice($gotData);
   }
@@ -491,6 +519,7 @@ if(isset($_REQUEST['action'])){
       $homeID=$hw->homeID;
       $gotData->user->homeID=$homeID;
       $gotData=getDeviceData($gotData);
+      $gotData->con=(object) null;
       echo json_encode($gotData);
     }
   }else if($action=="1" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName']) && isset($_REQUEST['dvName']) && isset($_REQUEST['dvPort']) && isset($_REQUEST['dvImg']) && isset($_REQUEST['userID'])){
@@ -532,6 +561,7 @@ if(isset($_REQUEST['action'])){
       $homeID=$hw->homeID;
       $gotData->user->device->homeID=$homeID;
       $gotData=createDevice($gotData);
+      $gotData->con=(object) null;
       echo json_encode($gotData);
     }
   }
@@ -548,6 +578,7 @@ if(isset($_REQUEST['action'])){
     $gotData->user->device->email=$email;
     $gotData->user->device->id=$id;
     $gotData=deleteDevice($gotData);
+    $gotData->con=(object) null;
     echo json_encode($gotData);
   }
   else if($action=="3" && isset($_REQUEST['email']) && isset($_REQUEST['dvName']) && isset($_REQUEST['dvPort']) && isset($_REQUEST['dvImg']) && isset($_REQUEST['id'])){
@@ -579,6 +610,7 @@ if(isset($_REQUEST['action'])){
     $gotData->user=(object) null;
     $gotData->con=$con;
     $gotData=getDeviceImgs($gotData);
+    $gotData->con=(object) null;
     echo json_encode($gotData);
   }
   else if($action=="5" && isset($_REQUEST['email']) && isset($_REQUEST['deviceName']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName']) && isset($_REQUEST['userID'])){
@@ -601,6 +633,7 @@ if(isset($_REQUEST['action'])){
       $deviceID=$dv->dvID;
       $gotData->user->deviceID=$deviceID;
       $gotData=getDevice($gotData);
+      $gotData->con=(object) null;
       echo json_encode($gotData);
     }
   }
@@ -626,6 +659,7 @@ if(isset($_REQUEST['action'])){
       $deviceID=$dv->dvID;
       $gotData->user->deviceID=$deviceID;
       $gotData=changeDeviceStatus($gotData);
+      $gotData->con=(object) null;
       echo json_encode($gotData);
     }
   }
@@ -653,6 +687,7 @@ if(isset($_REQUEST['action'])){
       $deviceID=$dv->dvID;
       $gotData->deviceSlider->dvID=$deviceID;
       $gotData=changeDeviceSlider($gotData);
+      $gotData->con=(object) null;
       echo json_encode($gotData);
     }
   }else if($action=="8" && isset($_REQUEST['email']) && isset($_REQUEST['homeName']) && isset($_REQUEST['roomName']) && isset($_REQUEST['hwName']) && isset($_REQUEST['userID']))
@@ -683,6 +718,7 @@ if(isset($_REQUEST['action'])){
       $homeID=$hw->homeID;
       $gotData->user->homeID=$homeID;
       $gotData=getDeviceList($gotData);
+      $gotData->con=(object) null;
       echo json_encode($gotData);
     }
   }else{

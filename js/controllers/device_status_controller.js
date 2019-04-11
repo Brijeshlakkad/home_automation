@@ -80,51 +80,56 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
   };
   $scope.getDevice();
   $scope.changeDeviceStatus = function(val) {
-    if (val == 0) {
-      val = 1;
-    } else {
-      val = 0;
-    }
-    $rootScope.body.addClass("loading");
-    $http({
-      method: "POST",
-      url: "device_actions.php",
-      data: "action=6&email=" + $scope.user + "&deviceName=" + $scope.dvID + "&status=" + val + "&homeName=" + $scope.homeID + "&roomName=" + $scope.roomID + "&hwName=" + $scope.hwID + "&userID=" + $scope.userID,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    }).then(function mySuccess(response) {
-      var data = response.data;
-      if (!data.error) {
-        if (typeof data.user == 'undefined') {
-          $rootScope.device = "";
-        } else {
-          $rootScope.device = data.user;
-          $rootScope.deviceImg = data.deviceImg;
-          $rootScope.deviceSlider = data.user.deviceSlider;
-          $scope.deviceStatus = $rootScope.device.dvStatus;
-          if ($rootScope.deviceSlider != "null") {
-            $scope.amountp = $rootScope.deviceSlider.value;
-            $scope.deviceSliderValue = $rootScope.deviceSlider.value;
-          }
-          if ($scope.deviceStatus == 1) {
-            $scope.deviceStatusPrint = "ON";
-            $scope.addClass['btn-primary'] = true;
-            $scope.addClass['btn-danger'] = false;
-          } else {
-            $scope.deviceStatusPrint = "OFF";
-            $scope.addClass['btn-primary'] = false;
-            $scope.addClass['btn-danger'] = true;
-          }
-        }
-        $rootScope.body.removeClass("loading");
+    if($rootScope.device.isScheduleRunning==true){
+      $rootScope.showErrorDialog("Your Scheduling is running. Please remove scheduling to change status.");
+    }else{
+      if (val == 0) {
+        val = 1;
       } else {
-        $rootScope.body.removeClass("loading");
-        $scope.showErrorDialog(data.errorMessage);
+        val = 0;
       }
-    }, function myError(response) {
-      $rootScope.body.removeClass("loading");
-    });
+      $rootScope.body.addClass("loading");
+      $http({
+        method: "POST",
+        url: "device_actions.php",
+        data: "action=6&email=" + $scope.user + "&deviceName=" + $scope.dvID + "&status=" + val + "&homeName=" + $scope.homeID + "&roomName=" + $scope.roomID + "&hwName=" + $scope.hwID + "&userID=" + $scope.userID,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }).then(function mySuccess(response) {
+        var data = response.data;
+        alert(JSON.stringify(data));
+        if (!data.error) {
+          if (typeof data.user == 'undefined') {
+            $rootScope.device = "";
+          } else {
+            $rootScope.device = data.user;
+            $rootScope.deviceImg = data.deviceImg;
+            $rootScope.deviceSlider = data.user.deviceSlider;
+            $scope.deviceStatus = $rootScope.device.dvStatus;
+            if ($rootScope.deviceSlider != "null") {
+              $scope.amountp = $rootScope.deviceSlider.value;
+              $scope.deviceSliderValue = $rootScope.deviceSlider.value;
+            }
+            if ($scope.deviceStatus == 1) {
+              $scope.deviceStatusPrint = "ON";
+              $scope.addClass['btn-primary'] = true;
+              $scope.addClass['btn-danger'] = false;
+            } else {
+              $scope.deviceStatusPrint = "OFF";
+              $scope.addClass['btn-primary'] = false;
+              $scope.addClass['btn-danger'] = true;
+            }
+          }
+          $rootScope.body.removeClass("loading");
+        } else {
+          $rootScope.body.removeClass("loading");
+          $scope.showErrorDialog(data.errorMessage);
+        }
+      }, function myError(response) {
+        $rootScope.body.removeClass("loading");
+      });
+    }
   };
   $scope.showErrorDialog = function(error) {
     swal({
@@ -268,8 +273,8 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
       }
     }).then(function mySuccess(response) {
       var data = response.data;
-      alert(JSON.stringify(data));
       if (!data.error) {
+        $scope.getDevice();
         $scope.getScheduleDevice();
         $rootScope.showSuccessDialog(data.data);
         $rootScope.body.removeClass("loading");
