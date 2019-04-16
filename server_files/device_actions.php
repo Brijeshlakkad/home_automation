@@ -361,7 +361,7 @@ function getDeviceSlider($dvID,$con){
       }
   }
   $gotData->error=true;
-  $gotData->errorMessage="Try again123!";
+  $gotData->errorMessage="Try again!";
   return $gotData;
 }
 function changeDeviceSlider($gotData){
@@ -399,7 +399,6 @@ if(isset($_REQUEST['action'])){
     $roomID=$_REQUEST['roomID'];
     $homeID=$_REQUEST['homeID'];
     $gotData = (object) null;
-    $gotData->b="Idk";
     $gotData->error=false;
     $gotData->errorMessage="null";
     $gotData->user=(object) null;

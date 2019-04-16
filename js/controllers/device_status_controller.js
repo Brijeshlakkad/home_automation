@@ -12,14 +12,14 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
   $scope.dvID = $routeParams.dvID;
   $scope.dateMin = new Date().toISOString().split('T')[0];
   $scope.dateMin = $scope.dateMin + "T00:00:00";
-  $scope.repetitionArray=['WEEKLY','ONCE','SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY']
-  $scope.afterStatusArray=['OFF','ON'];
-  $scope.afterStatus=1;
-  $scope.editMode=false;
-  $scope.scheduleInfo={};
-  $scope.isScheduled=false;
-  $scope.repetition=$scope.repetitionArray[0];
-  $scope.afterStatusPrint=$scope.afterStatusArray[$scope.afterStatus];
+  $scope.repetitionArray = ['DAILY', 'ONCE', 'SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY']
+  $scope.afterStatusArray = ['OFF', 'ON'];
+  $scope.afterStatus = 1;
+  $scope.editMode = false;
+  $scope.scheduleInfo = [];
+  $scope.isScheduled = false;
+  $scope.repetition = $scope.repetitionArray[0];
+  $scope.afterStatusPrint = $scope.afterStatusArray[$scope.afterStatus];
   $rootScope.device = "";
   $rootScope.deviceSlider = "";
   $scope.deviceSliderValue = 0;
@@ -80,9 +80,9 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
   };
   $scope.getDevice();
   $scope.changeDeviceStatus = function(val) {
-    if($rootScope.device.isScheduleRunning==true){
+    if ($rootScope.device.isScheduleRunning == true) {
       $rootScope.showErrorDialog("Your Scheduling is running. Please remove scheduling to change status.");
-    }else{
+    } else {
       if (val == 0) {
         val = 1;
       } else {
@@ -164,7 +164,7 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
       });
     }
   };
-  $scope.getRepition=function(){
+  $scope.getRepition = function() {
     $http({
       method: "POST",
       url: "schedule_device.php",
@@ -176,8 +176,8 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
       var data = response.data;
       if (!data.error) {
         $scope.repetition = data.frequency;
-        if($scope.repetition==0){
-          $scope.repetitionSet=$scope.repetitionArray[0];
+        if ($scope.repetition == 0) {
+          $scope.repetitionSet = $scope.repetitionArray[0];
         }
         $rootScope.body.removeClass("loading");
       } else {
@@ -188,44 +188,45 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
       $rootScope.body.removeClass("loading");
     });
   };
-  $scope.changeAfterStatus=function(afterStatus){
-    if(afterStatus==1){
-      $scope.afterStatus=0;
+  $scope.changeAfterStatus = function(afterStatus) {
+    if (afterStatus == 1) {
+      $scope.afterStatus = 0;
       $scope.addClassAfterStatus['btn-primary'] = false;
       $scope.addClassAfterStatus['btn-danger'] = true;
-    }else{
-      $scope.afterStatus=1;
+    } else {
+      $scope.afterStatus = 1;
       $scope.addClassAfterStatus['btn-primary'] = true;
       $scope.addClassAfterStatus['btn-danger'] = false;
     }
-    $scope.afterStatusPrint=$scope.afterStatusArray[$scope.afterStatus];
+    $scope.afterStatusPrint = $scope.afterStatusArray[$scope.afterStatus];
   };
   $scope.convertDatePickerTimeToMySQLTime = function(str) {
-        var month, day, year, hours, minutes, seconds;
-        var date = new Date(str),
-            month = ("0" + (date.getMonth() + 1)).slice(-2),
-            day = ("0" + date.getDate()).slice(-2);
-        hours = ("0" + date.getHours()).slice(-2);
-        minutes = ("0" + date.getMinutes()).slice(-2);
-        seconds = ("0" + date.getSeconds()).slice(-2);
+    var month, day, year, hours, minutes, seconds;
+    var date = new Date(str),
+      month = ("0" + (date.getMonth() + 1)).slice(-2),
+      day = ("0" + date.getDate()).slice(-2);
+    hours = ("0" + date.getHours()).slice(-2);
+    minutes = ("0" + date.getMinutes()).slice(-2);
+    seconds = ("0" + date.getSeconds()).slice(-2);
 
-        var mySQLDate = [date.getFullYear(), month, day].join("-");
-        var mySQLTime = [hours, minutes, seconds].join(":");
-        return [mySQLDate, mySQLTime].join(" ");
-    };
+    var mySQLDate = [date.getFullYear(), month, day].join("-");
+    var mySQLTime = [hours, minutes, seconds].join(":");
+    return [mySQLDate, mySQLTime].join(" ");
+  };
   $scope.scheduleDevice = function(startTime, endTime, afterStatus, repetition) {
     $rootScope.body.addClass("loading");
-    startTime=$scope.convertDatePickerTimeToMySQLTime(startTime);
-    endTime=$scope.convertDatePickerTimeToMySQLTime(endTime);
+    startTime = $scope.convertDatePickerTimeToMySQLTime(startTime);
+    endTime = $scope.convertDatePickerTimeToMySQLTime(endTime);
     $http({
       method: "POST",
       url: "schedule_device.php",
-      data: "action=1&email=" + $scope.user + "&deviceName=" + $scope.dvID + "&roomName=" + $scope.roomID + "&startTime=" + startTime +"&endTime=" + endTime + "&afterStatus=" + afterStatus + "&repetition=" + repetition,
+      data: "action=1&email=" + $scope.user + "&deviceName=" + $scope.dvID + "&roomName=" + $scope.roomID + "&startTime=" + startTime + "&endTime=" + endTime + "&afterStatus=" + afterStatus + "&repetition=" + repetition,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     }).then(function mySuccess(response) {
       var data = response.data;
+      alert(JSON.stringify(data));
       if (!data.error) {
         $rootScope.showSuccessDialog(data.data);
         $scope.getScheduleDevice();
@@ -249,25 +250,25 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
     }).then(function mySuccess(response) {
       var data = response.data;
       if (!data.error) {
-        $scope.isScheduled=data.isScheduled;
-        if($scope.isScheduled==true){
-          $scope.scheduleInfo=data.scheduleInfo;
-        }else{
-          $scope.scheduleInfo={};
+        $scope.totalRows = data.totalRows;
+        if ($scope.totalRows > 0) {
+          $scope.scheduleInfo = data.scheduleInfo;
+        } else {
+          $scope.scheduleInfo = [];
         }
       } else {
-        $scope.scheduleInfo={};
+        $scope.scheduleInfo = [];
       }
     }, function myError(response) {
-      $scope.scheduleInfo={};
+      $scope.scheduleInfo = [];
     });
   };
   $scope.getScheduleDevice();
-  $scope.deleteScheduleDevice = function() {
+  $scope.deleteSchedule = function(schedule) {
     $http({
       method: "POST",
       url: "schedule_device.php",
-      data: "action=3&email=" + $scope.user + "&deviceName=" + $scope.dvID + "&roomName=" + $scope.roomID,
+      data: "action=4&email=" + $scope.user + "&scheduleID=" + schedule.scheduleID,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
@@ -285,6 +286,39 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
     }, function myError(response) {
       $rootScope.showErrorDialog("Please try again later!");
       $rootScope.body.removeClass("loading");
+    });
+  };
+  $scope.deleteScheduleDevice = function() {
+    swal({
+      title: "Are you sure?",
+      text: "You will not be able to recover this home!",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+    }).then(function() {
+      $rootScope.body.addClass("loading");
+      $http({
+        method: "POST",
+        url: "schedule_device.php",
+        data: "action=5&email=" + $scope.user + "&deviceName=" + $scope.dvID + "&roomName=" + $scope.roomID,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }).then(function mySuccess(response) {
+        var data = response.data;
+        if (!data.error) {
+          $scope.getDevice();
+          $scope.getScheduleDevice();
+          $rootScope.showSuccessDialog(data.data);
+          $rootScope.body.removeClass("loading");
+        } else {
+          $rootScope.showErrorDialog(data.errorMessage);
+          $rootScope.body.removeClass("loading");
+        }
+      }, function myError(response) {
+        $rootScope.showErrorDialog("Please try again later!");
+        $rootScope.body.removeClass("loading");
+      });
     });
   };
 });

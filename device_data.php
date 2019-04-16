@@ -1,5 +1,6 @@
 <?php
 require_once("hardware_data.php");
+require_once("room_data.php");
 class Device{
   var $userID,$homeID,$roomID,$hwID,$dvID,$dvName,$dvPort,$dvImg,$dvStatus,$error,$errorMessage;
   function getData($con,$sql){
@@ -45,6 +46,12 @@ function getDeviceDataUsingName($con,$userID,$dvName,$hwName,$roomName,$homeName
 function getDeviceDataUsingNameIDs($con,$userID,$dvName,$hwID,$roomID,$homeID){
   $dv = new Device;
   $sql="SELECT * FROM room_device where device_name='$dvName' and hid='$homeID' and room_id='$roomID' and hw_id='$hwID' and uid='$userID'";
+  $dv->getData($con,$sql);
+  return $dv;
+}
+function getDeviceDataUsingRoomID($con,$deviceName,$roomID,$userID){
+  $dv = new Device;
+  $sql="SELECT * FROM room_device WHERE device_name='$deviceName' AND room_id='$roomID' AND uid='$userID'";
   $dv->getData($con,$sql);
   return $dv;
 }

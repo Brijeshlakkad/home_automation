@@ -121,7 +121,7 @@
       <br />
     </div>
   </div>
-  <div class="row" ng-if="isScheduled">
+  <div class="row" ng-if="scheduleInfo.length>0">
     <table class="table table-hover">
       <thead>
         <tr>
@@ -129,26 +129,28 @@
           <th>To Scheduled Time</th>
           <th>After Status</th>
           <th>Repetition</th>
+          <th>Run Times</th>
           <th>Created Date</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>{{scheduleInfo.startTime}}</td>
-          <td>{{scheduleInfo.endTime}}</td>
-          <td ng-if="scheduleInfo.afterStatus==1">ON</td>
-          <td ng-if="scheduleInfo.afterStatus==0">OFF</td>
-          <td>{{scheduleInfo.repetition}}</td>
-          <th>{{scheduleInfo.createdDate}}</th>
+        <tr ng-repeat="schedule in scheduleInfo">
+          <td>{{schedule.startTime}}</td>
+          <td>{{schedule.endTime}}</td>
+          <td ng-if="schedule.afterStatus==1">ON</td>
+          <td ng-if="schedule.afterStatus==0">OFF</td>
+          <td>{{schedule.repetition}}</td>
+          <td>{{schedule.runTimes}}</td>
+          <th>{{schedule.createdDate}}</th>
           <td>
-            <button class="btn btn-danger" ng-click="deleteScheduleDevice()">Remove</button>
+            <button class="btn btn-danger" ng-click="deleteSchedule(schedule)">Remove</button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
-  <div class="row" ng-if="!isScheduled">
+  <div class="row" ng-if="scheduleInfo.length==0">
     {{device.dvName}} has not been scheduled yet!
   </div>
 </div>

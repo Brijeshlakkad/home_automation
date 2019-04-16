@@ -1,4 +1,7 @@
 <?php
+// require_once("config.php");
+// error_reporting(E_ALL);
+// ini_set('display_errors', 1);
 date_default_timezone_set("Asia/Kolkata");
 function getNextDay($endTime){
   $endTimeNext=strtotime("+1 day");
@@ -12,39 +15,30 @@ function getNowDate($time){
   $dateTime=Date("Y-m-d H:i:s",strtotime($date." ".$time));
   return $dateTime;
 }
-function shouldRun($startDate,$endDate,$nowDate,$repetition){
+function shouldRun($startTime,$endTime,$nowDate,$repetition,$runTimes){
   $toDay = Date("D",strtotime($nowDate));
-  if($repetition=='0'){
-    return false;
-  }
-  else if($repetition=="ONCE"){
-    $startDate2=$startDate;
-    $endDate2=$endDate;
-    if(strtoupper($toDay)==strtoupper($repetition)){
-      if((strtotime($startDate2)<=strtotime($nowDate)) && (strtotime($endDate2)>=strtotime($nowDate)))
-      {
-        return true;
-      }
+  if($repetition=="ONCE" && $runTimes!=0){
+    if((strtotime($startTime)<=strtotime($nowDate)) && (strtotime($endTime)>=strtotime($nowDate)))
+    {
+      return true;
     }
   }
   else{
-    $startTime=Date("H:i",strtotime($startDate));
-    $endTime=Date("H:i",strtotime($endDate));
-    $nowTime=Date("H:i",strtotime($nowDate));
-    $startDate2=getNowDate($startTime);
-    $endDate2=getNowDate($endTime);
-    if(strtotime($startDate2)>strtotime($endDate2)){
-      $endDate2=getNextDay($endTime);
+    $startDate=Date("H:i:s",strtotime($startTime));
+    $endDate=Date("H:i:s",strtotime($endTime));
+    $nowTime=Date("H:i:s",strtotime($nowDate));
+    if(strtotime($startDate)>=strtotime($endDate)){
+      $endDate=getNextDay($endTime);
     }
-    if($repetition=="WEEKLY"){
-      if((strtotime($startDate2)<=strtotime($nowDate)) && (strtotime($endDate2)>=strtotime($nowDate)))
+    if($repetition=="DAILY"){
+      if((strtotime($startDate)<=strtotime($nowDate)) && (strtotime($endDate)>=strtotime($nowDate)))
       {
         return true;
       }
     }
     else{
       if(strtoupper($toDay)==strtoupper($repetition)){
-        if((strtotime($startDate2)<=strtotime($nowDate)) && (strtotime($endDate2)>=strtotime($nowDate)))
+        if((strtotime($startDate)<=strtotime($nowDate)) && (strtotime($endDate)>=strtotime($nowDate)))
         {
           return true;
         }
@@ -54,26 +48,33 @@ function shouldRun($startDate,$endDate,$nowDate,$repetition){
   // echo $startDate."BB".$startDate2."<br/>";
   // echo $endDate."BB".$endDate2."<br/>";
   // echo $nowDate."<br/>".$toDay."<br />";
-
   return false;
 }
 function getDeviceStatusUsingScheduling($con,$deviceID){
   $gotData=(object) null;
-  $sql="SELECT * FROM room_device WHERE id='$deviceID'";
+  $gotData->error=false;
+  $sql="SELECT `schedule_device`.id as `scheduleID`, `schedule_device`.device_id as `deviceID`, `schedule_device`.start_time as `startTime`, `schedule_device`.end_time as `endTime`,
+        `schedule_device`.after_status as `afterStatus`, `schedule_device`.repetition as `repetition`, `schedule_device`.run_times as `runTimes`,
+        `schedule_device`.created_time as `createdTime`, `room_device`.status as `status`
+         FROM schedule_device INNER JOIN room_device ON room_device.id=schedule_device.device_id WHERE room_device.id='$deviceID'";
   $result=mysqli_query($con,$sql);
   if($result){
-    $row=mysqli_fetch_array($result);
-    $startDate=$row['from_scheduled_time'];
-    $endDate=$row['to_scheduled_time'];
-    $status=$row['status'];
-    $afterStatus=$row['after_status'];
-    $repetition=$row['frequency'];
-    $nowDate=Date("Y-m-d H:i:s",strtotime("now"));
-    $gotData->isScheduleRunning=false;
-    $gotData->status=$status;
-    if(shouldRun($startDate,$endDate,$nowDate,$repetition)){
-      $gotData->isScheduleRunning=true;
-      $gotData->afterStatus=$afterStatus;
+    while($row=mysqli_fetch_array($result)){
+      $startTime=$row['startTime'];
+      $endTime=$row['endTime'];
+      $status=$row['status'];
+      $afterStatus=$row['afterStatus'];
+      $repetition=$row['repetition'];
+      $runTimes=$row['runTimes'];
+      $nowDate=Date("Y-m-d H:i:s",strtotime("now"));
+      $gotData->isScheduleRunning=false;
+      $gotData->status=$status;
+      $gotData->scheduleID=$row['scheduleID'];
+      if(shouldRun($startTime,$endTime,$nowDate,$repetition,$runTimes)){
+        $gotData->isScheduleRunning=true;
+        $gotData->afterStatus=$afterStatus;
+        return $gotData;
+      }
     }
     return $gotData;
   }
@@ -81,5 +82,5 @@ function getDeviceStatusUsingScheduling($con,$deviceID){
   $gotData->errorMessage="Device does not exists anymore";
   return $gotData;
 }
-// echo getDeviceStatusUsingScheduling($con,"35");
+// echo json_encode(getDeviceStatusUsingScheduling($con,"34"));
 ?>
