@@ -1,4 +1,4 @@
-myApp.controller("ScheduledDevicesController", function($rootScope, $scope, $http, $window, $sce, $timeout, $cookies, $routeParams, $ocLazyLoad) {
+myApp.controller("ScheduledDevicesController", function($rootScope, $scope, $http, $window, $sce, $timeout, $interval, $cookies, $routeParams, $ocLazyLoad) {
   $rootScope.checkSessionData();
   $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js', 'js/notification/bootstrap-growl.min.js', 'js/wow.min.js', 'js/main.js'], {
     rerun: true,
@@ -8,7 +8,9 @@ myApp.controller("ScheduledDevicesController", function($rootScope, $scope, $htt
   $scope.userID = $rootScope.$storage.userID;
   $scope.userType = $rootScope.$storage.userType;
   $scope.scheduledDeviceList = [];
-  $scope.getScheduleList = function() {
+  $scope.getScheduleList = function(pleaseWait) {
+    if(pleaseWait)
+      $rootScope.body.addClass("loading");
     $http({
       method: "POST",
       url: "schedule_device.php",
@@ -27,11 +29,19 @@ myApp.controller("ScheduledDevicesController", function($rootScope, $scope, $htt
       } else {
         $scope.scheduledDeviceList = [];
       }
+      if(pleaseWait)
+        $rootScope.body.removeClass("loading");
     }, function myError(response) {
       $scope.scheduledDeviceList = [];
+      if(pleaseWait)
+        $rootScope.body.removeClass("loading");
     });
   };
-  $scope.getScheduleList();
+  $scope.getScheduleList(true);
+  var checkPeriodic = function() {
+    $scope.getScheduleList(false);
+  }
+  $interval(checkPeriodic, 1000);
   $scope.removeSchedule = function(scheduledDevice) {
     swal({
       title: "Are you sure?",

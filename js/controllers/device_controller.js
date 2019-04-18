@@ -1,5 +1,5 @@
-myApp.controller("DeviceController", function($rootScope, $scope, $http, $window, $sce, $timeout, $cookies, $routeParams, $ocLazyLoad) {
-  $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js','js/notification/bootstrap-growl.min.js','js/wow.min.js','js/main.js'], {
+myApp.controller("DeviceController", function($rootScope, $scope, $http, $window, $sce, $timeout, $interval, $cookies, $routeParams, $ocLazyLoad) {
+  $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js', 'js/notification/bootstrap-growl.min.js', 'js/wow.min.js', 'js/main.js'], {
     rerun: true,
     cache: false
   });
@@ -64,16 +64,16 @@ myApp.controller("DeviceController", function($rootScope, $scope, $http, $window
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     }).then(function mySuccess(response) {
-      $rootScope.body.removeClass("loading");
       var data = response.data;
       $scope.dvForm.$setPristine();
       $scope.dvName = "";
       if (!data.error) {
         $scope.showSuccessDialog("Device Created");
-        $scope.getAllDevice();
+        $scope.getAllDevice(false);
       } else {
         $scope.showErrorDialog(data.errorMessage);
       }
+      $rootScope.body.removeClass("loading");
     }, function myError(response) {
       $rootScope.body.removeClass("loading");
     });
@@ -130,8 +130,9 @@ myApp.controller("DeviceController", function($rootScope, $scope, $http, $window
   $scope.showSuccessDialog = function(val) {
     swal("" + val, "", "success");
   };
-  $scope.getAllDevice = function() {
-    $rootScope.body.addClass("loading");
+  $scope.getAllDevice = function(pleaseWait) {
+    if(pleaseWait)
+      $rootScope.body.addClass("loading");
     $http({
       method: "POST",
       url: "device_actions.php",
@@ -147,18 +148,25 @@ myApp.controller("DeviceController", function($rootScope, $scope, $http, $window
         $scope.getDeviceList();
         $scope.getDeviceImgList();
         $scope.showAddDevice = true;
-        $rootScope.body.removeClass("loading");
+        if(pleaseWait)
+          $rootScope.body.removeClass("loading");
       } else {
         $scope.showAddDevice = false;
-        $rootScope.body.removeClass("loading");
+        if(pleaseWait)
+          $rootScope.body.removeClass("loading");
         $scope.showErrorDialog(data.errorMessage);
       }
     }, function myError(response) {
       $scope.showAddDevice = false;
-      $rootScope.body.removeClass("loading");
+      if(pleaseWait)
+        $rootScope.body.removeClass("loading");
     });
   };
-  $scope.getAllDevice();
+  $scope.getAllDevice(true);
+  var checkPeriodic = function() {
+    $scope.getAllDevice(false);
+  }
+  $interval(checkPeriodic, 1000);
   $scope.deleteDevice = function(val) {
     swal({
       title: "Are you sure?",
@@ -180,10 +188,11 @@ myApp.controller("DeviceController", function($rootScope, $scope, $http, $window
         var data = response.data;
         if (!data.error) {
           swal("Deleted!", "Your device has been deleted.", "success");
-          $scope.getAllDevice();
+          $scope.getAllDevice(false);
         } else {
           $scope.showErrorDialog(data.errorMessage);
         }
+        $rootScope.body.removeClass("loading");
       });
     });
   };
@@ -224,18 +233,16 @@ myApp.controller("DeviceController", function($rootScope, $scope, $http, $window
         }
       }).then(function mySuccess(response) {
         var data = response.data;
-        $rootScope.body.removeClass("loading");
         $scope.dvReForm.$setPristine();
         $scope.beforeDvName = "";
         $scope.dvReName = "";
         if (!data.error && (typeof data.error != 'undefined')) {
           $scope.showSuccessDialog("Device Modified");
-          $scope.getAllDevice();
-          $rootScope.body.removeClass("loading");
+          $scope.getAllDevice(false);
         } else {
-          $rootScope.body.removeClass("loading");
           $scope.showErrorDialog(data.errorMessage);
         }
+        $rootScope.body.removeClass("loading");
       }, function myError(response) {
         $rootScope.body.removeClass("loading");
       });

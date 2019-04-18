@@ -1,4 +1,4 @@
-myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $window, $sce, $timeout, $cookies, $routeParams, $ocLazyLoad) {
+myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $window, $sce, $timeout, $interval, $cookies, $routeParams, $ocLazyLoad) {
   $ocLazyLoad.load(['js/meanmenu/jquery.meanmenu.js', 'js/notification/bootstrap-growl.min.js', 'js/wow.min.js', 'js/main.js'], {
     rerun: true,
     cache: false
@@ -35,8 +35,9 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
     "btn-primary": true
   };
   $scope.deviceStatusPrint = "Connection Problem!";
-  $scope.getDevice = function() {
-    $rootScope.body.addClass("loading");
+  $scope.getDevice = function(pleaseWait) {
+    if (pleaseWait)
+      $rootScope.body.addClass("loading");
     $http({
       method: "POST",
       url: "device_actions.php",
@@ -69,16 +70,23 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
             $scope.addClass['btn-danger'] = true;
           }
         }
-        $rootScope.body.removeClass("loading");
+        if (pleaseWait)
+          $rootScope.body.removeClass("loading");
       } else {
-        $rootScope.body.removeClass("loading");
+        if (pleaseWait)
+          $rootScope.body.removeClass("loading");
         $scope.showErrorDialog(data.errorMessage);
       }
     }, function myError(response) {
-      $rootScope.body.removeClass("loading");
+      if (pleaseWait)
+        $rootScope.body.removeClass("loading");
     });
   };
-  $scope.getDevice();
+  $scope.getDevice(true);
+  var checkPeriodic = function() {
+    $scope.getDevice(false);
+  }
+  $interval(checkPeriodic, 1000);
   $scope.changeDeviceStatus = function(val) {
     if ($rootScope.device.isScheduleRunning == true) {
       $rootScope.showErrorDialog("Your Scheduling is running. Please remove scheduling to change status.");
@@ -153,7 +161,7 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
       }).then(function mySuccess(response) {
         var data = response.data;
         if (!data.error) {
-          $scope.getDevice();
+          $scope.getDevice(false);
           $rootScope.body.removeClass("loading");
         } else {
           $rootScope.body.removeClass("loading");
@@ -307,7 +315,7 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
       }).then(function mySuccess(response) {
         var data = response.data;
         if (!data.error) {
-          $scope.getDevice();
+          $scope.getDevice(true);
           $scope.getScheduleDevice();
           $rootScope.showSuccessDialog(data.data);
           $rootScope.body.removeClass("loading");
