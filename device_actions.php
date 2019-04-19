@@ -65,11 +65,32 @@ function checkDevicePort($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
+function checkDeviceName($gotData){
+  $homeID=$gotData->user->device->homeID;
+  $roomID=$gotData->user->device->roomID;
+  $userID=$gotData->user->userID;
+  $dvName=$gotData->user->device->dvName;
+  $sql="SELECT * FROM room_device WHERE hid='$homeID' AND room_id='$roomID' AND uid='$userID' AND device_name='$dvName'";
+  $result=mysqli_query($gotData->con,$sql);
+  if($result){
+    if(mysqli_num_rows($result)>0){
+      $row=mysqli_fetch_array($result);
+      $gotData->error=true;
+      $gotData->errorMessage="'".$dvName."' name is already in use!";
+    }
+    return $gotData;
+  }
+  $gotData->error=true;
+  $gotData->errorMessage="Try again!";
+  return $gotData;
+}
 function createDevice($gotData){
   $userID=$gotData->user->userID;
   $homeID=$gotData->user->device->homeID;
   $roomID=$gotData->user->device->roomID;
   $hwID=$gotData->user->device->hwID;
+  $gotData=checkDeviceName($gotData);
+  if($gotData->error) return $gotData;
   $gotData=checkDevicePort($gotData);
   if($gotData->error) return $gotData;
   $dvName=$gotData->user->device->dvName;
@@ -103,12 +124,7 @@ function deleteDevice($gotData){
   $gotData=getUserID($gotData);
   if($gotData->error==true) return $gotData;
   $id=$gotData->user->device->id;
-  $dvID=$gotData->user->device->id;
-  if(checkDeviceSliderExists($dvID,$gotData->con)){
-    $got=deleteDeviceSlider($dvID,$gotData->con);
-    if($got->error) return $got;
-  }
-  $sql="DELETE FROM room_device where id='$id'";
+  $sql="DELETE `room_device`,`schedule_device`, `devicevalue` FROM room_device LEFT JOIN schedule_device ON schedule_device.device_id=room_device.id LEFT JOIN devicevalue ON devicevalue.did=room_device.id WHERE room_device.id='$id'";
   $result=mysqli_query($gotData->con,$sql);
   if($result)
   {

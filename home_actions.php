@@ -39,35 +39,11 @@ function deleteHome($gotData){
   $gotData=getUserID($gotData);
   if($gotData->error) return $gotData;
   $id=$gotData->user->home->id;
-  $sql="DELETE FROM room_device where hid='$id'";
+  $sql="DELETE `home`, `room`, `hardware`,`room_device`, `devicevalue`,`schedule_device` FROM home LEFT JOIN room ON room.hid=home.id LEFT JOIN hardware ON hardware.rid=room.id LEFT JOIN room_device ON room_device.hw_id=hardware.id LEFT JOIN schedule_device ON schedule_device.device_id=room_device.id LEFT JOIN devicevalue ON devicevalue.did=room_device.id WHERE home.id='$id'";
   $result=mysqli_query($gotData->con,$sql);
   if($result)
   {
-    $sql="DELETE FROM hardware where hid='$id'";
-    $result=mysqli_query($gotData->con,$sql);
-    if($result)
-    {
-      $sql="DELETE FROM room where hid='$id'";
-      $result=mysqli_query($gotData->con,$sql);
-      if($result)
-      {
-        $sql="DELETE FROM home where id='$id'";
-        $result=mysqli_query($gotData->con,$sql);
-        if($result)
-        {
-          $gotData->error=false;
-          return $gotData;
-        }
-        $gotData->error=true;
-        $gotData->errorMessage="Try again!";
-        return $gotData;
-      }
-      $gotData->error=true;
-      $gotData->errorMessage="Try again!";
-      return $gotData;
-    }
-    $gotData->error=true;
-    $gotData->errorMessage="Try again!";
+    $gotData->error=false;
     return $gotData;
   }
   $gotData->error=true;

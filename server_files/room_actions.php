@@ -60,27 +60,11 @@ function createRoom($gotData){
 }
 function deleteRoom($gotData){
   $id=$gotData->user->room->id;
-  $sql="DELETE FROM room_device where room_id='$id'";
+  $sql="DELETE `room`, `hardware`,`room_device`,`schedule_device`, `devicevalue` FROM room LEFT JOIN hardware ON hardware.rid=room.id LEFT JOIN room_device ON room_device.hw_id=hardware.id LEFT JOIN schedule_device ON schedule_device.device_id=room_device.id LEFT JOIN devicevalue ON devicevalue.did=room_device.id WHERE room.id='$id'";
   $result=mysqli_query($gotData->con,$sql);
   if($result)
   {
-    $sql="DELETE FROM hardware where rid='$id'";
-    $result=mysqli_query($gotData->con,$sql);
-    if($result)
-    {
-      $sql="DELETE FROM room where id='$id'";
-      $result=mysqli_query($gotData->con,$sql);
-      if($result)
-      {
-        $gotData->error=false;
-        return $gotData;
-      }
-      $gotData->error=true;
-      $gotData->errorMessage="Try again!";
-      return $gotData;
-    }
-    $gotData->error=true;
-    $gotData->errorMessage="Try again!";
+    $gotData->error=false;
     return $gotData;
   }
   $gotData->error=true;

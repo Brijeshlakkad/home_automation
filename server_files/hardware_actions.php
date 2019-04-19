@@ -91,24 +91,16 @@ function deleteControlledHardwares($gotData){
   return $gotData;
 }
 function deleteHardware($gotData){
-  $id=$gotData->user->hw->id;
   $gotData=deleteControlledMembers($gotData);
   if($gotData->error) return $gotData;
   $gotData=deleteControlledHardwares($gotData);
   if($gotData->error) return $gotData;
-  $sql="DELETE FROM room_device where hw_id='$id'";
+  $id=$gotData->user->hw->id;
+  $sql="DELETE `hardware`,`room_device`,`schedule_device`, `devicevalue` FROM hardware LEFT JOIN room_device ON room_device.hw_id=hardware.id LEFT JOIN schedule_device ON schedule_device.device_id=room_device.id LEFT JOIN devicevalue ON devicevalue.did=room_device.id WHERE hardware.id='$id'";
   $result=mysqli_query($gotData->con,$sql);
   if($result)
   {
-    $sql="DELETE FROM hardware where id='$id'";
-    $result=mysqli_query($gotData->con,$sql);
-    if($result)
-    {
-      $gotData->error=false;
-      return $gotData;
-    }
-    $gotData->error=true;
-    $gotData->errorMessage="Try again!";
+    $gotData->error=false;
     return $gotData;
   }
   $gotData->error=true;
