@@ -41,7 +41,10 @@ myApp.controller("ScheduledDevicesController", function($rootScope, $scope, $htt
   var checkPeriodic = function() {
     $scope.getScheduleList(false);
   }
-  $interval(checkPeriodic, 1000);
+  var interval = $interval(checkPeriodic, 2000);
+  $scope.$on('$destroy', function(){
+    $interval.cancel(interval)
+  });
   $scope.removeSchedule = function(scheduledDevice) {
     swal({
       title: "Are you sure?",

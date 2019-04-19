@@ -145,11 +145,12 @@ myApp.controller("DeviceController", function($rootScope, $scope, $http, $window
       if (!data.error) {
         var showAllDevice = data.user.allDevice;
         $scope.showAllDevice = $sce.trustAsHtml(showAllDevice);
-        $scope.getDeviceList();
-        $scope.getDeviceImgList();
         $scope.showAddDevice = true;
-        if(pleaseWait)
+        if(pleaseWait){
+          $scope.getDeviceList();
+          $scope.getDeviceImgList();
           $rootScope.body.removeClass("loading");
+        }
       } else {
         $scope.showAddDevice = false;
         if(pleaseWait)
@@ -166,7 +167,10 @@ myApp.controller("DeviceController", function($rootScope, $scope, $http, $window
   var checkPeriodic = function() {
     $scope.getAllDevice(false);
   }
-  $interval(checkPeriodic, 1000);
+  var interval = $interval(checkPeriodic, 2000);
+  $scope.$on('$destroy', function(){
+    $interval.cancel(interval)
+  });
   $scope.deleteDevice = function(val) {
     swal({
       title: "Are you sure?",

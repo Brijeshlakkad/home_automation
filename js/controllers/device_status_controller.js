@@ -85,8 +85,12 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
   $scope.getDevice(true);
   var checkPeriodic = function() {
     $scope.getDevice(false);
+    $scope.getScheduleDevice();
   }
-  $interval(checkPeriodic, 1000);
+  var interval = $interval(checkPeriodic, 2000);
+  $scope.$on('$destroy', function(){
+    $interval.cancel(interval)
+  });
   $scope.changeDeviceStatus = function(val) {
     if ($rootScope.device.isScheduleRunning == true) {
       $rootScope.showErrorDialog("Your Scheduling is running. Please remove scheduling to change status.");
@@ -234,7 +238,6 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
       }
     }).then(function mySuccess(response) {
       var data = response.data;
-      alert(JSON.stringify(data));
       if (!data.error) {
         $rootScope.showSuccessDialog(data.data);
         $scope.getScheduleDevice();
