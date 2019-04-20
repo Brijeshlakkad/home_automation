@@ -88,7 +88,7 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
     $scope.getScheduleDevice();
   }
   var interval = $interval(checkPeriodic, 2000);
-  $scope.$on('$destroy', function(){
+  $scope.$on('$destroy', function() {
     $interval.cancel(interval)
   });
   $scope.changeDeviceStatus = function(val) {
@@ -275,33 +275,41 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
   };
   $scope.getScheduleDevice();
   $scope.deleteSchedule = function(schedule) {
-    $http({
-      method: "POST",
-      url: "schedule_device.php",
-      data: "action=4&email=" + $scope.user + "&scheduleID=" + schedule.scheduleID,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    }).then(function mySuccess(response) {
-      var data = response.data;
-      if (!data.error) {
-        $scope.getDevice();
-        $scope.getScheduleDevice();
-        $rootScope.showSuccessDialog(data.data);
+    swal({
+      title: "Are you sure?",
+      text: "You will not be able to recover this schedule!",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+    }).then(function() {
+      $http({
+        method: "POST",
+        url: "schedule_device.php",
+        data: "action=4&email=" + $scope.user + "&scheduleID=" + schedule.scheduleID,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }).then(function mySuccess(response) {
+        var data = response.data;
+        if (!data.error) {
+          $scope.getDevice();
+          $scope.getScheduleDevice();
+          $rootScope.showSuccessDialog(data.data);
+          $rootScope.body.removeClass("loading");
+        } else {
+          $rootScope.showErrorDialog(data.errorMessage);
+          $rootScope.body.removeClass("loading");
+        }
+      }, function myError(response) {
+        $rootScope.showErrorDialog("Please try again later!");
         $rootScope.body.removeClass("loading");
-      } else {
-        $rootScope.showErrorDialog(data.errorMessage);
-        $rootScope.body.removeClass("loading");
-      }
-    }, function myError(response) {
-      $rootScope.showErrorDialog("Please try again later!");
-      $rootScope.body.removeClass("loading");
+      });
     });
   };
   $scope.deleteScheduleDevice = function() {
     swal({
       title: "Are you sure?",
-      text: "You will not be able to recover this home!",
+      text: "You will not be able to recover all schedules from this device!",
       type: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes, delete it!",

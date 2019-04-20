@@ -48,7 +48,39 @@ myApp.controller("ScheduledDevicesController", function($rootScope, $scope, $htt
   $scope.removeSchedule = function(scheduledDevice) {
     swal({
       title: "Are you sure?",
-      text: "You will not be able to recover this home!",
+      text: "You will not be able to recover this schedule!",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+    }).then(function() {
+      $rootScope.body.addClass("loading");
+      $http({
+        method: "POST",
+        url: "schedule_device.php",
+        data: "action=4&email=" + $scope.user + "&scheduleID=" + scheduledDevice.scheduleID,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }).then(function mySuccess(response) {
+        var data = response.data;
+        if (!data.error) {
+          $scope.getScheduleList();
+          $rootScope.showSuccessDialog(data.data);
+          $rootScope.body.removeClass("loading");
+        } else {
+          $rootScope.showErrorDialog(data.errorMessage);
+          $rootScope.body.removeClass("loading");
+        }
+      }, function myError(response) {
+        $rootScope.showErrorDialog("Please try again later!");
+        $rootScope.body.removeClass("loading");
+      });
+    });
+  };
+  $scope.removeAllSchedule = function(scheduledDevice) {
+    swal({
+      title: "Are you sure?",
+      text: "You will not be able to recover this schedule!",
       type: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes, delete it!",
