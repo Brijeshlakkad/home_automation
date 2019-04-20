@@ -57,7 +57,6 @@ myApp.controller("AdminHomeController", function($rootScope, $scope, $http, $win
       }
     }).then(function mySuccess(response) {
       var data = response.data;
-      alert(JSON.stringify(data));
       if (!data.error) {
         $scope.getAllProducts();
         $rootScope.openNotification($rootScope.dataFrom, $rootScope.dataAlign, $rootScope.dataIcon, $rootScope.dataType[0], $rootScope.dataAnimIn, $rootScope.dataAnimOut, "Removed  ", "Product named " + productName + " is removed");

@@ -149,6 +149,7 @@ myApp.controller("SettingsController", function($rootScope, $scope, $http, $wind
   };
   $scope.submit_password = function() {
     if ($scope.new_password == $scope.confirm_new_password) {
+      $rootScope.body.addClass("loading");
       $http({
         method: "POST",
         url: "customer_interface.php",
@@ -159,19 +160,21 @@ myApp.controller("SettingsController", function($rootScope, $scope, $http, $wind
       }).then(function mySuccess(response) {
         var data = response.data;
         if (data.error == false) {
-          $scope.showErrorDialog(data.errorMessage);
-        } else {
           $scope.passwordForm.$setPristine();
           $scope.old_password = "";
           $scope.new_password = "";
           $scope.confirm_new_password = "";
           $scope.showSuccessDialog(data.responseMessage);
+        } else {
+          $scope.showErrorDialog(data.errorMessage);
         }
+        $rootScope.body.removeClass("loading");
       }, function myError(response) {
-        alert("error");
+        $rootScope.showErrorDialog("Please try again later!");
+        $rootScope.body.removeClass("loading");
       });
     } else {
-      alert("passwords are not matching");
+      $rootScope.showErrorDialog("Passwords are not matching");
     }
   };
   // Add input field dynamically (Author: Brijesh Lakkad)

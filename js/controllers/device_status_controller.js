@@ -110,7 +110,6 @@ myApp.controller("DeviceStatusController", function($rootScope, $scope, $http, $
         }
       }).then(function mySuccess(response) {
         var data = response.data;
-        alert(JSON.stringify(data));
         if (!data.error) {
           if (typeof data.user == 'undefined') {
             $rootScope.device = "";
