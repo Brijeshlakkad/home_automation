@@ -56,7 +56,7 @@ function getDeviceStatusUsingScheduling($con,$deviceID){
   $sql="SELECT `schedule_device`.id as `scheduleID`, `schedule_device`.device_id as `deviceID`, `schedule_device`.start_time as `startTime`, `schedule_device`.end_time as `endTime`,
         `schedule_device`.after_status as `afterStatus`, `schedule_device`.repetition as `repetition`, `schedule_device`.run_times as `runTimes`,
         `schedule_device`.created_time as `createdTime`, `room_device`.status as `status`
-         FROM schedule_device INNER JOIN room_device ON room_device.id=schedule_device.device_id WHERE room_device.id='$deviceID'";
+         FROM room_device LEFT JOIN schedule_device ON room_device.id=schedule_device.device_id WHERE room_device.id='$deviceID'";
   $result=mysqli_query($con,$sql);
   if($result){
     while($row=mysqli_fetch_array($result)){
@@ -69,9 +69,9 @@ function getDeviceStatusUsingScheduling($con,$deviceID){
       $nowDate=Date("Y-m-d H:i:s",strtotime("now"));
       $gotData->isScheduleRunning=false;
       $gotData->status=$status;
-      $gotData->scheduleID=$row['scheduleID'];
       if(shouldRun($startTime,$endTime,$nowDate,$repetition,$runTimes)){
         $gotData->isScheduleRunning=true;
+        $gotData->scheduleID=$row['scheduleID'];
         $gotData->afterStatus=$afterStatus;
         return $gotData;
       }
