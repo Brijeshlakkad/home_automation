@@ -56,6 +56,23 @@ function changePassword($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
+function getAppLink($gotData){
+  $isIOS=$gotData->isIOS;
+  if($isIOS=="true"){
+    $sql="SELECT `link` FROM `app_link` WHERE os='ios'";
+  }else{
+    $sql="SELECT `link` FROM `app_link` WHERE os='android'";
+  }
+  $result=mysqli_query($gotData->con,$sql);
+  if($result){
+    $row = mysqli_fetch_array($result);
+    $gotData->link=$row['link'];
+    return $gotData;
+  }
+  $gotData->error=true;
+  $gotData->errorMessage="Server Error!";
+  return $gotData;
+}
 $gotData=(object) null;
 if(isset($_REQUEST['action'])){
   $action=$_REQUEST['action'];
@@ -87,6 +104,13 @@ if(isset($_REQUEST['action'])){
     $gotData->user->oldPassword=$_REQUEST['oldPassword'];
     $gotData->user->newPassword=$_REQUEST['newPassword'];
     $gotData=changePassword($gotData);
+    $gotData->con=(object) null;
+    echo json_encode($gotData);
+    exit();
+  }else if($action==4 && isset($_REQUEST['isIOS']) ){
+    $gotData->user=(object) null;
+    $gotData->isIOS=$_REQUEST['isIOS'];
+    $gotData=getAppLink($gotData);
     $gotData->con=(object) null;
     echo json_encode($gotData);
     exit();
