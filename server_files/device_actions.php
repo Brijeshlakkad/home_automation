@@ -76,6 +76,14 @@ function createDevice($gotData){
   $homeID=$gotData->user->device->homeID;
   $roomID=$gotData->user->device->roomID;
   $hwID=$gotData->user->device->hwID;
+  $hwSeries=$gotData->user->hwSeries;
+  if(hasOwnerShip($gotData->con,$hwSeries,$userID)){
+    $sql="INSERT INTO room_device(uid,hid,room_id,hw_id,device_name,device_image,port,status) VALUES('$userID','$homeID','$roomID','$hwID','$dvName','$dvImg','$dvPort','$dvStatus')";
+  }else{
+    $gotData->error=true;
+    $gotData->errorMessage="You do not have access to create device in this hardware";
+    return $gotData;
+  }
   $gotData=checkDeviceName($gotData);
   if($gotData->error) return $gotData;
   $gotData=checkDevicePort($gotData);
@@ -109,6 +117,12 @@ function createDevice($gotData){
 }
 function deleteDevice($gotData){
   $id=$gotData->user->device->id;
+  $userID=$gotData->user->userID;
+  if(!hasOwnerShipUsigDeviceID($gotData->con,$id,$userID)){
+    $gotData->error=true;
+    $gotData->errorMessage="You do not have access to perform delete operation!";
+    return $gotData;
+  }
   $sql="DELETE `room_device`,`schedule_device`, `devicevalue` FROM room_device LEFT JOIN schedule_device ON schedule_device.device_id=room_device.id LEFT JOIN devicevalue ON devicevalue.did=room_device.id WHERE room_device.id='$id'";
   $result=mysqli_query($gotData->con,$sql);
   if($result)
@@ -164,6 +178,27 @@ function getDeviceImg($con,$dvImg){
   }
   return null;
 }
+function hasOwnerShip($con,$hwSeries,$userID){
+  $sql="SELECT product_serial.serial_no FROM product_serial INNER JOIN sold_product ON sold_product.serial_id=product_serial.id
+        INNER JOIN user ON user.email=sold_product.customer_email WHERE user.id='$userID' AND product_serial.serial_no='$hwSeries'";
+  $result=mysqli_query($con,$sql);
+  if($result){
+    if(mysqli_num_rows($result)==1){
+      return true;
+    }
+  }
+  return false;
+}
+function hasOwnerShipUsigDeviceID($con,$deviceID,$userID){
+  $sql="SELECT * FROM room_device WHERE id='$deviceID' AND uid='$userID'";
+  $result=mysqli_query($con,$sql);
+  if($result){
+    if(mysqli_num_rows($result)==1){
+      return true;
+    }
+  }
+  return false;
+}
 function getDeviceData($gotData){
   $u=getUserDataUsingEmail($gotData->con,$gotData->user->email);
   if($u->error) return $u;
@@ -171,7 +206,19 @@ function getDeviceData($gotData){
   $homeID=$gotData->user->homeID;
   $roomID=$gotData->user->roomID;
   $hwID=$gotData->user->hwID;
-  $sql="SELECT * FROM room_device where uid='$userID' and hid='$homeID' and room_id='$roomID' and hw_id='$hwID'";
+  $hwSeries=$gotData->user->hwSeries;
+  $owner=0;
+  if(hasOwnerShip($gotData->con,$hwSeries,$userID)){
+    $sql="SELECT room_device.id as `dvID`, room_device.device_name as `dvName`, room_device.port as `dvPort`, room_device.device_image as `dvImg`,
+          room_device.hid as `homeID`, room_device.room_id as `roomID`, room_device.hw_id as `hwID`
+          FROM room_device INNER JOIN hardware ON hardware.id=room_device.hw_id WHERE hardware.series='$hwSeries' AND hardware.uid='$userID'";
+    $owner=1;
+  }else{
+    $sql="SELECT room_device.id as `dvID`, room_device.device_name as `dvName`, room_device.port as `dvPort`, room_device.device_image as `dvImg`
+          FROM room_device INNER JOIN hardware ON hardware.id=room_device.hw_id INNER JOIN allowed_user ON allowed_user.serial_no=hardware.series
+          INNER JOIN product_serial ON product_serial.serial_no=allowed_user.serial_no INNER JOIN sold_product ON sold_product.serial_id=product_serial.id
+          WHERE allowed_user.member_id='$userID' AND allowed_user.serial_no='$hwSeries'";
+  }
   $check=mysqli_query($gotData->con,$sql);
   $gotData->total=mysqli_num_rows($check);
   if($check && ($gotData->total>=0))
@@ -180,7 +227,7 @@ function getDeviceData($gotData){
     $email=$gotData->user->email;
     while($row=mysqli_fetch_array($check)){
       $gotData->user->device[$i] = (object) null;
-      $dvID=$row['id'];
+      $dvID=$row['dvID'];
       $got=getDeviceStatusUsingScheduling($gotData->con,$dvID);
       if($got->error) return $got;
       if($got->isScheduleRunning){
@@ -189,11 +236,11 @@ function getDeviceData($gotData){
       else{
         $dvStatus=$got->status;
       }
-      $dvName=$row['device_name'];
-      $dvPort=$row['port'];
-      $dvImg=$row['device_image'];
+      $dvName=$row['dvName'];
+      $dvPort=$row['dvPort'];
+      $dvImg=$row['dvImg'];
       // $dvStatus=$row['status'];
-      $id=$row['id'];
+      $id=$row['dvID'];
       $deviceImg=getDeviceImg($gotData->con,$dvImg);
       $gotData->user->device[$i]=(object) null;
       $gotData->user->device[$i]->dvName=$dvName;
@@ -277,6 +324,39 @@ function getDevice($gotData){
   $gotData->error=true;
   $gotData->errorMessage="Try again!";
   return $gotData;
+}
+function getDeviceDataUsingHwSeries($gotData){
+  $userID=$gotData->user->userID;
+  $deviceName=$gotData->user->deviceName;
+  $hwSeries=$gotData->user->hwSeries;
+  if(hasOwnerShip($gotData->con,$hwSeries,$userID)){
+    $sql="SELECT room_device.id as `dvID`, room_device.device_name as `dvName`, room_device.port as `dvPort`, room_device.device_image as `dvImg`
+          FROM room_device INNER JOIN hardware ON hardware.id=room_device.hw_id WHERE hardware.series='$hwSeries' AND hardware.uid='$userID' AND room_device.device_name='$deviceName'";
+  }else{
+    $sql="SELECT room_device.id as `dvID`, room_device.device_name as `dvName`, room_device.port as `dvPort`, room_device.device_image as `dvImg`,
+          room_device.hid as `homeID`, room_device.room_id as `roomID`, room_device.hw_id as `hwID`
+          FROM room_device INNER JOIN hardware ON hardware.id=room_device.hw_id INNER JOIN allowed_user ON allowed_user.serial_no=hardware.series
+          INNER JOIN product_serial ON product_serial.serial_no=allowed_user.serial_no INNER JOIN sold_product ON sold_product.serial_id=product_serial.id
+          WHERE allowed_user.member_id='$userID' AND allowed_user.serial_no='$hwSeries' AND room_device.device_name='$deviceName'";
+  }
+  $check=mysqli_query($gotData->con,$sql);
+  $gotData->total=mysqli_num_rows($check);
+  if($check && ($gotData->total==1))
+  {
+    $row=mysqli_fetch_array($check);
+    $gotData->user->deviceID=$row['dvID'];
+    $gotData->user->dvID=$row['dvID'];
+    $gotData->user->dvName=$row['dvName'];
+    $gotData->user->dvPort=$row['dvPort'];
+    $gotData->user->dvImg=$row['getDeviceImg'];
+    $gotData->user->homeID=$row['homeID'];
+    $gotData->user->roomID=$row['roomID'];
+    $gotData->user->hwID=$row['hwID'];
+    return $gotData;
+  }else{
+    $gotData->error=true;
+    $gotData->errorMessage="Device does not exists!";
+  }
 }
 function changeDeviceStatus($gotData){
   $status=$gotData->user->status;
@@ -423,7 +503,12 @@ if(isset($_REQUEST['action'])){
     $gotData->user->email=$email;
     $gotData->user->roomID=$roomID;
     $gotData->user->hwID=$hwID;
-    $gotData->user->action=$action;
+    $hw=getHardwareDataUsingOnlyID($gotData->con,$hwID);
+    if($hw->error){
+      echo json_encode($hw);
+      exit();
+    }
+    $gotData->user->hwSeries=$hw->hwSeries;
     $gotData=getDeviceData($gotData);
     $gotData->con=(object) null;
     echo json_encode($gotData);
@@ -450,6 +535,12 @@ if(isset($_REQUEST['action'])){
     $gotData->user->device->dvPort=$dvPort;
     $gotData->user->device->dvImg=$dvImg;
     $gotData->user->device->dvStatus="0";
+    $hw=getHardwareDataUsingOnlyID($gotData->con,$hwID);
+    if($hw->error){
+      echo json_encode($hw);
+      exit();
+    }
+    $gotData->user->hwSeries=$hw->hwSeries;
     $gotData=createDevice($gotData);
     $gotData->con=(object) null;
     echo json_encode($gotData);

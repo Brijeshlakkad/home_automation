@@ -29,6 +29,12 @@ function getHardwareDataUsingID($con,$userID,$hwID){
   $hw->getData($con,$sql);
   return $hw;
 }
+function getHardwareDataUsingOnlyID($con,$hwID){
+  $hw = new Hardware;
+  $sql="SELECT * FROM hardware where id='$hwID'";
+  $hw->getData($con,$sql);
+  return $hw;
+}
 function getHardwareDataUsingName($con,$userID,$hwName,$roomName,$homeName){
   $hw = new Hardware;
   $r=getRoomDataUsingName($con,$userID,$roomName,$homeName);

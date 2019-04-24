@@ -144,7 +144,7 @@ function saveMemberList($gotData){
 }
 function getMemberList($gotData){
   $userID=$gotData->user->userID;
-  $sql="SELECT allowed_user.member_id as `member_id`, hardware.name as `hwName` FROM allowed_user INNER JOIN hardware ON hardware.series=allowed_user.serial_no WHERE allowed_user.uid='$userID'";
+  $sql="SELECT allowed_user.member_id as `member_id`, hardware.name as `hwName` FROM allowed_user INNER JOIN hardware ON hardware.series=allowed_user.serial_no WHERE allowed_user.uid='$userID' AND hardware.uid='$userID'";
   $result=mysqli_query($gotData->con,$sql);
   if($result){
     $gotData->user->memberRows=mysqli_num_rows($result);

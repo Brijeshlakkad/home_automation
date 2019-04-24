@@ -241,10 +241,13 @@ function getSchedulingForDevice($gotData){
   $roomName=$gotData->roomName;
   $userID=$gotData->userID;
   $roomID=$gotData->roomID;
-  $sql="SELECT `schedule_device`.id as `scheduleID`, `schedule_device`.device_id as `deviceID`, `schedule_device`.start_time as `startTime`, `schedule_device`.end_time as `endTime`,
-        `schedule_device`.after_status as `afterStatus`, `schedule_device`.repetition as `repetition`, `schedule_device`.run_times as `runTimes`,
-        `schedule_device`.created_time as `createdTime`
-        FROM `room_device` INNER JOIN `schedule_device` ON room_device.id=schedule_device.device_id WHERE `room_device`.`device_name`='$deviceName' AND `room_device`.`room_id`='$roomID' AND `room_device`.`uid`='$userID'";
+  $device=getDeviceDataUsingRoomID($gotData->con,$deviceName,$roomID,$userID);
+  if($device->error) return $device;
+  $deviceID=$device->dvID;
+  $sql="SELECT id as `scheduleID`, device_id as `deviceID`, start_time as `startTime`, end_time as `endTime`,
+        after_status as `afterStatus`, repetition as `repetition`, run_times as `runTimes`,
+        created_time as `createdTime`
+        FROM`schedule_device` WHERE `device_id`='$deviceID'";
   $result=mysqli_query($gotData->con,$sql);
   if($result){
     $gotData->totalRows=mysqli_num_rows($result);
@@ -307,6 +310,11 @@ function deleteSchedulingForDevice($gotData){
   $roomName=$gotData->roomName;
   $userID=$gotData->userID;
   $roomID=$gotData->roomID;
+  if(!hasOwnerShipUsingRoomID($gotData->con,$deviceName,$roomID,$userID)){
+    $gotData->error=true;
+    $gotData->errorMessage="You do not have permission to remove all scheduling at once.";
+    return $gotData;
+  }
   $sql="DELETE schedule_device FROM schedule_device INNER JOIN room_device ON room_device.id=schedule_device.device_id WHERE room_device.device_name='$deviceName' AND room_device.room_id='$roomID' AND room_device.uid='$userID'";
   $result=mysqli_query($gotData->con,$sql);
   if($result){
@@ -332,41 +340,82 @@ function deleteSchedulingForRoom($gotData){
   $gotData->errorMessage="You do not any devices in room ".$roomName;
   return $gotData;
 }
+function hasOwnerShip($con,$hwSeries,$userID){
+  $sql="SELECT product_serial.serial_no FROM product_serial INNER JOIN sold_product ON sold_product.serial_id=product_serial.id
+        INNER JOIN user ON user.email=sold_product.customer_email WHERE user.id='$userID' AND product_serial.serial_no='$hwSeries'";
+  $result=mysqli_query($con,$sql);
+  if($result){
+    if(mysqli_num_rows($result)==1){
+      return true;
+    }
+  }
+  return false;
+}
 function getScheduling($gotData){
   $email=$gotData->email;
   $userID=$gotData->userID;
    // GROUP BY room.name
-  $sql="SELECT `schedule_device`.id as `scheduleID`, `schedule_device`.device_id as `deviceID`, `schedule_device`.start_time as `startTime`, `schedule_device`.end_time as `endTime`,
-        `schedule_device`.after_status as `afterStatus`, `schedule_device`.repetition as `repetition`, `schedule_device`.run_times as `runTimes`,
-        `schedule_device`.created_time as `createdTime`, room.roomname as`roomName`, room_device.device_name as `deviceName`
-        FROM room_device INNER JOIN `schedule_device` ON room_device.id=schedule_device.device_id LEFT JOIN room ON room.id=room_device.room_id WHERE room_device.uid='$userID'";
-  $result=mysqli_query($gotData->con,$sql);
-  if($result){
-    if(mysqli_num_rows($result)>0){
-      $i=0;
-      while($row=mysqli_fetch_array($result)){
-        $nowDate=strtotime(Date("Y-m-d H:i:s"));
-        $date1=strtotime($row['startTime']);
-        $date2=strtotime($row['endTime']);
-        if(!shouldRun($row['createdTime'],$row['repetition'],$row['runTimes'])){
-          continue;
+  $roomSQL="SELECT * FROM room WHERE uid='$userID'";
+  $roomResult=mysqli_query($gotData->con,$roomSQL);
+  if($roomResult){
+    $dvIndex=0;
+    while($roomRow=mysqli_fetch_array($roomResult)){
+      $roomID=$roomRow['id'];
+      $roomName=$roomRow['roomname'];
+      $hwSeriesList=getHardwareListUsingRoomID($gotData->con,$roomID,$userID);
+      // echo "<br />Room:".$roomName."->".json_encode($hwSeriesList)."<br/>";
+      for($i=0;$i<count($hwSeriesList);$i++){
+        $hwSeries=$hwSeriesList[$i];
+        if(hasOwnerShip($gotData->con,$hwSeries,$userID)){
+          $deviceSQL="SELECT room_device.id as `dvID`, room_device.device_name as `deviceName` FROM room_device INNER JOIN hardware ON hardware.id=room_device.hw_id WHERE room_device.room_id='$roomID' AND room_device.uid='$userID' AND hardware.series='$hwSeries'";
         }
-        $gotData->scheduledDevice[$i]=(object) null;
-        $gotData->scheduledDevice[$i]->scheduleID=$row['scheduleID'];
-        $gotData->scheduledDevice[$i]->deviceID=$row['deviceID'];
-        $gotData->scheduledDevice[$i]->startTime=Date("h:i:s A",$date1);
-        $gotData->scheduledDevice[$i]->endTime=Date("h:i:s A",$date2);
-        $gotData->scheduledDevice[$i]->createdDate=Date("d-m-Y h:i:s A",strtotime($row['createdTime']));
-        $gotData->scheduledDevice[$i]->repetition=strtoupper(Date("l",strtotime($row['repetition'])));
-        $gotData->scheduledDevice[$i]->deviceName=ucfirst($row['deviceName']);
-        $gotData->scheduledDevice[$i]->roomName=$row['roomName'];
-        $gotData->scheduledDevice[$i]->runTimes=$row['runTimes'];
-        $gotData->scheduledDevice[$i]->afterStatus=$row['afterStatus'];
-        $i++;
+        else{
+          $deviceSQL="SELECT room_device.id as `dvID`, room_device.device_name as `deviceName`
+                FROM room_device
+                INNER JOIN hardware ON hardware.id=room_device.hw_id
+                INNER JOIN allowed_user ON allowed_user.serial_no=hardware.series
+                INNER JOIN product_serial ON product_serial.serial_no=allowed_user.serial_no
+                INNER JOIN sold_product ON sold_product.serial_id=product_serial.id
+                WHERE allowed_user.member_id='$userID' AND allowed_user.serial_no='$hwSeries'";
+        }
+        $deviceResult=mysqli_query($gotData->con,$deviceSQL);
+        if($deviceResult){
+          while($deviceRow=mysqli_fetch_array($deviceResult)){
+            $deviceID=$deviceRow['dvID'];
+            $deviceName=$deviceRow['deviceName'];
+            $scheduleSQL="SELECT id as `scheduleID`, device_id as `deviceID`, start_time as `startTime`, end_time as `endTime`,
+                  after_status as `afterStatus`, repetition as `repetition`, run_times as `runTimes`,
+                  created_time as `createdTime`
+                  FROM`schedule_device` WHERE `device_id`='$deviceID'";
+            $scheduleResult=mysqli_query($gotData->con,$scheduleSQL);
+            if($scheduleResult){
+                while($scheduleRow=mysqli_fetch_array($scheduleResult)){
+                  $nowDate=strtotime(Date("Y-m-d H:i:s"));
+                  $date1=strtotime($scheduleRow['startTime']);
+                  $date2=strtotime($scheduleRow['endTime']);
+                  if(!shouldRun($scheduleRow['createdTime'],$scheduleRow['repetition'],$scheduleRow['runTimes'])){
+                    continue;
+                  }
+                  $gotData->scheduledDevice[$dvIndex]=(object) null;
+                  $gotData->scheduledDevice[$dvIndex]->scheduleID=$scheduleRow['scheduleID'];
+                  $gotData->scheduledDevice[$dvIndex]->deviceID=$scheduleRow['deviceID'];
+                  $gotData->scheduledDevice[$dvIndex]->startTime=Date("h:i:s A",$date1);
+                  $gotData->scheduledDevice[$dvIndex]->endTime=Date("h:i:s A",$date2);
+                  $gotData->scheduledDevice[$dvIndex]->createdDate=Date("d-m-Y h:i:s A",strtotime($scheduleRow['createdTime']));
+                  $gotData->scheduledDevice[$dvIndex]->repetition=strtoupper(Date("l",strtotime($scheduleRow['repetition'])));
+                  $gotData->scheduledDevice[$dvIndex]->deviceName=ucfirst($deviceName);
+                  $gotData->scheduledDevice[$dvIndex]->roomName=$roomName;
+                  $gotData->scheduledDevice[$dvIndex]->runTimes=$scheduleRow['runTimes'];
+                  $gotData->scheduledDevice[$dvIndex]->afterStatus=$scheduleRow['afterStatus'];
+                  $dvIndex++;
+                }
+            }
+          }
+        }
       }
-      $gotData->totalRows=$i;
-      return $gotData;
     }
+    $gotData->totalRows=$dvIndex;
+    return $gotData;
   }
   $gotData->error=true;
   $gotData->errorMessage="You do not have any devices scheduled";
