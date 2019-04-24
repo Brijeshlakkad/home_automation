@@ -89,14 +89,6 @@ function createDevice($gotData){
   $homeID=$gotData->user->device->homeID;
   $roomID=$gotData->user->device->roomID;
   $hwID=$gotData->user->device->hwID;
-  $hwSeries=$gotData->user->hwSeries;
-  if(hasOwnerShip($gotData->con,$hwSeries,$userID)){
-    $sql="INSERT INTO room_device(uid,hid,room_id,hw_id,device_name,device_image,port,status) VALUES('$userID','$homeID','$roomID','$hwID','$dvName','$dvImg','$dvPort','$dvStatus')";
-  }else{
-    $gotData->error=true;
-    $gotData->errorMessage="You do not have access to create device in this hardware";
-    return $gotData;
-  }
   $gotData=checkDeviceName($gotData);
   if($gotData->error) return $gotData;
   $gotData=checkDevicePort($gotData);
@@ -105,6 +97,14 @@ function createDevice($gotData){
   $dvPort=$gotData->user->device->dvPort;
   $dvImg=$gotData->user->device->dvImg;
   $dvStatus=$gotData->user->device->dvStatus;
+  $hwSeries=$gotData->user->hwSeries;
+  if(hasOwnerShip($gotData->con,$hwSeries,$userID)){
+    $sql="INSERT INTO room_device(uid,hid,room_id,hw_id,device_name,device_image,port,status) VALUES('$userID','$homeID','$roomID','$hwID','$dvName','$dvImg','$dvPort','$dvStatus')";
+  }else{
+    $gotData->error=true;
+    $gotData->errorMessage="You do not have access to create device in this hardware";
+    return $gotData;
+  }
   $result=mysqli_query($gotData->con,$sql);
   if($result)
   {
@@ -386,7 +386,8 @@ function getDevice($gotData){
   $deviceName=$gotData->user->deviceName;
   $hwSeries=$gotData->user->hwSeries;
   if(hasOwnerShip($gotData->con,$hwSeries,$userID)){
-    $sql="SELECT room_device.id as `dvID`, room_device.device_name as `dvName`, room_device.port as `dvPort`, room_device.device_image as `dvImg`
+    $sql="SELECT room_device.id as `dvID`, room_device.device_name as `dvName`, room_device.port as `dvPort`, room_device.device_image as `dvImg`,
+          room_device.hid as `homeID`, room_device.room_id as `roomID`, room_device.hw_id as `hwID`
           FROM room_device INNER JOIN hardware ON hardware.id=room_device.hw_id WHERE hardware.series='$hwSeries' AND hardware.uid='$userID' AND room_device.device_name='$deviceName'";
   }else{
     $sql="SELECT room_device.id as `dvID`, room_device.device_name as `dvName`, room_device.port as `dvPort`, room_device.device_image as `dvImg`,
@@ -403,7 +404,7 @@ function getDevice($gotData){
     $dvID=$row['dvID'];
     $dvName=$row['dvName'];
     $dvPort=$row['dvPort'];
-    $dvImg=$row['getDeviceImg'];
+    $dvImg=$row['dvImg'];
     $got=getDeviceStatusUsingScheduling($gotData->con,$dvID);
     if($got->error) return $got;
     $isScheduleRunning=$got->isScheduleRunning;
@@ -448,7 +449,8 @@ function getDeviceDataUsingHwSeries($gotData){
   $deviceName=$gotData->user->deviceName;
   $hwSeries=$gotData->user->hwSeries;
   if(hasOwnerShip($gotData->con,$hwSeries,$userID)){
-    $sql="SELECT room_device.id as `dvID`, room_device.device_name as `dvName`, room_device.port as `dvPort`, room_device.device_image as `dvImg`
+    $sql="SELECT room_device.id as `dvID`, room_device.device_name as `dvName`, room_device.port as `dvPort`, room_device.device_image as `dvImg`,
+          room_device.hid as `homeID`, room_device.room_id as `roomID`, room_device.hw_id as `hwID`
           FROM room_device INNER JOIN hardware ON hardware.id=room_device.hw_id WHERE hardware.series='$hwSeries' AND hardware.uid='$userID' AND room_device.device_name='$deviceName'";
   }else{
     $sql="SELECT room_device.id as `dvID`, room_device.device_name as `dvName`, room_device.port as `dvPort`, room_device.device_image as `dvImg`,
@@ -466,7 +468,7 @@ function getDeviceDataUsingHwSeries($gotData){
     $gotData->user->dvID=$row['dvID'];
     $gotData->user->dvName=$row['dvName'];
     $gotData->user->dvPort=$row['dvPort'];
-    $gotData->user->dvImg=$row['getDeviceImg'];
+    $gotData->user->dvImg=$row['dvImg'];
     $gotData->user->homeID=$row['homeID'];
     $gotData->user->roomID=$row['roomID'];
     $gotData->user->hwID=$row['hwID'];
@@ -790,10 +792,10 @@ if(isset($_REQUEST['action'])){
     $u=getUserDataUsingEmail($gotData->con,$gotData->user->email);
     if($u->error) return $u;
     $userID=$u->id;
+    $gotData->user->userID=$userID;
     $gotData->user->homeName=$homeName;
     $gotData->user->roomName=$roomName;
     $gotData->user->hwName=$hwName;
-    $gotData->user->userID=$userID;
     $gotData->user->deviceName=$deviceName;
     $hw=getHardwareDataUsingName($gotData->con,$userID,$hwName,$roomName,$homeName);
     if($hw->error){
@@ -821,7 +823,6 @@ if(isset($_REQUEST['action'])){
     $roomName=ucfirst($_REQUEST['roomName']);
     $hwName=ucfirst($_REQUEST['hwName']);
     $deviceName=$_REQUEST['deviceName'];
-    $userID=$_REQUEST['userID'];
     $value=$_REQUEST['value'];
     $gotData = (object) null;
     $gotData->error=false;
@@ -832,11 +833,31 @@ if(isset($_REQUEST['action'])){
     $gotData->user->email=$email;
     $gotData->deviceSlider->email=$email;
     $gotData->deviceSlider->value=$value;
-    $dv=getDeviceDataUsingName($gotData->con,$userID,$deviceName,$hwName,$roomName,$homeName);
-    if($dv->error){
-      echo json_encode($dv);
+    $gotData->user->homeName=$homeName;
+    $gotData->user->roomName=$roomName;
+    $gotData->user->hwName=$hwName;
+    $gotData->user->deviceName=$deviceName;
+    $u=getUserDataUsingEmail($gotData->con,$gotData->user->email);
+    if($u->error) return $u;
+    $userID=$u->id;
+    $gotData->user->userID=$userID;
+    $hw=getHardwareDataUsingName($gotData->con,$userID,$hwName,$roomName,$homeName);
+    if($hw->error){
+      echo json_encode($hw);
     }else{
-      $deviceID=$dv->dvID;
+      $hwID=$hw->hwID;
+      $gotData->user->hwID=$hwID;
+      $roomID=$hw->roomID;
+      $gotData->user->roomID=$roomID;
+      $homeID=$hw->homeID;
+      $gotData->user->homeID=$homeID;
+      $gotData->user->hwSeries=$hw->hwSeries;
+      $gotData=getDeviceDataUsingHwSeries($gotData);
+      if($gotData->error){
+        echo json_encode($gotData);
+        exit();
+      }
+      $deviceID=$gotData->user->deviceID;
       $gotData->deviceSlider->dvID=$deviceID;
       $gotData=changeDeviceSlider($gotData);
       $gotData->con=(object) null;

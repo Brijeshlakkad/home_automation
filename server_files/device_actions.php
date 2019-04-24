@@ -76,14 +76,6 @@ function createDevice($gotData){
   $homeID=$gotData->user->device->homeID;
   $roomID=$gotData->user->device->roomID;
   $hwID=$gotData->user->device->hwID;
-  $hwSeries=$gotData->user->hwSeries;
-  if(hasOwnerShip($gotData->con,$hwSeries,$userID)){
-    $sql="INSERT INTO room_device(uid,hid,room_id,hw_id,device_name,device_image,port,status) VALUES('$userID','$homeID','$roomID','$hwID','$dvName','$dvImg','$dvPort','$dvStatus')";
-  }else{
-    $gotData->error=true;
-    $gotData->errorMessage="You do not have access to create device in this hardware";
-    return $gotData;
-  }
   $gotData=checkDeviceName($gotData);
   if($gotData->error) return $gotData;
   $gotData=checkDevicePort($gotData);
@@ -92,7 +84,14 @@ function createDevice($gotData){
   $dvPort=$gotData->user->device->dvPort;
   $dvImg=$gotData->user->device->dvImg;
   $dvStatus=$gotData->user->device->dvStatus;
-  $sql="INSERT INTO room_device(uid,hid,room_id,hw_id,device_name,device_image,port,status) VALUES('$userID','$homeID','$roomID','$hwID','$dvName','$dvImg','$dvPort','$dvStatus')";
+  $hwSeries=$gotData->user->hwSeries;
+  if(hasOwnerShip($gotData->con,$hwSeries,$userID)){
+    $sql="INSERT INTO room_device(uid,hid,room_id,hw_id,device_name,device_image,port,status) VALUES('$userID','$homeID','$roomID','$hwID','$dvName','$dvImg','$dvPort','$dvStatus')";
+  }else{
+    $gotData->error=true;
+    $gotData->errorMessage="You do not have access to create device in this hardware";
+    return $gotData;
+  }
   $result=mysqli_query($gotData->con,$sql);
   if($result)
   {
