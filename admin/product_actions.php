@@ -4,6 +4,21 @@ include_once('../dealer_distributor/dealer_data.php');
 include_once('../assigned_user_data.php');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+function getProductCode($con){
+  $sql="SELECT code FROM product_code WHERE id='1'";
+  $result=mysqli_query($con,$sql);
+  if($result){
+    $row=mysqli_fetch_array($result);
+    $code=$row['code'];
+    $code=rand(10,100)+(int)$code;
+    $codeSQL="UPDATE product_code SET code='$code' WHERE id='1'";
+    $codeResult=mysqli_query($con,$codeSQL);
+    if($codeResult){
+      return $code;
+    }
+  }
+  return "DEFUALT";
+}
 function getAllProducts($gotData){
   $sql="SELECT * FROM product";
   $check=mysqli_query($gotData->con,$sql);
@@ -46,7 +61,8 @@ function createProduct($gotData){
   $taxation=$gotData->product->taxation;
   $hsn_code=$gotData->product->hsn_code;
   $qty_name=$gotData->product->qty_name;
-  $sql="INSERT INTO product(name,s_rate,p_rate,description,taxation,hsncode,qty_name) VALUES('$name','$s_rate','$p_rate','$description','$taxation','$hsn_code','$qty_name')";
+  $code=getProductCode($gotData->con);
+  $sql="INSERT INTO product(name,s_rate,p_rate,product_code,description,taxation,hsncode,qty_name) VALUES('$name','$s_rate','$p_rate','$code','$description','$taxation','$hsn_code','$qty_name')";
   $check=mysqli_query($gotData->con,$sql);
   if($check){
     $gotData->product->id=mysqli_insert_id($gotData->con);
