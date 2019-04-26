@@ -92,22 +92,53 @@ function createHardware($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function deleteControlledHardwares($gotData){
+function hasOwnerShip($con,$hwSeries,$userID){
+  $sql="SELECT product_serial.serial_no FROM product_serial INNER JOIN sold_product ON sold_product.serial_id=product_serial.id
+        INNER JOIN user ON user.email=sold_product.customer_email WHERE user.id='$userID' AND product_serial.serial_no='$hwSeries'";
+  $result=mysqli_query($con,$sql);
+  if($result){
+    if(mysqli_num_rows($result)==1){
+      return true;
+    }
+  }
+  return false;
+}
+function deleteControlledMembers($gotData){
   $hwID=$gotData->user->hw->id;
-  $user=getUserDataUsingEmail($gotData->con,$gotData->user->email);
-  $sql="DELETE allowed_user FROM allowed_user INNER JOIN hardware ON hardware.series=allowed_user.serial_no WHERE hardware.id='$hwID'";
+  $email=$gotData->user->email;
+  $userID=$gotData->userID;
+  $sql="DELETE allowed_user FROM allowed_user INNER JOIN hardware ON hardware.series=allowed_user.serial_no INNER JOIN product_serial ON product_serial.serial_no=hardware.series INNER JOIN sold_product ON sold_product.id=product_serial.sold_product_id WHERE hardware.id='$hwID' AND sold_product.customer_email='$email' AND allowed_user.uid='$userID'";
   $result=mysqli_query($gotData->con,$sql);
   if($result){
     return $gotData;
   }
   $gotData->error=true;
-  $gotData->errorMessage="Error in removing control members.";
+  $gotData->errorMessage="Error in removing controlled members.";
+  return $gotData;
+}
+function deleteControlledHardwares($gotData){
+  $hwID=$gotData->user->hw->id;
+  $userID=$gotData->userID;
+  $hw=getHardwareDataUsingID($gotData->con,$userID,$hwID);
+  if($hw->error) return $hw;
+  $hwSeries=$hw->hwSeries;
+  if(!hasOwnerShip($gotData->con,$hwSeries,$userID)){
+    return $gotData;
+  }
+  $sql="DELETE FROM hardware WHERE series='$hwSeries' AND uid!='$userID'";
+  $result=mysqli_query($gotData->con,$sql);
+  if($result){
+    return deleteControlledMembers($gotData);
+  }
+  $gotData->error=true;
+  $gotData->errorMessage="Error in removing controlled hardwares";
   return $gotData;
 }
 function deleteHardware($gotData){
+  $user=getUserDataUsingEmail($gotData->con,$gotData->user->email);
+  if($user->error) return $user;
+  $gotData->userID=$user->id;
   $gotData=deleteControlledHardwares($gotData);
-  if($gotData->error) return $gotData;
-  $gotData=getUserID($gotData);
   if($gotData->error) return $gotData;
   $id=$gotData->user->hw->id;
   $sql="DELETE `hardware`,`room_device`,`schedule_device`, `devicevalue` FROM hardware LEFT JOIN room_device ON room_device.hw_id=hardware.id LEFT JOIN schedule_device ON schedule_device.device_id=room_device.id LEFT JOIN devicevalue ON devicevalue.did=room_device.id WHERE hardware.id='$id'";

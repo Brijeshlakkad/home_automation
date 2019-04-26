@@ -80,6 +80,8 @@ function getDeviceDataUsingRoomID($con,$deviceName,$roomID,$userID){
     $dv->getData($con,$sql);
     return $dv;
   }else{
+    $dv=(object) null;
+    $dv->error=false;
     $hwSeriesList=getHardwareListUsingRoomID($con,$roomID,$userID);
     for($i=0;$i<count($hwSeriesList);$i++){
       $hwSeries=$hwSeriesList[$i];

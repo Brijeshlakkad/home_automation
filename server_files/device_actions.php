@@ -557,7 +557,12 @@ if(isset($_REQUEST['action'])){
     $gotData->user->email=$email;
     $gotData->user->device->email=$email;
     $gotData->user->device->id=$id;
+    $u=getUserDataUsingEmail($gotData->con,$gotData->user->email);
+    if($u->error) return $u;
+    $userID=$u->id;
+    $gotData->user->userID=$userID;
     $gotData=deleteDevice($gotData);
+    $gotData->con=(object) null;
     echo json_encode($gotData);
     exit();
   }
