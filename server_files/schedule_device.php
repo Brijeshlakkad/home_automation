@@ -179,6 +179,9 @@ function checkConflictTime($con,$deviceID,$startTime,$endTime,$repetition1){
       $eTime=strtotime($row['end_time']);
       $startTime1 = strtotime($startTime);
       $endTime1 = strtotime($endTime);
+      if($sTime>=$eTime){
+        $eTime=strtotime(getNextDay($row['end_time']));
+      }
       $repetition=$row['repetition'];
       if($repetition1==$repetition || $repetition=="DAILY"){
         if(($startTime1>=$sTime && $startTime1<=$eTime)||($endTime1>=$sTime && $endTime1<=$eTime)){
