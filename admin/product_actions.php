@@ -4,7 +4,7 @@ include_once('../dealer_distributor/dealer_data.php');
 include_once('../assigned_user_data.php');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-function getProductCode($con){
+function getProductCode($con){  // gets product code and increments product code
   $sql="SELECT code FROM product_code WHERE id='1'";
   $result=mysqli_query($con,$sql);
   if($result){
@@ -19,7 +19,7 @@ function getProductCode($con){
   }
   return "DEFUALT";
 }
-function getAllProducts($gotData){
+function getAllProducts($gotData){ // gets all product list
   $sql="SELECT * FROM product";
   $check=mysqli_query($gotData->con,$sql);
   $gotData->user=(object) null;
@@ -53,7 +53,7 @@ function getAllProducts($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function createProduct($gotData){
+function createProduct($gotData){  // creates product
   $name=$gotData->product->name;
   $s_rate=$gotData->product->s_rate;
   $p_rate=$gotData->product->p_rate;
@@ -92,7 +92,7 @@ function editProduct($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function checkProductName($gotData){
+function checkProductName($gotData){  // checks product name exists or not
   $productName=$gotData->product->productName;
   $sql="SELECT * FROM product WHERE name='$productName'";
   $check=mysqli_query($gotData->con,$sql);
@@ -108,7 +108,7 @@ function checkProductName($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function getProduct($gotData){
+function getProduct($gotData){ // gets one specific product details
   $productName=$gotData->product->productName;
   $sql="SELECT * FROM product where name='$productName'";
   $check=mysqli_query($gotData->con,$sql);
@@ -140,7 +140,7 @@ function getProduct($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function deleteProduct($gotData){
+function deleteProduct($gotData){  // deletes specific product
   $productName=$gotData->product->productName;
   $sql="DELETE FROM product WHERE name='$productName'";
   $check=mysqli_query($gotData->con,$sql);
@@ -151,7 +151,7 @@ function deleteProduct($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function getAllProductSerials($gotData){
+function getAllProductSerials($gotData){  // gets all product serials of product
   $productID=$gotData->user->productID;
   $sql="SELECT product_serial.id as `id`, product_serial.product_id as `product_id`, product_serial.serial_no as `serial_no`,
         assigned_user.user_id as `dealer_id`, product_serial.date as `creationDate`,
@@ -200,7 +200,7 @@ function getAllProductSerials($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function checkProductSerial($gotData){
+function checkProductSerial($gotData){  // checks if product serial exists
   $productSerial=$gotData->product->productSerial;
   $sql="SELECT * FROM product_serial WHERE serial_no='$productSerial'";
   $check=mysqli_query($gotData->con,$sql);
@@ -217,7 +217,7 @@ function checkProductSerial($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function addProductSerials($gotData){
+function addProductSerials($gotData){  // adds product serial to list of product serial for specific product
   $productSerialArray=$gotData->product->productSerialArray;
   $productID=$gotData->product->productID;
   $len = count($productSerialArray);

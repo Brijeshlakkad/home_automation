@@ -3,79 +3,20 @@ include_once("verify_data.php");
 include_once("config.php");
 include_once("device_data.php");
 date_default_timezone_set("Asia/Kolkata");
-function checkFrequencyExists($con,$userID){
-  $sql="SELECT * FROM frequency WHERE uid='$userID'";
-  $result=mysqli_query($con,$sql);
-  if($result){
-    if(mysqli_num_rows($result)==1){
-      return true;
-    }
-  }
-  return false;
-}
-function getNextDay($endTime){
+function getNextDay($endTime){  // gets next day time from given time
   $endTimeNext=strtotime("+1 day");
   $endDate=Date("Y-m-d",$endTimeNext)." ".Date("H:i:s",strtotime($endTime));
   $date2=strtotime($endDate);
   $endTime=Date("Y-m-d H:i:s",$date2);
   return $endTime;
 }
-function processFrequency($gotData){
-  $frequency=$gotData->frequency;
-  $frequencyArray=["weekly","all days","all","whole week","week"];
-  if(in_array(strtolower($frequency),$frequencyArray)){
-    $gotData->frequency="WEEKELY";
-  }else{
-    $day=Date("D",strtotime($frequency));
-    $gotData->frequency=strtoupper($day);
-  }
-  return $gotData;
-}
-function shouldRun($createdTime,$repetition,$runTimes){
+function shouldRun($createdTime,$repetition,$runTimes){ //checks if schedule should run or not
   if($repetition=="ONCE" && $runTimes!=0){
     return false;
   }
   return true;
 }
-function setFrequency($gotData){
-  $gotData=processFrequency($gotData);
-  if($gotData->error) return $gotData;
-  $userID=$gotData->userID;
-  $frequency=$gotData->frequency;
-  if(checkFrequencyExists($gotData->con,$userID)){
-    $sql="UPDATE frequency SET value='$frequency' WHERE uid='$userID'";
-  }else{
-    $sql="INSERT INTO frequency(value,uid) VALUES ('$frequency', '$userID')";
-  }
-  $result=mysqli_query($gotData->con,$sql);
-  if($result){
-    $gotData->data="Frequency set successfully.";
-    return $gotData;
-  }
-  $gotData->error=true;
-  $gotData->errorMessage="Error in setting frequency.";
-  return $gotData;
-}
-function getFrequency($gotData){
-  $userID=$gotData->userID;
-  $con=$gotData->con;
-  $sql="SELECT * FROM frequency WHERE uid='$userID'";
-  $result=mysqli_query($con,$sql);
-  if($result){
-    if(checkFrequencyExists($con,$userID)){
-      $row=mysqli_fetch_array($result);
-      $frequency=$row['value'];
-      $gotData->frequency=Date("l",strtotime($frequency));
-      return $gotData;
-    }
-    $gotData->frequency = 0;
-    return $gotData;
-  }
-  $gotData->error=true;
-  $gotData->errorMessage="Error in setting frequency.";
-  return $gotData;
-}
-function decideMeridiem($hour){
+function decideMeridiem($hour){ // decides nearest meridiem if meridiem is not given
   $currentM=Date("A");
   $date = Date("h");
   if($currentM=="AM"){
@@ -110,64 +51,7 @@ function decideMeridiem($hour){
   //   return $oppositeM;
   // }
 }
-function processScheduledTime($scheduledTime){
-  $gotData = (object) null;
-  $gotData->error=0;
-  $scheduledTime=str_replace("and"," ",$scheduledTime);
-  $endArray1=["hours","hour","minutes","minute","seconds","second"];
-  $end=null;
-  for($i=0;$i<count($endArray1);$i++){
-    if(substr($scheduledTime, -strlen($endArray1[$i])) === $endArray1[$i]){
-      $end=$endArray1[$i];
-      break;
-    }
-  }
-  if($end!=null){
-    $gotData->scheduledTime=Date("Y-m-d H:i:s",strtotime("+".$scheduledTime));
-    return $gotData;
-  }else{
-    $endArray2=["AM","PM","a.m.","p.m.","am","pm"];
-    $end=null;
-    for($i=0;$i<count($endArray2);$i++){
-      if(substr($scheduledTime, -strlen($endArray2[$i])) === $endArray2[$i]){
-        $end=$endArray2[$i];
-        break;
-      }
-    }
-    if($end==null){
-      $time=$scheduledTime;
-      $minute=(string)(int)$time%100;
-      $hour=(int)((int)$time/100);
-      if($minute==0){
-        $minute="00";
-      }
-      if($hour>12){
-        $end="";
-      }else{
-        $end=decideMeridiem($hour);
-      }
-      $hour=(string)$hour;
-    }
-    else{
-      $time=substr($scheduledTime,0,strpos($scheduledTime,$end));
-      $minute=(string)(int)$time%100;
-      $hour=(int)((int)$time/100);
-      if($minute==0){
-        $minute="00";
-      }
-      if($hour>12){
-        $end="";
-      }
-      $hour=(string)$hour;
-    }
-    $gotData->scheduledTime=Date("Y-m-d H:i:s",strtotime($hour.":".$minute."".$end));
-    return $gotData;
-  }
-  $gotData->error=true;
-  $gotData->errorMessage="Error in time!";
-  return $gotData;
-}
-function checkConflictTime($con,$deviceID,$startTime,$endTime,$repetition1){
+function checkConflictTime($con,$deviceID,$startTime,$endTime,$repetition1){  // check if given start and end time conflicts with other schedules
   $gotData=(object) null;
   $gotData->error=false;
   $sql="SELECT * FROM schedule_device WHERE device_id='$deviceID'";
@@ -197,7 +81,7 @@ function checkConflictTime($con,$deviceID,$startTime,$endTime,$repetition1){
   $gotData->errorMessage="Error in device!";
   return $gotData;
 }
-function setSchedule($gotData){
+function setSchedule($gotData){  // set schedule for given device
   $repetitionNotDay=array('DAILY','ONCE');
   $email=$gotData->email;
   $deviceName=$gotData->deviceName;
@@ -237,7 +121,7 @@ function setSchedule($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function getSchedulingForDevice($gotData){
+function getSchedulingForDevice($gotData){ // get scheduling list for device
   $repetitionNotDay=array('DAILY','ONCE');
   $email=$gotData->email;
   $deviceName=$gotData->deviceName;
@@ -294,7 +178,7 @@ function getSchedulingForDevice($gotData){
   $gotData->errorMessage="You do not have device named ".$deviceName;
   return $gotData;
 }
-function deleteScheduling($gotData){
+function deleteScheduling($gotData){  // removes specific scheduling
   $email=$gotData->email;
   $scheduleID=$gotData->scheduleID;
   $sql="DELETE FROM schedule_device WHERE id='$scheduleID'";
@@ -307,7 +191,7 @@ function deleteScheduling($gotData){
   $gotData->errorMessage="You do not any devices in room ".$roomName;
   return $gotData;
 }
-function deleteSchedulingForDevice($gotData){
+function deleteSchedulingForDevice($gotData){ // removes all scheduling for device
   $email=$gotData->email;
   $deviceName=$gotData->deviceName;
   $roomName=$gotData->roomName;
@@ -328,7 +212,7 @@ function deleteSchedulingForDevice($gotData){
   $gotData->errorMessage="You do not any devices in room ".$roomName;
   return $gotData;
 }
-function deleteSchedulingForRoom($gotData){
+function deleteSchedulingForRoom($gotData){ // removes all device scheduling for room
   $email=$gotData->email;
   $roomName=$gotData->roomName;
   $userID=$gotData->userID;
@@ -343,7 +227,7 @@ function deleteSchedulingForRoom($gotData){
   $gotData->errorMessage="You do not any devices in room ".$roomName;
   return $gotData;
 }
-function hasOwnerShip($con,$hwSeries,$userID){
+function hasOwnerShip($con,$hwSeries,$userID){ // checks if user owns hardware series
   $sql="SELECT product_serial.serial_no FROM product_serial INNER JOIN sold_product ON sold_product.serial_id=product_serial.id
         INNER JOIN user ON user.email=sold_product.customer_email WHERE user.id='$userID' AND product_serial.serial_no='$hwSeries'";
   $result=mysqli_query($con,$sql);
@@ -354,7 +238,7 @@ function hasOwnerShip($con,$hwSeries,$userID){
   }
   return false;
 }
-function getScheduling($gotData){
+function getScheduling($gotData){  // get all scheduling details for all devices of user
   $email=$gotData->email;
   $userID=$gotData->userID;
    // GROUP BY room.name

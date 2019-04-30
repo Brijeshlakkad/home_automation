@@ -1,5 +1,5 @@
 <?php
-class Home{
+class Home{ // gets home data
   var $homeID,$userID,$homeName,$error,$errorMessage;
   function getData($con,$sql){
     $check=mysqli_query($con,$sql);

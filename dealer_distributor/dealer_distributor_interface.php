@@ -5,7 +5,7 @@ require_once('../user_data.php');
 require_once('dealer_data.php');
 require_once('../assigned_user_data.php');
 require_once('../product_serial_data.php');
-function getUniqueProductIDs($productSerial){
+function getUniqueProductIDs($productSerial){  // gets only unique product serials from given list
   $newArr=[];
   $k=0;
   for($i=0;$i<count($productSerial);$i++){
@@ -16,7 +16,7 @@ function getUniqueProductIDs($productSerial){
   }
   return $newArr;
 }
-function createAssignedUser($con,$serialID,$userID,$userType){
+function createAssignedUser($con,$serialID,$userID,$userType){ // assignes dealer or distributor to specific product
   $sql="INSERT INTO `assigned_user`(`serial_id`,`user_id`,`user_type`) VALUES('$serialID','$userID','$userType')";
   $result=mysqli_query($con,$sql);
   if($result){
@@ -25,7 +25,7 @@ function createAssignedUser($con,$serialID,$userID,$userType){
   }
   return -99;
 }
-function createSoldProduct($con,$serialID,$soldEmail){
+function createSoldProduct($con,$serialID,$soldEmail){ // solds product to customer
   $sql="INSERT INTO `sold_product`(`serial_id`,`customer_email`) VALUES('$serialID','$soldEmail')";
   $result=mysqli_query($con,$sql);
   if($result){
@@ -34,7 +34,7 @@ function createSoldProduct($con,$serialID,$soldEmail){
   }
   return -99;
 }
-function getProducts($gotData){
+function getProducts($gotData){ // gets product assigned to dealer or distributor
   $id=$gotData->d->id;
   $d=getDealerDataUsingID($gotData->con,$id);
   if($d->error) return $d;
@@ -69,7 +69,7 @@ function getProducts($gotData){
   $gotData->d->productRows=$k;
   return $gotData;
 }
-function getProductSerialUsingSQL($gotData){
+function getProductSerialUsingSQL($gotData){ // gets all assigned product serial using given sql
   $result=mysqli_query($gotData->con,$gotData->sql);
   if($result){
     $gotData->d->productSerialRows=mysqli_num_rows($result);
@@ -90,7 +90,7 @@ function getProductSerialUsingSQL($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function getProductSerialsUsingIDAndName($gotData){
+function getProductSerialsUsingIDAndName($gotData){  // gets all assigned product serial using product name and dealer id
   $id=$gotData->d->id;
   $productName=$gotData->d->productName;
   $p=getProductDataUsingName($gotData->con,$productName);
@@ -108,7 +108,7 @@ function getProductSerialsUsingIDAndName($gotData){
   $gotData->d=$got->d;
   return $gotData;
 }
-function checkDistributorEmail($gotData){
+function checkDistributorEmail($gotData){  // checks distributor email exists or not
   $distributorEmail=$gotData->user->distributorEmail;
   $sql="SELECT * FROM dealer WHERE email='$distributorEmail' AND type='distributor'";
   $check=mysqli_query($gotData->con,$sql);
@@ -127,7 +127,7 @@ function checkDistributorEmail($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function getDealerProductSerialCount($gotData){
+function getDealerProductSerialCount($gotData){  // gets product serial count for assined and not assigned under perticular dealer or distributor
     $productID=$gotData->user->productID;
     $id=$gotData->user->id;
     $d=getDealerDataUsingID($gotData->con,$id);
@@ -147,7 +147,7 @@ function getDealerProductSerialCount($gotData){
     $gotData->errorMessage="Try again!";
     return $gotData;
 }
-function checkCustomerEmail($gotData){
+function checkCustomerEmail($gotData){   // checks customer email exists or not
   $customerEmail=$gotData->user->customerEmail;
   $u=getUserDataUsingEmail($gotData->con,$customerEmail);
   if($u->error==false){
@@ -158,7 +158,7 @@ function checkCustomerEmail($gotData){
   }
   return $gotData;
 }
-function sellProduct($gotData){
+function sellProduct($gotData){  // makes product sold to customer
   $soldToEmail=$gotData->user->soldToEmail;
   $productID=$gotData->user->productID;
   $numProductSerials=$gotData->user->numProductSerials;
@@ -221,7 +221,7 @@ function sellProduct($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function getProductSoldList($gotData){
+function getProductSoldList($gotData){  // gets product sold list to distributor or to customer for dealer or distributor respectively
   $id=$gotData->user->id;
   $type=$gotData->user->type;
   if($type=="dealer"){
@@ -256,7 +256,7 @@ function getProductSoldList($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function checkCustomerHasAdded($gotData){
+function checkCustomerHasAdded($gotData){  // check customer has used given hardware series or not
   $oldCustomerEmail=$gotData->user->oldCustomerEmail;
   $serialNo=$gotData->user->serialNo;
   $sql="SELECT amc.id FROM amc INNER JOIN product_serial ON amc.serial_no=product_serial.serial_no INNER JOIN sold_product ON sold_product.id=product_serial.sold_product_id WHERE sold_product.customer_email='$oldCustomerEmail' AND amc.serial_no='$serialNo'";
@@ -272,7 +272,7 @@ function checkCustomerHasAdded($gotData){
   $gotData->errorMessage="An error occured!";
   return $gotData;
 }
-function changeSerialCustomerEmail($gotData){
+function changeSerialCustomerEmail($gotData){   // changes customer email for given sold product
   $userID=$gotData->user->userID;
   $serialNo=$gotData->user->serialNo;
   $customerEmail=$gotData->user->customerEmail;
@@ -303,7 +303,7 @@ function changeSerialCustomerEmail($gotData){
   $gotData->errorMessage=$customerEmail." email is not exists with records";
   return $gotData;
 }
-function checkProductSerialExists($gotData){
+function checkProductSerialExists($gotData){  // check product serial exists
   $userID=$gotData->user->userID;
   $userType=$gotData->user->userType;
   $productSerial=$gotData->user->productSerial;
@@ -325,7 +325,7 @@ function checkProductSerialExists($gotData){
   $gotData->errorMessage="Try Again!";
   return $gotData;
 }
-function sellProductUsingSerial($gotData){
+function sellProductUsingSerial($gotData){   // sells product to customer or assignes distributor using specific product serial
   $soldToEmail=$gotData->user->soldToEmail;
   $productID=$gotData->user->productID;
   $productSerial=$gotData->user->productSerial;

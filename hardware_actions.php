@@ -32,7 +32,7 @@ function checkHomeID($gotData)
   $gotData->errorMessage="You do not have home in OUR app.";
   return $gotData;
 }
-function createSubscription($gotData){
+function createSubscription($gotData){  // creates subscription before hardware is being created
   $hwSeries=$gotData->user->hw->hwSeries;
   $sql="SELECT * FROM amc WHERE serial_no='$hwSeries'";
   $result=mysqli_query($gotData->con,$sql);
@@ -51,7 +51,7 @@ function createSubscription($gotData){
   }
   return $gotData;
 }
-function createHardware($gotData){
+function createHardware($gotData){  // creates hardware
   $gotData=getUserID($gotData);
   if($gotData->error) return $gotData;
   $homeID=$gotData->user->hw->homeID;
@@ -92,7 +92,7 @@ function createHardware($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function hasOwnerShip($con,$hwSeries,$userID){
+function hasOwnerShip($con,$hwSeries,$userID){  // checks if user owns hardware series
   $sql="SELECT product_serial.serial_no FROM product_serial INNER JOIN sold_product ON sold_product.serial_id=product_serial.id
         INNER JOIN user ON user.email=sold_product.customer_email WHERE user.id='$userID' AND product_serial.serial_no='$hwSeries'";
   $result=mysqli_query($con,$sql);
@@ -103,7 +103,7 @@ function hasOwnerShip($con,$hwSeries,$userID){
   }
   return false;
 }
-function deleteControlledMembers($gotData){
+function deleteControlledMembers($gotData){  // deletes all control members from list who has access to given hardwareID
   $hwID=$gotData->user->hw->id;
   $email=$gotData->user->email;
   $userID=$gotData->userID;
@@ -116,7 +116,7 @@ function deleteControlledMembers($gotData){
   $gotData->errorMessage="Error in removing controlled members.";
   return $gotData;
 }
-function deleteControlledHardwares($gotData){
+function deleteControlledHardwares($gotData){ // deletes all hardware from user who has creates hardware in their room
   $hwID=$gotData->user->hw->id;
   $userID=$gotData->userID;
   $hw=getHardwareDataUsingID($gotData->con,$userID,$hwID);
@@ -134,7 +134,7 @@ function deleteControlledHardwares($gotData){
   $gotData->errorMessage="Error in removing controlled hardwares";
   return $gotData;
 }
-function deleteHardware($gotData){
+function deleteHardware($gotData){  // deletes hardware using hardware id
   $user=getUserDataUsingEmail($gotData->con,$gotData->user->email);
   if($user->error) return $user;
   $gotData->userID=$user->id;
@@ -152,7 +152,7 @@ function deleteHardware($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function renameHardware($gotData){
+function renameHardware($gotData){  // modifies hardware configuration
   $gotData=getUserID($gotData);
   if($gotData->error) return $gotData;
   $hwName=$gotData->user->hw->hwName;
@@ -181,7 +181,7 @@ function renameHardware($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function getHardwareData($gotData){
+function getHardwareData($gotData){  // get hardware list for web
   $gotData=getUserID($gotData);
   if($gotData->error) return $gotData;
   $userID=$gotData->user->userID;
@@ -224,7 +224,7 @@ function getHardwareData($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function getHardwareList($gotData){
+function getHardwareList($gotData){ // get hardware list for validation
   $gotData=getUserID($gotData);
   if($gotData->error) return $gotData;
   $userID=$gotData->user->userID;
@@ -259,7 +259,7 @@ function getHardwareList($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function checkAlreadyAdded($con,$hwSeries,$userID){
+function checkAlreadyAdded($con,$hwSeries,$userID){  // check hardware is already has been used
     $sql="SELECT * FROM hardware WHERE uid='$userID' AND series='$hwSeries'";
     $result=mysqli_query($con,$sql);
     if($result){
@@ -269,7 +269,7 @@ function checkAlreadyAdded($con,$hwSeries,$userID){
     }
     return true;
 }
-function checkAllowedUser($con,$hwSeries,$email,$userID){
+function checkAllowedUser($con,$hwSeries,$email,$userID){ // check if user has been given to use hardware
   $sql="SELECT allowed_user.id as `allowedID`, hardware.id as `hwID` FROM allowed_user INNER JOIN hardware ON hardware.uid=allowed_user.uid WHERE allowed_user.member_id='$userID' AND hardware.series='$hwSeries' AND allowed_user.serial_no='$hwSeries'";
   $result=mysqli_query($con,$sql);
   if($result){
@@ -279,7 +279,7 @@ function checkAllowedUser($con,$hwSeries,$email,$userID){
   }
   return false;
 }
-function checkHardwareSeries($gotData){
+function checkHardwareSeries($gotData){ // check if user owns hardware which is being created
   $hwSeries = $gotData->user->hwSeries;
   $email = $gotData->user->email;
   $userID = $gotData->user->userID;

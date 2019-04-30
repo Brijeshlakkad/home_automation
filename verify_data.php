@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-function getUserID($gotResult)
+function getUserID($gotResult)  // gets user id
 {
   $sql="SELECT * FROM user where email='$gotResult->email'";
   $check=mysqli_query($gotResult->con,$sql);
@@ -16,7 +16,7 @@ function getUserID($gotResult)
   return $gotResult;
 }
 
-function getRoomID($gotResult)
+function getRoomID($gotResult)  // gets room id using room name
 {
   $sql="SELECT * FROM room where uid='$gotResult->userID' and roomname='$gotResult->roomName'";
   $check=mysqli_query($gotResult->con,$sql);
@@ -30,7 +30,7 @@ function getRoomID($gotResult)
   $gotResult->errorMessage="You do not have room named ".$gotResult->roomName;
   return $gotResult;
 }
-function verifyData($gotResult){
+function verifyData($gotResult){  // verifies data
   if(!filter_var($gotResult->email, FILTER_VALIDATE_EMAIL))
   {
     $gotResult->error=true;

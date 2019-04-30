@@ -1,5 +1,5 @@
 <?php
-class AssignedUser{
+class AssignedUser{  // dealer and distributor assigned to product serial
   var $id,$serial_id,$user_id,$user_type,$date,$error,$errorMessage;
   function getData($con,$sql){
     $check=mysqli_query($con,$sql);
@@ -20,7 +20,7 @@ class AssignedUser{
     }
   }
 }
-class SoldProduct{
+class SoldProduct{  // customer id who has bought the product serial
   var $id,$serial_id,$customer_email,$date,$error,$errorMessage;
   function getData($con,$sql){
     $check=mysqli_query($con,$sql);

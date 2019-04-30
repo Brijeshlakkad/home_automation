@@ -17,7 +17,7 @@ function getNowDate($time){
 }
 function shouldRun($startTime,$endTime,$nowDate,$repetition,$runTimes){
   $toDay = Date("D",strtotime($nowDate));
-  if($repetition=="ONCE" && $runTimes!=0){
+  if($repetition=="ONCE" && $runTimes==0){
     if((strtotime($startTime)<=strtotime($nowDate)) && (strtotime($endTime)>=strtotime($nowDate)))
     {
       return true;

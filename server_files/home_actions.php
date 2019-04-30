@@ -2,7 +2,7 @@
 require_once("config.php");
 require_once('home_data.php');
 require_once('user_data.php');
-function createHome($gotData){
+function createHome($gotData){  // creates home
   $u=getUserDataUsingEmail($gotData->con,$gotData->user->email);
   if($u->error) return $u;
   $userID=$u->id;
@@ -21,7 +21,7 @@ function createHome($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function deleteHome($gotData){
+function deleteHome($gotData){ // removes home
   $id=$gotData->user->home->id;
   $sql="DELETE `home`, `room`, `hardware`,`room_device`, `devicevalue`,`schedule_device` FROM home LEFT JOIN room ON room.hid=home.id LEFT JOIN hardware ON hardware.rid=room.id LEFT JOIN room_device ON room_device.hw_id=hardware.id LEFT JOIN schedule_device ON schedule_device.device_id=room_device.id LEFT JOIN devicevalue ON devicevalue.did=room_device.id WHERE home.id='$id'";
   $result=mysqli_query($gotData->con,$sql);
@@ -34,7 +34,7 @@ function deleteHome($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function renameHome($gotData){
+function renameHome($gotData){ // modifies home
   $homeName=$gotData->user->home->homeName;
   $id=$gotData->user->home->id;
   $sql="UPDATE home SET homename='$homeName' where id='$id'";
@@ -48,7 +48,7 @@ function renameHome($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function getHomeData($gotData){
+function getHomeData($gotData){ // gets home list in json
   $u=getUserDataUsingEmail($gotData->con,$gotData->user->email);
   if($u->error) return $u;
   $userID=$u->id;

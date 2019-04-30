@@ -1,7 +1,7 @@
 <?php
 require_once("config.php");
 require_once("user_data.php");
-function check_user($gotData){
+function check_user($gotData){  // check user email and password
   $email=$gotData->user->email;
   $password=$gotData->user->password;
   $sql="SELECT * FROM user where email='$email' and password='$password'";

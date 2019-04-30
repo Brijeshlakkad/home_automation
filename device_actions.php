@@ -5,7 +5,7 @@ require_once("hardware_data.php");
 require_once("device_data.php");
 require_once('device_slider_data.php');
 require_once('device_controller.php');
-function getUserID($gotData)
+function getUserID($gotData)  // get user's id from user email
 {
   $email=$gotData->user->email;
   $sql="SELECT * FROM user where email='$email'";
@@ -20,7 +20,7 @@ function getUserID($gotData)
   $gotData->errorMessage="You do not have account in OUR app. Please registor yourself at OUR app";
   return $gotData;
 }
-function checkHomeID($gotData)
+function checkHomeID($gotData) // check home id exists
 {
   $homeID=$gotData->user->homeID;
   $sql="SELECT * FROM home where id='$homeID'";
@@ -33,7 +33,7 @@ function checkHomeID($gotData)
   $gotData->errorMessage="You do not have home in OUR app.";
   return $gotData;
 }
-function deservesDeviceSlider($dvImg){
+function deservesDeviceSlider($dvImg){  // device type which deserves slider to set value
   $dvImgs=['ac.png','fan.png'];
   $flag=false;
   for($i=0;$i<count($dvImgs);$i++){
@@ -43,7 +43,7 @@ function deservesDeviceSlider($dvImg){
   }
   return $flag;
 }
-function checkDevicePort($gotData){
+function checkDevicePort($gotData){  // to check that no other devices are connected to this given port
   $homeID=$gotData->user->device->homeID;
   $roomID=$gotData->user->device->roomID;
   $hwID=$gotData->user->device->hwID;
@@ -65,7 +65,7 @@ function checkDevicePort($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function checkDeviceName($gotData){
+function checkDeviceName($gotData){ // check device name does not exists
   $homeID=$gotData->user->device->homeID;
   $roomID=$gotData->user->device->roomID;
   $userID=$gotData->user->userID;
@@ -84,7 +84,7 @@ function checkDeviceName($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function createDevice($gotData){
+function createDevice($gotData){  // to create device in specific hardware
   $userID=$gotData->user->userID;
   $homeID=$gotData->user->device->homeID;
   $roomID=$gotData->user->device->roomID;
@@ -127,7 +127,7 @@ function createDevice($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function deleteDevice($gotData){
+function deleteDevice($gotData){   // to delete device using deviceID
   $id=$gotData->user->device->id;
   $userID=$gotData->user->userID;
   if(!hasOwnerShipUsigDeviceID($gotData->con,$id,$userID)){
@@ -145,7 +145,7 @@ function deleteDevice($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function checkDevicePortUsingID($gotData){
+function checkDevicePortUsingID($gotData){   // check device port using deviceID
   $dvPort=$gotData->user->device->dvPort;
   $id=$gotData->user->device->id;
   $sql="SELECT * FROM room_device WHERE id='$id'";
@@ -162,7 +162,7 @@ function checkDevicePortUsingID($gotData){
   $gotData->errorMessage="Try Again!";
   return $gotData;
 }
-function renameDevice($gotData){
+function renameDevice($gotData){  // to modify device configuration
   $gotData=getUserID($gotData);
   if($gotData->error==true) return $gotData;
   $dvName=$gotData->user->device->dvName;
@@ -194,8 +194,8 @@ function renameDevice($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function getDvImgValue($con,$dvImg){
-  $sql="select * from device where image='$dvImg'";
+function getDvImgValue($con,$dvImg){  // to get device type value
+  $sql="SELECT * FROM device WHERE image='$dvImg'";
   $result=mysqli_query($con,$sql);
   if($result){
     $row=mysqli_fetch_array($result);
@@ -204,7 +204,7 @@ function getDvImgValue($con,$dvImg){
     return $dvImg;
   }
 }
-function getDeviceImg($con,$dvImg){
+function getDeviceImg($con,$dvImg){ // to get device type columns
   $sql="SELECT * FROM device WHERE image='$dvImg'";
   $check=mysqli_query($con,$sql);
   if($check && (mysqli_num_rows($check)>0))
@@ -221,7 +221,7 @@ function getDeviceImg($con,$dvImg){
   }
   return null;
 }
-function hasOwnerShip($con,$hwSeries,$userID){
+function hasOwnerShip($con,$hwSeries,$userID){  // checks whether user owns hwseries
   $sql="SELECT product_serial.serial_no FROM product_serial INNER JOIN sold_product ON sold_product.serial_id=product_serial.id
         INNER JOIN user ON user.email=sold_product.customer_email WHERE user.id='$userID' AND product_serial.serial_no='$hwSeries'";
   $result=mysqli_query($con,$sql);
@@ -232,7 +232,7 @@ function hasOwnerShip($con,$hwSeries,$userID){
   }
   return false;
 }
-function hasOwnerShipUsigDeviceID($con,$deviceID,$userID){
+function hasOwnerShipUsigDeviceID($con,$deviceID,$userID){ // checks user owns devices in specific hardware
   $sql="SELECT * FROM room_device WHERE id='$deviceID' AND uid='$userID'";
   $result=mysqli_query($con,$sql);
   if($result){
@@ -242,7 +242,7 @@ function hasOwnerShipUsigDeviceID($con,$deviceID,$userID){
   }
   return false;
 }
-function getDeviceData($gotData){
+function getDeviceData($gotData){ // get all devices in specific hardware and creates web object
   $userID=$gotData->user->userID;
   $homeID=$gotData->user->homeID;
   $roomID=$gotData->user->roomID;
@@ -319,7 +319,7 @@ function getDeviceData($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function getDeviceList($gotData){
+function getDeviceList($gotData){  // get device list in json format
   $gotData=getUserID($gotData);
   if($gotData->error==true) return $gotData;
   $userID=$gotData->user->userID;
@@ -379,7 +379,7 @@ function getDeviceList($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function getDevice($gotData){
+function getDevice($gotData){  // get one specific device
   $userID=$gotData->user->userID;
   $email=$gotData->user->email;
   $deviceID=$gotData->user->deviceID;
@@ -444,7 +444,7 @@ function getDevice($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function getDeviceDataUsingHwSeries($gotData){
+function getDeviceDataUsingHwSeries($gotData){  // gets device data using hardware series
   $userID=$gotData->user->userID;
   $deviceName=$gotData->user->deviceName;
   $hwSeries=$gotData->user->hwSeries;
@@ -478,7 +478,7 @@ function getDeviceDataUsingHwSeries($gotData){
     $gotData->errorMessage="Device does not exists!";
   }
 }
-function changeDeviceStatus($gotData){
+function changeDeviceStatus($gotData){  // change device status
   $status=$gotData->user->status;
   $deviceID=$gotData->user->deviceID;
   $got=getDeviceStatusUsingScheduling($gotData->con,$deviceID);
@@ -499,7 +499,7 @@ function changeDeviceStatus($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function getDeviceImgs($gotData){
+function getDeviceImgs($gotData){  // get device type list with key and value
   $sql="SELECT * FROM device";
   $check=mysqli_query($gotData->con,$sql);
   $gotData->total=mysqli_num_rows($check);
@@ -521,7 +521,7 @@ function getDeviceImgs($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function checkDeviceSliderExists($dvID,$con){
+function checkDeviceSliderExists($dvID,$con){ // check device has device slider in devicevalue table
   $sql="SELECT * from devicevalue where did='$dvID'";
   $check=mysqli_query($con,$sql);
   $total=mysqli_num_rows($check);
@@ -531,7 +531,7 @@ function checkDeviceSliderExists($dvID,$con){
   }
   return false;
 }
-function createDeviceSlider($dvID,$con,$value="0"){
+function createDeviceSlider($dvID,$con,$value="0"){ // create device slider of specific device [this function will be used when device configuration changes from light to ac]
   $gotData=(object) null;
   $gotData->user=(object) null;
   $gotData->error=false;
@@ -551,7 +551,7 @@ function createDeviceSlider($dvID,$con,$value="0"){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function getDeviceSlider($dvID,$con){
+function getDeviceSlider($dvID,$con){  // get value of device
   $gotData=(object) null;
   $gotData->user=(object) null;
   $gotData->error=false;
@@ -573,7 +573,7 @@ function getDeviceSlider($dvID,$con){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function changeDeviceSlider($gotData){
+function changeDeviceSlider($gotData){ // change device value
   $gotData=getUserID($gotData);
   if($gotData->error==true) return $gotData;
   $dvID=$gotData->deviceSlider->dvID;
@@ -588,7 +588,7 @@ function changeDeviceSlider($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function deleteDeviceSlider($dvID,$con){
+function deleteDeviceSlider($dvID,$con){ // delete devicevalue row using deviceID when device is being changed from ac to light
   $gotData=(object) null;
   $gotData->error=false;
   $sql="DELETE FROM devicevalue where did='$dvID'";

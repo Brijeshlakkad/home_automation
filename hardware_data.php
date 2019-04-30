@@ -1,6 +1,6 @@
 <?php
 require_once("room_data.php");
-class Hardware{
+class Hardware{  // get hardware data
   var $userID,$homeID,$roomID,$hwID,$hwName,$hwSeries,$hwIP,$error,$errorMessage;
   function getData($con,$sql){
     $check=mysqli_query($con,$sql);

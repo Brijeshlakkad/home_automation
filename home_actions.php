@@ -16,7 +16,7 @@ function getUserID($gotData)
   $gotData->errorMessage="You do not have account in OUR app. Please register yourself at OUR app";
   return $gotData;
 }
-function createHome($gotData){
+function createHome($gotData){  // creates home
   $gotData=getUserID($gotData);
   if($gotData->error) return $gotData;
   $userID=$gotData->user->userID;
@@ -35,7 +35,7 @@ function createHome($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function deleteHome($gotData){
+function deleteHome($gotData){  // removes home
   $gotData=getUserID($gotData);
   if($gotData->error) return $gotData;
   $id=$gotData->user->home->id;
@@ -50,7 +50,7 @@ function deleteHome($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function renameHome($gotData){
+function renameHome($gotData){  // modifies home
   $gotData=getUserID($gotData);
   if($gotData->error) return $gotData;
   $homeName=$gotData->user->home->homeName;
@@ -66,7 +66,7 @@ function renameHome($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function getHomeData($gotData){
+function getHomeData($gotData){  // gets home list in web
   $gotData=getUserID($gotData);
   if($gotData->error) return $gotData;
   $userID=$gotData->user->userID;
@@ -103,7 +103,7 @@ function getHomeData($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function getHomeList($gotData){
+function getHomeList($gotData){  // gets home list for validation
   $gotData=getUserID($gotData);
   if($gotData->error) return $gotData;
   $userID=$gotData->user->userID;

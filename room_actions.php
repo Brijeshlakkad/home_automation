@@ -31,7 +31,7 @@ function checkHomeID($gotData)
   $gotData->errorMessage="You do not have home in OUR app.";
   return $gotData;
 }
-function roomExistsInAnotherHome($gotData,$ignoreID){
+function roomExistsInAnotherHome($gotData,$ignoreID){ //  checks if room name exists in another home
     $userID=$gotData->user->userID;
     $roomName=$gotData->user->room->roomName;
     $sql="SELECT * FROM room WHERE roomname='$roomName' AND uid='$userID' AND id!='$ignoreID'";
@@ -50,7 +50,7 @@ function roomExistsInAnotherHome($gotData,$ignoreID){
     $gotData->errorMessage="Try again!";
     return $gotData;
 }
-function createRoom($gotData){
+function createRoom($gotData){  // creates room
   $u=getUserDataUsingEmail($gotData->con,$gotData->user->email);
   if($u->error) return $u;
   $userID=$u->id;
@@ -73,7 +73,7 @@ function createRoom($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function deleteRoom($gotData){
+function deleteRoom($gotData){  // deletes room
   $gotData=getUserID($gotData);
   if($gotData->error) return $gotData;
   $id=$gotData->user->room->id;
@@ -88,7 +88,7 @@ function deleteRoom($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function renameRoom($gotData){
+function renameRoom($gotData){  // modifies room data
   $u=getUserDataUsingEmail($gotData->con,$gotData->user->email);
   if($u->error) return $u;
   $userID=$u->id;
@@ -108,7 +108,7 @@ function renameRoom($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function getRoomData($gotData){
+function getRoomData($gotData){  // gets room list for web
   $gotData=getUserID($gotData);
   if($gotData->error) return $gotData;
   $userID=$gotData->user->userID;
@@ -148,7 +148,7 @@ function getRoomData($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function getRoomList($gotData){
+function getRoomList($gotData){  // gets room list for validation
   $gotData=getUserID($gotData);
   if($gotData->error) return $gotData;
   $userID=$gotData->user->userID;

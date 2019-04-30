@@ -1,5 +1,5 @@
 <?php
-class Product{
+class Product{ //  gets product data using given sql
   var $id,$name,$s_rate,$p_rate,$description,$taxation,$product_code,$hsncode,$qty_name,$error,$errorMessage;
   function getData($con,$sql){
     $check=mysqli_query($con,$sql);

@@ -381,6 +381,9 @@
       }).when('/admin/dealer', {
         templateUrl: 'admin/assign_dealer.html',
         controller: 'AssignDealerController'
+      }).when('/customer/alexa/login', {
+        templateUrl: 'alexa_login.php',
+        controller: 'LoginController'
       }).when('/404-not-found', {
         templateUrl: '404.html',
       }).otherwise({

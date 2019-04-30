@@ -1,7 +1,7 @@
 <?php
 require_once("config.php");
 require_once("user_data.php");
-function getSubscriptionDetails($gotData){
+function getSubscriptionDetails($gotData){  // subscription details of customer using userID
   $userID=$gotData->user->userID;
   $user=getUserDataUsingID($gotData->con,$userID);
   if($user->error) return $user;
@@ -37,6 +37,7 @@ function getSubscriptionDetails($gotData){
   return $gotData;
 }
 function checkMemberAlreadyExists($con,$userID,$memberID,$seriesNo){
+  // check control member already exists in user's list
   $sql="SELECT * FROM allowed_user WHERE uid='$userID' AND member_id='$memberID' AND serial_no='$seriesNo'";
   $result=mysqli_query($con,$sql);
   if($result){
@@ -47,6 +48,7 @@ function checkMemberAlreadyExists($con,$userID,$memberID,$seriesNo){
   return true;
 }
 function checkMemberEmail($con,$memberEmail){
+  // check control member email is registered with our server
   $sql="SELECT * FROM user WHERE email='$memberEmail'";
   $result=mysqli_query($con,$sql);
   if($result){
@@ -57,6 +59,7 @@ function checkMemberEmail($con,$memberEmail){
   return false;
 }
 function getHwSeriesList($gotData){
+  // customer created own hardware to show list in control member
   $userID=$gotData->user->userID;
   $hwSeries=$gotData->user->hwSeries;
   $user=getUserDataUsingID($gotData->con,$userID);
@@ -90,6 +93,7 @@ function getHwSeriesList($gotData){
   return $gotData;
 }
 function saveMemberList($gotData){
+  // save control members in user's control member list
   $userID=$gotData->user->userID;
   $memberList=$gotData->user->memberList;
   $hwSeries=$gotData->user->hwSeries;
@@ -143,6 +147,7 @@ function saveMemberList($gotData){
   return $gotData;
 }
 function getMemberList($gotData){
+  // get user's control member list
   $userID=$gotData->user->userID;
   $sql="SELECT allowed_user.member_id as `member_id`, hardware.name as `hwName` FROM allowed_user INNER JOIN hardware ON hardware.series=allowed_user.serial_no WHERE allowed_user.uid='$userID' AND hardware.uid='$userID'";
   $result=mysqli_query($gotData->con,$sql);
@@ -170,6 +175,7 @@ function getMemberList($gotData){
   return $gotData;
 }
 function removeChildUserHardware($con,$userID,$memberID){
+  // remove hardware from child in heirarchy to prevent access after removing that user from control member list
   $gotData=(object) null;
   $gotData->error=false;
   $u=getUserDataUsingID($con,$userID);
@@ -191,6 +197,7 @@ function removeChildUserHardware($con,$userID,$memberID){
   return $gotData;
 }
 function removeMember($gotData){
+  // remove control member
   $userID=$gotData->user->userID;
   $memberEmail=$gotData->user->memberEmail;
   $hwName=$gotData->user->hwName;
@@ -211,6 +218,7 @@ function removeMember($gotData){
   return $gotData;
 }
 function getHardwareList($gotData){
+  // get hardware list of user to use in saveMemberList function
   $email=$gotData->user->email;
   $user=getUserDataUsingEmail($gotData->con,$email);
   if($user->error) return $user;

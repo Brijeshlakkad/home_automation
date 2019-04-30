@@ -16,7 +16,7 @@ function checkHomeID($gotData)
   $gotData->errorMessage="You do not have home in OUR app.";
   return $gotData;
 }
-function roomExistsInAnotherHome($gotData,$ignoreID){
+function roomExistsInAnotherHome($gotData,$ignoreID){ //  checks if room name exists in another home
     $userID=$gotData->user->userID;
     $roomName=$gotData->user->room->roomName;
     $sql="SELECT * FROM room WHERE roomname='$roomName' AND uid='$userID' AND id!='$ignoreID'";
@@ -35,7 +35,7 @@ function roomExistsInAnotherHome($gotData,$ignoreID){
     $gotData->errorMessage="Try again!";
     return $gotData;
 }
-function createRoom($gotData){
+function createRoom($gotData){  // creates room
   $u=getUserDataUsingEmail($gotData->con,$gotData->user->email);
   if($u->error) return $u;
   $userID=$u->id;
@@ -58,7 +58,7 @@ function createRoom($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function deleteRoom($gotData){
+function deleteRoom($gotData){ // deletes room
   $id=$gotData->user->room->id;
   $sql="DELETE `room`, `hardware`,`room_device`,`schedule_device`, `devicevalue` FROM room LEFT JOIN hardware ON hardware.rid=room.id LEFT JOIN room_device ON room_device.hw_id=hardware.id LEFT JOIN schedule_device ON schedule_device.device_id=room_device.id LEFT JOIN devicevalue ON devicevalue.did=room_device.id WHERE room.id='$id'";
   $result=mysqli_query($gotData->con,$sql);
@@ -71,7 +71,7 @@ function deleteRoom($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function renameRoom($gotData){
+function renameRoom($gotData){ // modifies room data
   $u=getUserDataUsingEmail($gotData->con,$gotData->user->email);
   if($u->error) return $u;
   $userID=$u->id;
@@ -91,7 +91,7 @@ function renameRoom($gotData){
   $gotData->errorMessage="Try again!";
   return $gotData;
 }
-function getRoomData($gotData){
+function getRoomData($gotData){ // gets room list for web
   $u=getUserDataUsingEmail($gotData->con,$gotData->user->email);
   if($u->error) return $u;
   $userID=$u->id;

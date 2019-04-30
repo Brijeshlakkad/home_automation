@@ -2,7 +2,7 @@
 require_once("config.php");
 require_once('check_user.php');
 $gotData=(object) null;
-function createUser($gotData){
+function createUser($gotData){  // creates user
   $got=checkEmailExists($gotData->con,$gotData->email);
   if($got->error) return $got;
   $got=checkMobileExists($gotData->con,$gotData->mobile,false,null);

@@ -1,5 +1,5 @@
 <?php
-class DeviceSlider{
+class DeviceSlider{ // device slider class to get device value
   var $id,$dvID,$value,$error,$errorMessage;
   function getData($con,$sql){
     $check=mysqli_query($con,$sql);

@@ -1,5 +1,5 @@
 <?php
-class ProductSerial{
+class ProductSerial{ //  gets product serial data using given sql
   var $id,$serial_no,$product_id,$assigned_dealer,$assigned_distributor,$sold_product_id,$date,$error,$errorMessage;
   function getData($con,$sql){
     $check=mysqli_query($con,$sql);

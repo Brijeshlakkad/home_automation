@@ -1,7 +1,7 @@
 <?php
 require_once("hardware_data.php");
 require_once("room_data.php");
-class Device{
+class Device{  // to get device class
   var $userID,$homeID,$roomID,$hwID,$dvID,$dvName,$dvPort,$dvImg,$dvStatus,$error,$errorMessage;
   function getData($con,$sql){
     $check=mysqli_query($con,$sql);
@@ -26,13 +26,13 @@ class Device{
     }
   }
 }
-function getDeviceDataUsingID($con,$userID,$dvID){
+function getDeviceDataUsingID($con,$userID,$dvID){  // using device id and user id
   $hw = new Device;
   $sql="SELECT * FROM room_device where id='$dvID' and uid='$userID'";
   $hw->getData($con,$sql);
   return $hw;
 }
-function getDeviceDataUsingName($con,$userID,$dvName,$hwName,$roomName,$homeName){
+function getDeviceDataUsingName($con,$userID,$dvName,$hwName,$roomName,$homeName){  // using all name and user id
   $dv = new Device;
   $hw=getHardwareDataUsingName($con,$userID,$hwName,$roomName,$homeName);
   if($hw->error) return $hw;
@@ -43,13 +43,13 @@ function getDeviceDataUsingName($con,$userID,$dvName,$hwName,$roomName,$homeName
   $dv->getData($con,$sql);
   return $dv;
 }
-function getDeviceDataUsingNameIDs($con,$userID,$dvName,$hwID,$roomID,$homeID){
+function getDeviceDataUsingNameIDs($con,$userID,$dvName,$hwID,$roomID,$homeID){  // using home, room and hardware id and device name
   $dv = new Device;
   $sql="SELECT * FROM room_device where device_name='$dvName' and hid='$homeID' and room_id='$roomID' and hw_id='$hwID' and uid='$userID'";
   $dv->getData($con,$sql);
   return $dv;
 }
-function getHardwareListUsingRoomID($con,$roomID,$userID){
+function getHardwareListUsingRoomID($con,$roomID,$userID){ // using room and user id
   $hwSeriesList=[];
   $sql="SELECT * FROM hardware WHERE rid='$roomID' AND uid='$userID'";
   $result=mysqli_query($con,$sql);
@@ -63,7 +63,7 @@ function getHardwareListUsingRoomID($con,$roomID,$userID){
   }
   return $hwSeriesList;
 }
-function hasOwnerShipUsingRoomID($con,$deviceName,$roomID,$userID){
+function hasOwnerShipUsingRoomID($con,$deviceName,$roomID,$userID){  // using device name and room and user id
   $sql="SELECT * FROM room_device WHERE room_id='$roomID' AND uid='$userID' AND device_name='$deviceName'";
   $result=mysqli_query($con,$sql);
   if($result){
@@ -73,7 +73,7 @@ function hasOwnerShipUsingRoomID($con,$deviceName,$roomID,$userID){
   }
   return false;
 }
-function getDeviceDataUsingRoomID($con,$deviceName,$roomID,$userID){
+function getDeviceDataUsingRoomID($con,$deviceName,$roomID,$userID){ // device data using user id, room id and device name
   if(hasOwnerShipUsingRoomID($con,$deviceName,$roomID,$userID)){
     $dv = new Device;
     $sql="SELECT * FROM room_device WHERE room_id='$roomID' AND uid='$userID' AND device_name='$deviceName'";

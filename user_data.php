@@ -1,5 +1,5 @@
 <?php
-class User{
+class User{  // gets user data
   var $id,$email,$name,$password,$contact,$city,$address,$error,$errorMessage;
   function getData($con,$sql){
     $check=mysqli_query($con,$sql);

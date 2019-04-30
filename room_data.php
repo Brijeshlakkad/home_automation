@@ -1,6 +1,6 @@
 <?php
 require_once("home_data.php");
-class Room{
+class Room{ // room data using sql
   var $roomID,$userID,$homeID,$roomName,$error,$errorMessage;
   function getData($con,$sql){
     $check=mysqli_query($con,$sql);
